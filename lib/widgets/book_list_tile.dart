@@ -17,7 +17,7 @@ class BookListTile extends StatelessWidget {
             '${index + 1}.',
             style: Theme.of(context).textTheme.bodyLarge,
           ),
-          // TODO: Add image support.
+          // TODO: Add book images.
           // const SizedBox(width: 12),
           // Image.file(File(book.coverImage)),
         ],
@@ -40,7 +40,7 @@ class BookListTile extends StatelessWidget {
       subtitleTextStyle: Theme.of(context).textTheme.labelSmall,
       trailing: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Container(
             padding: const EdgeInsets.all(4),
@@ -48,7 +48,10 @@ class BookListTile extends StatelessWidget {
               borderRadius: BorderRadius.circular(4),
               color: Theme.of(context).colorScheme.secondaryContainer,
             ),
-            child: Text('Issued: ${book.issuedCopies}'),
+            child: Text(
+              'Issued: ${book.issuedCopies}',
+              style: Theme.of(context).textTheme.labelSmall,
+            ),
           ),
           Container(
             padding: const EdgeInsets.all(4),
@@ -56,7 +59,10 @@ class BookListTile extends StatelessWidget {
               borderRadius: BorderRadius.circular(4),
               color: Theme.of(context).colorScheme.tertiaryContainer,
             ),
-            child: Text('Total: ${book.totalCopies}'),
+            child: Text(
+              'Total: ${book.totalCopies}',
+              style: Theme.of(context).textTheme.labelSmall,
+            ),
           ),
         ],
       ),

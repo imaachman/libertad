@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:libertad/features/books/screens/authors_screen.dart';
 import 'package:libertad/features/books/screens/books_screen.dart';
 
 void main() {
@@ -34,6 +35,13 @@ class _HomePageState extends State<HomePage>
     Tab(text: 'Borrowers'),
   ];
 
+  final List<Widget> _tabViews = const [
+    BooksPage(),
+    AuthorsPage(),
+    BooksPage(),
+    AuthorsPage(),
+  ];
+
   late final TabController _tabController;
 
   @override
@@ -56,7 +64,7 @@ class _HomePageState extends State<HomePage>
       ),
       body: TabBarView(
         controller: _tabController,
-        children: _tabs.map((tab) => const BooksPage()).toList(),
+        children: _tabs.map((tab) => _tabViews[_tabs.indexOf(tab)]).toList(),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {},

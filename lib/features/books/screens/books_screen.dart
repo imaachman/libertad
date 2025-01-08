@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:libertad/data/mock/mock_books.dart';
 import 'package:libertad/widgets/book_list_tile.dart';
 
-class BooksPage extends ConsumerWidget {
+class BooksPage extends StatelessWidget {
   const BooksPage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return ListView.separated(
       itemCount: mockBooks.length,
       separatorBuilder: (context, index) => const Divider(),
