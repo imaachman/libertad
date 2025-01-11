@@ -2,6 +2,7 @@ import '../models/book_model.dart';
 
 List<BookModel> mockBooks = [
   BookModel(
+    id: '11c0bb9b-8b16-40cc-b0ad-b38bb242b26f',
     title: 'To Kill a Mockingbird',
     author: 'Harper Lee',
     genre: 'Fiction',
@@ -13,6 +14,7 @@ List<BookModel> mockBooks = [
     issuedCopies: 4,
   ),
   BookModel(
+    id: 'b84d9824-1604-4870-8fa3-f46669e4e901',
     title: '1984',
     author: 'George Orwell',
     genre: 'Dystopian',
@@ -24,6 +26,7 @@ List<BookModel> mockBooks = [
     issuedCopies: 10,
   ),
   BookModel(
+    id: '1233809e-6b7a-4759-8b1a-ff4ed40c96f6',
     title: 'The Great Gatsby',
     author: 'F. Scott Fitzgerald',
     genre: 'Classic',
@@ -35,6 +38,7 @@ List<BookModel> mockBooks = [
     issuedCopies: 3,
   ),
   BookModel(
+    id: '8bd21328-1071-4f0a-8166-c06dcc9e69b4',
     title: 'The Catcher in the Rye',
     author: 'J.D. Salinger',
     genre: 'Fiction',
@@ -46,6 +50,7 @@ List<BookModel> mockBooks = [
     issuedCopies: 7,
   ),
   BookModel(
+    id: '0cc0c784-ddfc-4f6c-b1d4-8b0af721ffcb',
     title: 'Pride and Prejudice',
     author: 'Jane Austen',
     genre: 'Romance',
@@ -57,6 +62,7 @@ List<BookModel> mockBooks = [
     issuedCopies: 2,
   ),
   BookModel(
+    id: '4e97b080-eb76-48a3-92c4-bf3762cacfb2',
     title: 'The Hobbit',
     author: 'J.R.R. Tolkien',
     genre: 'Fantasy',
@@ -68,6 +74,7 @@ List<BookModel> mockBooks = [
     issuedCopies: 5,
   ),
   BookModel(
+    id: '4ec7bb0f-165b-418e-85e5-5bdf720d6d48',
     title: 'The Alchemist',
     author: 'Paulo Coelho',
     genre: 'Adventure',
@@ -78,6 +85,7 @@ List<BookModel> mockBooks = [
     issuedCopies: 6,
   ),
   BookModel(
+    id: 'd75f3398-7030-4605-a8b9-e48be9c7c5e8',
     title: 'The Road',
     author: 'Cormac McCarthy',
     genre: 'Post-apocalyptic',
@@ -89,6 +97,7 @@ List<BookModel> mockBooks = [
     issuedCopies: 4,
   ),
   BookModel(
+    id: 'eaa1d88f-14a7-4c95-a2c4-a01457766873',
     title: 'Sapiens: A Brief History of Humankind',
     author: 'Yuval Noah Harari',
     genre: 'Non-fiction',
@@ -100,6 +109,7 @@ List<BookModel> mockBooks = [
     issuedCopies: 8,
   ),
   BookModel(
+    id: 'df8327f4-f1a0-4356-b265-98c41458b81f',
     title: 'Harry Potter and the Philosopher\'s Stone',
     author: 'J.K. Rowling',
     genre: 'Fantasy',
@@ -110,6 +120,7 @@ List<BookModel> mockBooks = [
     issuedCopies: 18,
   ),
   BookModel(
+    id: '98164ca9-7e8c-4401-b023-fa671d6d4659',
     title: 'The Book Thief',
     author: 'Markus Zusak',
     genre: 'Historical Fiction',
@@ -120,6 +131,7 @@ List<BookModel> mockBooks = [
     issuedCopies: 5,
   ),
   BookModel(
+    id: '8cc38c63-d706-4f6e-b9ac-24aa375a3b94',
     title: 'The Fault in Our Stars',
     author: 'John Green',
     genre: 'Romance',
@@ -131,6 +143,7 @@ List<BookModel> mockBooks = [
     issuedCopies: 9,
   ),
   BookModel(
+    id: '54d91e21-faa5-4f99-bfdc-3071ad419774',
     title: 'Dune',
     author: 'Frank Herbert',
     genre: 'Science Fiction',
@@ -141,6 +154,7 @@ List<BookModel> mockBooks = [
     issuedCopies: 10,
   ),
   BookModel(
+    id: '8fab7fce-80af-4396-b90e-b085d5d754d7',
     title: 'Becoming',
     author: 'Michelle Obama',
     genre: 'Memoir',
@@ -152,6 +166,7 @@ List<BookModel> mockBooks = [
     issuedCopies: 7,
   ),
   BookModel(
+    id: '41a74dff-420a-48d5-aaa9-fe04fc89c5dd',
     title: 'The Midnight Library',
     author: 'Matt Haig',
     genre: 'Fantasy',

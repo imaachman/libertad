@@ -1,4 +1,5 @@
 class BookModel {
+  final String id;
   final String title;
   final String author;
   final String genre;
@@ -9,6 +10,7 @@ class BookModel {
   final int issuedCopies;
 
   BookModel({
+    required this.id,
     required this.title,
     required this.author,
     required this.genre,
