@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:libertad/features/books/screens/authors_screen.dart';
-import 'package:libertad/features/books/screens/books_screen.dart';
+
+import 'features/home/home_screen.dart';
+import 'navigation/route_generator.dart';
 
 void main() {
   runApp(const ProviderScope(child: Libertad()));
@@ -15,62 +16,7 @@ class Libertad extends StatelessWidget {
     return const MaterialApp(
       title: 'Libertad',
       home: HomePage(),
-    );
-  }
-}
-
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
-
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage>
-    with SingleTickerProviderStateMixin {
-  final List<Tab> _tabs = const [
-    Tab(text: 'Books'),
-    Tab(text: 'Authors'),
-    Tab(text: 'Issued Books'),
-    Tab(text: 'Borrowers'),
-  ];
-
-  final List<Widget> _tabViews = const [
-    BooksPage(),
-    AuthorsPage(),
-    BooksPage(),
-    AuthorsPage(),
-  ];
-
-  late final TabController _tabController;
-
-  @override
-  void initState() {
-    super.initState();
-    _tabController = TabController(length: _tabs.length, vsync: this);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text('Libertad'),
-        bottom: TabBar(
-          controller: _tabController,
-          tabs: _tabs,
-          tabAlignment: TabAlignment.center,
-        ),
-      ),
-      body: TabBarView(
-        controller: _tabController,
-        children: _tabs.map((tab) => _tabViews[_tabs.indexOf(tab)]).toList(),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        tooltip: 'Add new book',
-        child: const Icon(Icons.add),
-      ),
+      onGenerateRoute: RouteGenerator.generate,
     );
   }
 }
