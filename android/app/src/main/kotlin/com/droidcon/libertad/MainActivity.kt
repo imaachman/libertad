@@ -1,4 +1,4 @@
-package com.example.libertad
+package com.droidcon.libertad
 
 import io.flutter.embedding.android.FlutterActivity
 
