@@ -1,34 +1,20 @@
 import 'package:flutter/material.dart';
-// import 'package:libertad/data/mock/mock_books.dart';
-import 'package:libertad/data/repositories/database_repository.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:libertad/features/books/screens/book_list_tile.dart';
+import 'package:libertad/features/books/viewmodels/books_list_viewmodel.dart';
 
 import '../../../data/models/book.dart';
 
-class BooksPage extends StatefulWidget {
+class BooksPage extends ConsumerWidget {
   const BooksPage({super.key});
 
   @override
-  State<BooksPage> createState() => _BooksPageState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    // Retrieve books data and actively watch for changes.
+    final AsyncValue<List<Book>> booksData =
+        ref.watch(booksListViewModelProvider);
+    final List<Book> books = booksData.value ?? [];
 
-class _BooksPageState extends State<BooksPage> {
-  List<Book> books = [];
-
-  @override
-  void initState() {
-    super.initState();
-    populateBooks();
-  }
-
-  Future<void> populateBooks() async {
-    books = await DatabaseRepository.instance.getAllBooks();
-    setState(() {});
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if (books.isEmpty) return Container();
     return ListView.separated(
       itemCount: books.length,
       separatorBuilder: (context, index) => const Divider(),
