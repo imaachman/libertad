@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:libertad/data/repositories/database_repository.dart';
 
-import 'features/home/home_screen.dart';
+import 'features/home/screens/home_screen.dart';
 import 'navigation/route_generator.dart';
 
 Future<void> main() async {

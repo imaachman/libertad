@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:libertad/data/models/book.dart';
 import 'package:libertad/features/books/screens/book_details_screen.dart';
-import 'package:libertad/features/home/home_screen.dart';
+import 'package:libertad/features/home/screens/home_screen.dart';
 import 'package:libertad/navigation/routes.dart';
 
 class RouteGenerator {
