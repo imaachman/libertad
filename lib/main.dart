@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:libertad/data/repositories/database_repository.dart';
 
 import 'features/home/home_screen.dart';
 import 'navigation/route_generator.dart';
 
-void main() {
+Future<void> main() async {
+  // Make sure that an instance of [WidgetsBinding] is available to call native
+  // code through platform channels.
+  WidgetsFlutterBinding.ensureInitialized();
+  // Initialize database repository.
+  await DatabaseRepository.instance.initialize();
   runApp(const ProviderScope(child: Libertad()));
 }
 

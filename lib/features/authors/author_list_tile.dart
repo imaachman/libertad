@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:libertad/data/models/author_model.dart';
+import 'package:libertad/data/models/author.dart';
 
 class AuthorListTile extends StatelessWidget {
-  final AuthorModel author;
+  final Author author;
   final int index;
 
   const AuthorListTile({super.key, required this.author, required this.index});

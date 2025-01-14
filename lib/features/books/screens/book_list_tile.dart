@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:libertad/data/models/book_model.dart';
+import 'package:libertad/data/models/book.dart';
 import 'package:libertad/navigation/routes.dart';
 
 class BookListTile extends StatelessWidget {
-  final BookModel book;
+  final Book book;
   final int index;
 
   const BookListTile({super.key, required this.book, required this.index});
@@ -11,7 +11,10 @@ class BookListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => Navigator.of(context).pushNamed(Routes.book),
+      onTap: () => Navigator.of(context).pushNamed(
+        Routes.book,
+        arguments: book,
+      ),
       child: ListTile(
         leading: Row(
           mainAxisSize: MainAxisSize.min,
@@ -23,6 +26,7 @@ class BookListTile extends StatelessWidget {
             // TODO: Add book images.
             // const SizedBox(width: 12),
             // Image.file(File(book.coverImage)),
+            // SizedBox(width: 36, child: const Placeholder()),
           ],
         ),
         title: Text(book.title),

@@ -1,5 +1,10 @@
-class BookModel {
-  final String id;
+import 'package:isar/isar.dart';
+
+part 'book.g.dart';
+
+@collection
+class Book {
+  final Id id = Isar.autoIncrement;
   final String title;
   final String author;
   final String genre;
@@ -9,8 +14,7 @@ class BookModel {
   final int totalCopies;
   final int issuedCopies;
 
-  BookModel({
-    required this.id,
+  Book({
     required this.title,
     required this.author,
     required this.genre,

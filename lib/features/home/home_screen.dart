@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:libertad/data/repositories/database_repository.dart';
 
 import '../authors/authors_screen.dart';
 import '../books/screens/books_screen.dart';
@@ -40,6 +41,16 @@ class _HomePageState extends State<HomePage>
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text('Libertad'),
+        actions: [
+          IconButton(
+            onPressed: DatabaseRepository.instance.clearDatabase,
+            icon: Icon(Icons.clear_all),
+          ),
+          IconButton(
+            onPressed: DatabaseRepository.instance.resetDatabase,
+            icon: Icon(Icons.restart_alt_rounded),
+          ),
+        ],
         bottom: TabBar(
           controller: _tabController,
           tabs: _tabs,

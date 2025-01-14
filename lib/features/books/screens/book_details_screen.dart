@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:libertad/data/models/book.dart';
 
 class BookDetailsPage extends StatelessWidget {
-  const BookDetailsPage({super.key});
+  final Book book;
+
+  const BookDetailsPage({super.key, required this.book});
 
   @override
   Widget build(BuildContext context) {
-    return Placeholder();
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Book Details'),
+      ),
+    );
   }
 }
