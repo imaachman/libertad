@@ -1,4 +1,4 @@
-import 'package:libertad/data/models/book.dart';
+import 'package:flutter/material.dart';
 import 'package:libertad/data/repositories/database_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -15,6 +15,14 @@ class HomeViewModel extends _$HomeViewModel {
   Future<void> resetDatabase() async =>
       await DatabaseRepository.instance.resetDatabase();
 
-  void addBook(Book book) async =>
-      await DatabaseRepository.instance.addBook(book);
+  void openAddBookBottomsheet(
+      {required BuildContext context,
+      required Widget Function(BuildContext context) builder}) {
+    showModalBottomSheet(
+      context: context,
+      builder: builder,
+      isScrollControlled: true,
+      showDragHandle: true,
+    );
+  }
 }

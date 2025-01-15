@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:libertad/data/models/book.dart';
 import 'package:libertad/features/authors/authors_screen.dart';
 import 'package:libertad/features/books/screens/books_screen.dart';
 import 'package:libertad/features/home/viewmodels/home_viewmodel.dart';
+import 'package:libertad/widgets/book_editor.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
@@ -64,19 +64,12 @@ class _HomePageState extends ConsumerState<HomePage>
         children: _tabs.map((tab) => _tabViews[_tabs.indexOf(tab)]).toList(),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => ref.read(homeViewModelProvider.notifier).addBook(
-              Book(
-                title: 'Becoming',
-                author: 'Michelle Obama',
-                genre: 'Memoir',
-                releaseDate: DateTime(2018, 11, 13),
-                summary:
-                    'A powerful and inspiring memoir from the former First Lady of the United States.',
-                coverImage: '',
-                totalCopies: 12,
-                issuedCopies: 7,
-              ),
-            ),
+        onPressed: () {
+          ref.read(homeViewModelProvider.notifier).openAddBookBottomsheet(
+                context: context,
+                builder: (context) => BookEditor(),
+              );
+        },
         tooltip: 'Add new book',
         child: const Icon(Icons.add),
       ),
