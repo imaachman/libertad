@@ -35,7 +35,7 @@ class BookListTile extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('by ${book.author}'),
-            Row(
+            Wrap(
               children: [
                 Text('Released: ${book.releaseDate.year}'),
                 const SizedBox(width: 12),

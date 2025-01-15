@@ -56,6 +56,7 @@ class _HomePageState extends ConsumerState<HomePage>
           controller: _tabController,
           tabs: _tabs,
           tabAlignment: TabAlignment.center,
+          isScrollable: true,
         ),
       ),
       body: TabBarView(
