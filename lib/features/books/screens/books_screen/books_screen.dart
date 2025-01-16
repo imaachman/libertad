@@ -14,19 +14,20 @@ class BooksPage extends ConsumerWidget {
     final AsyncValue<List<Book>> books = ref.watch(booksListViewModelProvider);
 
     // Check for error and loading states and build the widget accordingly.
-    return switch (books) {
-      AsyncData(:final value) => ListView.separated(
-          itemCount: value.length,
-          separatorBuilder: (context, index) => const Divider(),
-          itemBuilder: (context, index) {
-            return BookListTile(
-              book: value[index],
-              index: index,
-            );
-          },
-        ),
-      AsyncError() => Center(child: Text('An unexpected error has occured.')),
-      _ => Center(child: CircularProgressIndicator()),
-    };
+    return books.when(
+      data: (data) => ListView.separated(
+        itemCount: data.length,
+        separatorBuilder: (context, index) => const Divider(),
+        itemBuilder: (context, index) {
+          return BookListTile(
+            book: data[index],
+            index: index,
+          );
+        },
+      ),
+      error: (error, stackTrace) =>
+          Center(child: Text('An unexpected error has occured.')),
+      loading: () => Center(child: CircularProgressIndicator()),
+    );
   }
 }

@@ -10,7 +10,7 @@ class BooksListViewModel extends _$BooksListViewModel {
   Future<List<Book>> build() async {
     List<Book> books = [];
     // Listen for changes in books collection and update the state with the
-    // latest data. The stream fires data snapshot immediately, so we don't need
+    // latest data. The stream fires a snapshot immediately, so we don't need
     // to initialize data seperately. This listener handles the initialization
     // as well.
     DatabaseRepository.instance.booksStream.listen((_) async {

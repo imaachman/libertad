@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:isar/isar.dart';
+import 'package:libertad/data/mock/mock_authors.dart';
 import 'package:libertad/data/mock/mock_books.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -53,6 +54,7 @@ class DatabaseRepository {
     await _isar.writeTxn(() async {
       await _isar.clear();
       await _isar.books.putAll(mockBooks);
+      await _isar.authors.putAll(mockAuthors);
     });
   }
 
