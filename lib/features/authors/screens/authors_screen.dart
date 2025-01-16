@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:libertad/data/mock/mock_authors.dart';
-import 'package:libertad/features/authors/author_list_tile.dart';
+import 'package:libertad/features/authors/screens/author_list_tile.dart';
 
 class AuthorsPage extends StatelessWidget {
   const AuthorsPage({super.key});

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:libertad/features/authors/authors_screen.dart';
-import 'package:libertad/features/books/screens/books_screen.dart';
+import 'package:libertad/features/authors/screens/authors_screen.dart';
+import 'package:libertad/features/books/screens/books_screen/books_screen.dart';
 import 'package:libertad/features/home/viewmodels/home_viewmodel.dart';
-import 'package:libertad/widgets/book_editor.dart';
+import 'package:libertad/features/books/screens/book_editor/book_editor.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});

@@ -3,6 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:libertad/core/constants/breakpoints.dart';
 import 'package:libertad/widgets/row_column_switch.dart';
 
+import 'author_field.dart';
+import 'book_cover.dart';
+import 'summary_field.dart';
+import 'title_field.dart';
+
 class BookEditor extends ConsumerStatefulWidget {
   const BookEditor({super.key});
 
@@ -142,159 +147,6 @@ class _BookEditorState extends ConsumerState<BookEditor> {
           ),
         );
       },
-    );
-  }
-}
-
-class BookCover extends StatefulWidget {
-  final TextEditingController titleController;
-  final TextEditingController authorController;
-
-  const BookCover({
-    super.key,
-    required this.titleController,
-    required this.authorController,
-  });
-
-  @override
-  State<BookCover> createState() => _BookCoverState();
-}
-
-class _BookCoverState extends State<BookCover> {
-  @override
-  void initState() {
-    super.initState();
-    widget.titleController.addListener(rebuild);
-    widget.authorController.addListener(rebuild);
-  }
-
-  @override
-  void dispose() {
-    widget.titleController.removeListener(rebuild);
-    widget.authorController.removeListener(rebuild);
-    super.dispose();
-  }
-
-  void rebuild() => setState(() {});
-
-  @override
-  Widget build(BuildContext context) {
-    return AspectRatio(
-      aspectRatio: 10 / 16,
-      child: Container(
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border.all(),
-          boxShadow: [BoxShadow(offset: Offset(-5, 5))],
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              widget.titleController.text,
-              style: Theme.of(context).textTheme.headlineSmall,
-              maxLines: 4,
-              overflow: TextOverflow.ellipsis,
-            ),
-            Text(
-              widget.authorController.text,
-              style: Theme.of(context).textTheme.labelMedium,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class TitleField extends StatelessWidget {
-  final TextEditingController controller;
-
-  const TitleField({super.key, required this.controller});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Title',
-          style: Theme.of(context)
-              .textTheme
-              .headlineMedium
-              ?.copyWith(fontWeight: FontWeight.bold),
-        ),
-        TextField(
-          controller: controller,
-          decoration: InputDecoration(
-            hintText: 'Enter book\'s title',
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class AuthorField extends StatelessWidget {
-  final TextEditingController controller;
-
-  const AuthorField({super.key, required this.controller});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Author',
-          style: Theme.of(context)
-              .textTheme
-              .headlineMedium
-              ?.copyWith(fontWeight: FontWeight.bold),
-        ),
-        TextField(
-          controller: controller,
-          decoration: InputDecoration(
-            hintText: 'Enter book\'s author',
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class SummaryField extends StatelessWidget {
-  final TextEditingController controller;
-
-  const SummaryField({super.key, required this.controller});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Summary',
-          style: Theme.of(context)
-              .textTheme
-              .headlineMedium
-              ?.copyWith(fontWeight: FontWeight.bold),
-        ),
-        SizedBox(height: 8),
-        TextField(
-          controller: controller,
-          decoration: InputDecoration(
-            border: OutlineInputBorder(),
-            hintText: 'Enter book\'s summary',
-            filled: true,
-            fillColor: Colors.white,
-          ),
-          maxLines: 6,
-        ),
-      ],
     );
   }
 }
