@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:libertad/data/models/author.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../screens/book_editor/author_search_delegate.dart';
+import '../screens/book_editor/authors_search_delegate.dart';
 
 part 'author_field_viewmodel.g.dart';
 

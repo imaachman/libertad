@@ -20,9 +20,26 @@ class AuthorsSearchPage extends ConsumerWidget {
 
     return authors.when(
       data: (data) => ListView.builder(
-        itemCount: data.length,
+        itemCount: data.length + 1,
         itemBuilder: (context, index) {
-          final Author author = data[index];
+          if (index == 0) {
+            return InkWell(
+              onTap: () => ref
+                  .read(authorsSearchViewModelProvider(query).notifier)
+                  .showAuthorCreationDialog(context, query),
+              child: ListTile(
+                // TODO: Replace with author image.
+                leading: const Icon(Icons.person_add_alt_rounded),
+                iconColor: Theme.of(context).colorScheme.primary,
+                title: Text('CREATE A NEW AUTHOR'),
+                titleTextStyle: Theme.of(context).textTheme.bodyLarge,
+                tileColor: Theme.of(context).colorScheme.primaryContainer,
+                subtitle: query.isNotEmpty ? Text(query.toUpperCase()) : null,
+                subtitleTextStyle: Theme.of(context).textTheme.labelSmall,
+              ),
+            );
+          }
+          final Author author = data[index - 1];
           return InkWell(
             onTap: () => close(context, author),
             child: ListTile(
