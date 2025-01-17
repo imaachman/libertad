@@ -17,21 +17,18 @@ class BookEditor extends ConsumerStatefulWidget {
 
 class _BookEditorState extends ConsumerState<BookEditor> {
   late final TextEditingController titleController;
-  late final TextEditingController authorController;
   late final TextEditingController summaryController;
 
   @override
   void initState() {
     super.initState();
     titleController = TextEditingController(text: 'title');
-    authorController = TextEditingController(text: 'author');
     summaryController = TextEditingController();
   }
 
   @override
   void dispose() {
     titleController.dispose();
-    authorController.dispose();
     summaryController.dispose();
     super.dispose();
   }
@@ -66,7 +63,6 @@ class _BookEditorState extends ConsumerState<BookEditor> {
                           width: buildColumn ? (maxWidth / 2) : (maxWidth / 3),
                           child: BookCover(
                             titleController: titleController,
-                            authorController: authorController,
                           ),
                         ),
                         SizedBox(
@@ -80,7 +76,7 @@ class _BookEditorState extends ConsumerState<BookEditor> {
                             children: [
                               TitleField(controller: titleController),
                               SizedBox(height: 16),
-                              AuthorField(controller: authorController),
+                              AuthorField(),
                             ],
                           ),
                         )

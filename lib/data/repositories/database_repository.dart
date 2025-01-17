@@ -74,4 +74,11 @@ class DatabaseRepository {
       await _isar.books.put(book);
     });
   }
+
+  Future<List<Author>> searchAuthors(String name) async {
+    return _isar.authors
+        .filter()
+        .nameContains(name, caseSensitive: false)
+        .findAll();
+  }
 }

@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:libertad/data/models/author.dart';
+import 'package:libertad/features/books/viewmodels/author_field_viewmodel.dart';
 
-class AuthorField extends StatelessWidget {
-  final TextEditingController controller;
-
-  const AuthorField({super.key, required this.controller});
+class AuthorField extends ConsumerWidget {
+  const AuthorField({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final AsyncValue<Author?> author = ref.watch(authorFieldViewModelProvider);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -18,16 +21,35 @@ class AuthorField extends StatelessWidget {
               ?.copyWith(fontWeight: FontWeight.bold),
         ),
         SizedBox(height: 4),
-        SearchAnchor.bar(
-          barElevation: WidgetStatePropertyAll(0),
-          barShape: WidgetStatePropertyAll(
-            ContinuousRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        TextButton(
+          style: ButtonStyle(
+            shape: WidgetStatePropertyAll(RoundedRectangleBorder()),
+            backgroundColor: WidgetStatePropertyAll(
+                Theme.of(context).colorScheme.surfaceContainerHighest),
           ),
-          barLeading: Icon(Icons.person),
-          barHintText: 'Select author',
-          suggestionsBuilder: (context, searchController) {
-            return [Text('data')];
-          },
+          onPressed: () => ref
+              .read(authorFieldViewModelProvider.notifier)
+              .showAuthorsSearchView(context),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 4),
+            width: double.infinity,
+            height: 56,
+            child: Center(
+                child: Row(
+              children: [
+                Icon(
+                  Icons.person,
+                  size: 24,
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
+                SizedBox(width: 16),
+                Text(
+                  author.value?.name ?? 'Select author',
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+              ],
+            )),
+          ),
         ),
       ],
     );
