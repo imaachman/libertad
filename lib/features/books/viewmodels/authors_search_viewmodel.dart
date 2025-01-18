@@ -8,14 +8,19 @@ part 'authors_search_viewmodel.g.dart';
 
 @riverpod
 class AuthorsSearchViewModel extends _$AuthorsSearchViewModel {
+  Author? newlyCreatedAuthor;
+
   @override
   Future<List<Author>> build(String query) =>
       DatabaseRepository.instance.searchAuthors(query);
 
-  void showAuthorCreationDialog(BuildContext context, String query) {
-    showAdaptiveDialog<Author>(
+  Future<void> showAuthorCreationDialog(
+      BuildContext context, String query) async {
+    final Author? result = await showAdaptiveDialog<Author>(
       context: context,
       builder: (context) => AuthorCreationDialog(query: query),
     );
+    if (result != null) newlyCreatedAuthor = result;
+    ref.notifyListeners();
   }
 }

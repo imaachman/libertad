@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:libertad/data/models/author.dart';
 
 class AuthorCreationDialog extends ConsumerStatefulWidget {
   final String query;
@@ -69,8 +70,50 @@ class _AuthorCreationDialogState extends ConsumerState<AuthorCreationDialog> {
                 hintText: 'Enter name',
               ),
             ),
-            const SizedBox(height: 15),
-            BioField(controller: TextEditingController()),
+            const SizedBox(height: 16),
+            BioField(controller: bioController),
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: Text(
+                    'Cancel',
+                    style: Theme.of(context).textTheme.labelLarge,
+                  ),
+                ),
+                SizedBox(width: 16),
+                TextButton(
+                  style: ButtonStyle(
+                    shape: WidgetStatePropertyAll(RoundedRectangleBorder()),
+                    backgroundColor: WidgetStatePropertyAll(
+                      Theme.of(context).primaryColor,
+                    ),
+                  ),
+                  onPressed: () {
+                    if (nameController.text.isEmpty ||
+                        bioController.text.isEmpty) {
+                      return;
+                    }
+                    Navigator.pop<Author>(
+                      context,
+                      Author(
+                        name: nameController.text,
+                        bio: bioController.text,
+                        books: [],
+                      ),
+                    );
+                  },
+                  child: Text(
+                    'Create Author',
+                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                          color: Theme.of(context).colorScheme.onPrimary,
+                        ),
+                  ),
+                ),
+              ],
+            )
           ],
         ),
       ),

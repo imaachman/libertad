@@ -18,15 +18,22 @@ class AuthorsSearchPage extends ConsumerWidget {
     final AsyncValue<List<Author>> authors =
         ref.watch(authorsSearchViewModelProvider(query));
 
+    final Author? newlyAddedAuthor = ref
+        .watch(authorsSearchViewModelProvider(query).notifier)
+        .newlyCreatedAuthor;
+
     return authors.when(
-      data: (data) => ListView.builder(
-        itemCount: data.length + 1,
-        itemBuilder: (context, index) {
-          if (index == 0) {
-            return InkWell(
-              onTap: () => ref
-                  .read(authorsSearchViewModelProvider(query).notifier)
-                  .showAuthorCreationDialog(context, query),
+      data: (data) => Column(
+        children: [
+          InkWell(
+            onTap: () => ref
+                .read(authorsSearchViewModelProvider(query).notifier)
+                .showAuthorCreationDialog(context, query),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.primaryContainer,
+                boxShadow: [BoxShadow(offset: Offset(0, -10), blurRadius: 10)],
+              ),
               child: ListTile(
                 // TODO: Replace with author image.
                 leading: const Icon(Icons.person_add_alt_rounded),
@@ -37,21 +44,40 @@ class AuthorsSearchPage extends ConsumerWidget {
                 subtitle: query.isNotEmpty ? Text(query.toUpperCase()) : null,
                 subtitleTextStyle: Theme.of(context).textTheme.labelSmall,
               ),
-            );
-          }
-          final Author author = data[index - 1];
-          return InkWell(
-            onTap: () => close(context, author),
-            child: ListTile(
-              // TODO: Replace with author image.
-              leading: const Icon(Icons.person),
-              title: Text(author.name),
-              titleTextStyle: Theme.of(context).textTheme.bodyLarge,
-              subtitle: Text('author of "${author.books.first}"'),
-              subtitleTextStyle: Theme.of(context).textTheme.labelSmall,
             ),
-          );
-        },
+          ),
+          Expanded(
+            child: ListView(
+              children: [
+                if (newlyAddedAuthor != null)
+                  InkWell(
+                    onTap: () => close(context, newlyAddedAuthor),
+                    child: ListTile(
+                      // TODO: Replace with author image.
+                      leading: const Icon(Icons.person),
+                      title: Text(newlyAddedAuthor.name),
+                      titleTextStyle: Theme.of(context).textTheme.bodyLarge,
+                      subtitle: Text('newly created author'),
+                      subtitleTextStyle: Theme.of(context).textTheme.labelSmall,
+                    ),
+                  ),
+                ...data.map(
+                  (author) => InkWell(
+                    onTap: () => close(context, author),
+                    child: ListTile(
+                      // TODO: Replace with author image.
+                      leading: const Icon(Icons.person),
+                      title: Text(author.name),
+                      titleTextStyle: Theme.of(context).textTheme.bodyLarge,
+                      subtitle: Text('author of "${author.books.first}"'),
+                      subtitleTextStyle: Theme.of(context).textTheme.labelSmall,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
       error: (error, stacktrace) =>
           Center(child: Text('Something unexpected has occured')),
