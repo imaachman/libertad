@@ -24,7 +24,7 @@ class AuthorListTile extends StatelessWidget {
       ),
       title: Text(author.name),
       titleTextStyle: Theme.of(context).textTheme.bodyLarge,
-      subtitle: Text('author of "${author.books.first}"'),
+      subtitle: Text('author of "${author.books.first.title}"'),
       subtitleTextStyle: Theme.of(context).textTheme.labelSmall,
     );
   }

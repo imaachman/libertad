@@ -34,7 +34,7 @@ class BookListTile extends StatelessWidget {
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('by ${book.author}'),
+            Text('by ${book.author.value?.name}'),
             Wrap(
               children: [
                 Text('Released: ${book.releaseDate.year}'),

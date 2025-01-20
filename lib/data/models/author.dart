@@ -1,17 +1,27 @@
 import 'package:isar/isar.dart';
+import 'package:libertad/data/models/book.dart';
 
 part 'author.g.dart';
 
 @collection
 class Author {
-  final Id id = Isar.autoIncrement;
+  Id id = Isar.autoIncrement;
   final String name;
   final String bio;
-  final List<String> books;
+  @Backlink(to: 'author')
+  final IsarLinks<Book> books = IsarLinks<Book>();
 
   Author({
     required this.name,
     required this.bio,
-    required this.books,
   });
+
+  Author copyWith({
+    String? name,
+    String? bio,
+  }) =>
+      Author(
+        name: name ?? this.name,
+        bio: bio ?? this.bio,
+      );
 }

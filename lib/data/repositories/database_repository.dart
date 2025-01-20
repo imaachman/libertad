@@ -53,20 +53,27 @@ class DatabaseRepository {
   Future<void> resetDatabase() async {
     await _isar.writeTxn(() async {
       await _isar.clear();
-      await _isar.books.putAll(mockBooks);
-      await _isar.authors.putAll(mockAuthors);
+      for (int index = 0; index < mockBooks.length; index++) {
+        // Need to create a new copy of the [Book] and [Author] object every
+        // time because otherwise we'll reassigning already initialized links
+        // to different objects. And it is illegal to move a link to another
+        // object.
+        final Book book = mockBooks[index].copyWith();
+        final Author author = mockAuthors[index].copyWith();
+        book.author.value = author;
+        await _isar.books.put(book);
+        await _isar.authors.put(author);
+        await book.author.save();
+        await author.books.save();
+      }
     });
   }
 
   /// Returns all the books in the collection.
-  Future<List<Book>> getAllBooks() {
-    return _isar.books.where().findAll();
-  }
+  Future<List<Book>> getAllBooks() => _isar.books.where().findAll();
 
   /// Returns all the authors in the collection.
-  Future<List<Author>> getAllAuthors() {
-    return _isar.authors.where().findAll();
-  }
+  Future<List<Author>> getAllAuthors() => _isar.authors.where().findAll();
 
   /// Adds a new book to the collection.
   Future<void> addBook(Book book) async {

@@ -3,7 +3,7 @@ import '../models/book.dart';
 List<Book> mockBooks = [
   Book(
     title: 'To Kill a Mockingbird',
-    author: 'Harper Lee',
+    // author: 'Harper Lee',
     genre: 'Fiction',
     releaseDate: DateTime(1960, 7, 11),
     summary:
@@ -14,7 +14,7 @@ List<Book> mockBooks = [
   ),
   Book(
     title: '1984',
-    author: 'George Orwell',
+    // author: 'George Orwell',
     genre: 'Dystopian',
     releaseDate: DateTime(1949, 6, 8),
     summary:
@@ -25,7 +25,7 @@ List<Book> mockBooks = [
   ),
   Book(
     title: 'The Great Gatsby',
-    author: 'F. Scott Fitzgerald',
+    // author: 'F. Scott Fitzgerald',
     genre: 'Classic',
     releaseDate: DateTime(1925, 4, 10),
     summary:
@@ -36,7 +36,7 @@ List<Book> mockBooks = [
   ),
   Book(
     title: 'The Catcher in the Rye',
-    author: 'J.D. Salinger',
+    // author: 'J.D. Salinger',
     genre: 'Fiction',
     releaseDate: DateTime(1951, 7, 16),
     summary:
@@ -47,7 +47,7 @@ List<Book> mockBooks = [
   ),
   Book(
     title: 'Pride and Prejudice',
-    author: 'Jane Austen',
+    // author: 'Jane Austen',
     genre: 'Romance',
     releaseDate: DateTime(1813, 1, 28),
     summary:
@@ -58,7 +58,7 @@ List<Book> mockBooks = [
   ),
   Book(
     title: 'The Hobbit',
-    author: 'J.R.R. Tolkien',
+    // author: 'J.R.R. Tolkien',
     genre: 'Fantasy',
     releaseDate: DateTime(1937, 9, 21),
     summary:
@@ -69,7 +69,7 @@ List<Book> mockBooks = [
   ),
   Book(
     title: 'The Alchemist',
-    author: 'Paulo Coelho',
+    // author: 'Paulo Coelho',
     genre: 'Adventure',
     releaseDate: DateTime(1988, 1, 1),
     summary: 'A mystical tale of self-discovery and following one\'s dreams.',
@@ -79,7 +79,7 @@ List<Book> mockBooks = [
   ),
   Book(
     title: 'The Road',
-    author: 'Cormac McCarthy',
+    // author: 'Cormac McCarthy',
     genre: 'Post-apocalyptic',
     releaseDate: DateTime(2006, 9, 26),
     summary:
@@ -90,7 +90,7 @@ List<Book> mockBooks = [
   ),
   Book(
     title: 'Sapiens: A Brief History of Humankind',
-    author: 'Yuval Noah Harari',
+    // author: 'Yuval Noah Harari',
     genre: 'Non-fiction',
     releaseDate: DateTime(2011, 2, 4),
     summary:
@@ -101,7 +101,7 @@ List<Book> mockBooks = [
   ),
   Book(
     title: 'Harry Potter and the Philosopher\'s Stone',
-    author: 'J.K. Rowling',
+    // author: 'J.K. Rowling',
     genre: 'Fantasy',
     releaseDate: DateTime(1997, 6, 26),
     summary: 'The magical story of a young wizard discovering his destiny.',
@@ -111,7 +111,7 @@ List<Book> mockBooks = [
   ),
   Book(
     title: 'The Book Thief',
-    author: 'Markus Zusak',
+    // author: 'Markus Zusak',
     genre: 'Historical Fiction',
     releaseDate: DateTime(2005, 3, 14),
     summary: 'A poignant story narrated by Death, set during World War II.',
@@ -121,7 +121,7 @@ List<Book> mockBooks = [
   ),
   Book(
     title: 'The Fault in Our Stars',
-    author: 'John Green',
+    // author: 'John Green',
     genre: 'Romance',
     releaseDate: DateTime(2012, 1, 10),
     summary:
@@ -132,7 +132,7 @@ List<Book> mockBooks = [
   ),
   Book(
     title: 'Dune',
-    author: 'Frank Herbert',
+    // author: 'Frank Herbert',
     genre: 'Science Fiction',
     releaseDate: DateTime(1965, 8, 1),
     summary: 'An epic tale of politics, religion, and power in a desert world.',
@@ -142,7 +142,7 @@ List<Book> mockBooks = [
   ),
   Book(
     title: 'Becoming',
-    author: 'Michelle Obama',
+    // author: 'Michelle Obama',
     genre: 'Memoir',
     releaseDate: DateTime(2018, 11, 13),
     summary:
@@ -153,7 +153,7 @@ List<Book> mockBooks = [
   ),
   Book(
     title: 'The Midnight Library',
-    author: 'Matt Haig',
+    // author: 'Matt Haig',
     genre: 'Fantasy',
     releaseDate: DateTime(2020, 8, 13),
     summary:

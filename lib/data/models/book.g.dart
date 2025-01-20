@@ -17,43 +17,38 @@ const BookSchema = CollectionSchema(
   name: r'Book',
   id: 4089735379470416465,
   properties: {
-    r'author': PropertySchema(
-      id: 0,
-      name: r'author',
-      type: IsarType.string,
-    ),
     r'coverImage': PropertySchema(
-      id: 1,
+      id: 0,
       name: r'coverImage',
       type: IsarType.string,
     ),
     r'genre': PropertySchema(
-      id: 2,
+      id: 1,
       name: r'genre',
       type: IsarType.string,
     ),
     r'issuedCopies': PropertySchema(
-      id: 3,
+      id: 2,
       name: r'issuedCopies',
       type: IsarType.long,
     ),
     r'releaseDate': PropertySchema(
-      id: 4,
+      id: 3,
       name: r'releaseDate',
       type: IsarType.dateTime,
     ),
     r'summary': PropertySchema(
-      id: 5,
+      id: 4,
       name: r'summary',
       type: IsarType.string,
     ),
     r'title': PropertySchema(
-      id: 6,
+      id: 5,
       name: r'title',
       type: IsarType.string,
     ),
     r'totalCopies': PropertySchema(
-      id: 7,
+      id: 6,
       name: r'totalCopies',
       type: IsarType.long,
     )
@@ -64,7 +59,14 @@ const BookSchema = CollectionSchema(
   deserializeProp: _bookDeserializeProp,
   idName: r'id',
   indexes: {},
-  links: {},
+  links: {
+    r'author': LinkSchema(
+      id: 3556842824856575488,
+      name: r'author',
+      target: r'Author',
+      single: true,
+    )
+  },
   embeddedSchemas: {},
   getId: _bookGetId,
   getLinks: _bookGetLinks,
@@ -78,7 +80,6 @@ int _bookEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
-  bytesCount += 3 + object.author.length * 3;
   bytesCount += 3 + object.coverImage.length * 3;
   bytesCount += 3 + object.genre.length * 3;
   bytesCount += 3 + object.summary.length * 3;
@@ -92,14 +93,13 @@ void _bookSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeString(offsets[0], object.author);
-  writer.writeString(offsets[1], object.coverImage);
-  writer.writeString(offsets[2], object.genre);
-  writer.writeLong(offsets[3], object.issuedCopies);
-  writer.writeDateTime(offsets[4], object.releaseDate);
-  writer.writeString(offsets[5], object.summary);
-  writer.writeString(offsets[6], object.title);
-  writer.writeLong(offsets[7], object.totalCopies);
+  writer.writeString(offsets[0], object.coverImage);
+  writer.writeString(offsets[1], object.genre);
+  writer.writeLong(offsets[2], object.issuedCopies);
+  writer.writeDateTime(offsets[3], object.releaseDate);
+  writer.writeString(offsets[4], object.summary);
+  writer.writeString(offsets[5], object.title);
+  writer.writeLong(offsets[6], object.totalCopies);
 }
 
 Book _bookDeserialize(
@@ -109,15 +109,15 @@ Book _bookDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = Book(
-    author: reader.readString(offsets[0]),
-    coverImage: reader.readString(offsets[1]),
-    genre: reader.readString(offsets[2]),
-    issuedCopies: reader.readLong(offsets[3]),
-    releaseDate: reader.readDateTime(offsets[4]),
-    summary: reader.readString(offsets[5]),
-    title: reader.readString(offsets[6]),
-    totalCopies: reader.readLong(offsets[7]),
+    coverImage: reader.readString(offsets[0]),
+    genre: reader.readString(offsets[1]),
+    issuedCopies: reader.readLong(offsets[2]),
+    releaseDate: reader.readDateTime(offsets[3]),
+    summary: reader.readString(offsets[4]),
+    title: reader.readString(offsets[5]),
+    totalCopies: reader.readLong(offsets[6]),
   );
+  object.id = id;
   return object;
 }
 
@@ -133,16 +133,14 @@ P _bookDeserializeProp<P>(
     case 1:
       return (reader.readString(offset)) as P;
     case 2:
-      return (reader.readString(offset)) as P;
-    case 3:
       return (reader.readLong(offset)) as P;
-    case 4:
+    case 3:
       return (reader.readDateTime(offset)) as P;
+    case 4:
+      return (reader.readString(offset)) as P;
     case 5:
       return (reader.readString(offset)) as P;
     case 6:
-      return (reader.readString(offset)) as P;
-    case 7:
       return (reader.readLong(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -154,10 +152,13 @@ Id _bookGetId(Book object) {
 }
 
 List<IsarLinkBase<dynamic>> _bookGetLinks(Book object) {
-  return [];
+  return [object.author];
 }
 
-void _bookAttach(IsarCollection<dynamic> col, Id id, Book object) {}
+void _bookAttach(IsarCollection<dynamic> col, Id id, Book object) {
+  object.id = id;
+  object.author.attach(col, col.isar.collection<Author>(), r'author', id);
+}
 
 extension BookQueryWhereSort on QueryBuilder<Book, Book, QWhere> {
   QueryBuilder<Book, Book, QAfterWhere> anyId() {
@@ -235,134 +236,6 @@ extension BookQueryWhere on QueryBuilder<Book, Book, QWhereClause> {
 }
 
 extension BookQueryFilter on QueryBuilder<Book, Book, QFilterCondition> {
-  QueryBuilder<Book, Book, QAfterFilterCondition> authorEqualTo(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'author',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Book, Book, QAfterFilterCondition> authorGreaterThan(
-    String value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'author',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Book, Book, QAfterFilterCondition> authorLessThan(
-    String value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'author',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Book, Book, QAfterFilterCondition> authorBetween(
-    String lower,
-    String upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'author',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Book, Book, QAfterFilterCondition> authorStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'author',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Book, Book, QAfterFilterCondition> authorEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'author',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Book, Book, QAfterFilterCondition> authorContains(String value,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'author',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Book, Book, QAfterFilterCondition> authorMatches(String pattern,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'author',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Book, Book, QAfterFilterCondition> authorIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'author',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<Book, Book, QAfterFilterCondition> authorIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'author',
-        value: '',
-      ));
-    });
-  }
-
   QueryBuilder<Book, Book, QAfterFilterCondition> coverImageEqualTo(
     String value, {
     bool caseSensitive = true,
@@ -1091,21 +964,22 @@ extension BookQueryFilter on QueryBuilder<Book, Book, QFilterCondition> {
 
 extension BookQueryObject on QueryBuilder<Book, Book, QFilterCondition> {}
 
-extension BookQueryLinks on QueryBuilder<Book, Book, QFilterCondition> {}
+extension BookQueryLinks on QueryBuilder<Book, Book, QFilterCondition> {
+  QueryBuilder<Book, Book, QAfterFilterCondition> author(
+      FilterQuery<Author> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.link(q, r'author');
+    });
+  }
+
+  QueryBuilder<Book, Book, QAfterFilterCondition> authorIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'author', 0, true, 0, true);
+    });
+  }
+}
 
 extension BookQuerySortBy on QueryBuilder<Book, Book, QSortBy> {
-  QueryBuilder<Book, Book, QAfterSortBy> sortByAuthor() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'author', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Book, Book, QAfterSortBy> sortByAuthorDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'author', Sort.desc);
-    });
-  }
-
   QueryBuilder<Book, Book, QAfterSortBy> sortByCoverImage() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'coverImage', Sort.asc);
@@ -1192,18 +1066,6 @@ extension BookQuerySortBy on QueryBuilder<Book, Book, QSortBy> {
 }
 
 extension BookQuerySortThenBy on QueryBuilder<Book, Book, QSortThenBy> {
-  QueryBuilder<Book, Book, QAfterSortBy> thenByAuthor() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'author', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Book, Book, QAfterSortBy> thenByAuthorDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'author', Sort.desc);
-    });
-  }
-
   QueryBuilder<Book, Book, QAfterSortBy> thenByCoverImage() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'coverImage', Sort.asc);
@@ -1302,13 +1164,6 @@ extension BookQuerySortThenBy on QueryBuilder<Book, Book, QSortThenBy> {
 }
 
 extension BookQueryWhereDistinct on QueryBuilder<Book, Book, QDistinct> {
-  QueryBuilder<Book, Book, QDistinct> distinctByAuthor(
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'author', caseSensitive: caseSensitive);
-    });
-  }
-
   QueryBuilder<Book, Book, QDistinct> distinctByCoverImage(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -1360,12 +1215,6 @@ extension BookQueryProperty on QueryBuilder<Book, Book, QQueryProperty> {
   QueryBuilder<Book, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
-    });
-  }
-
-  QueryBuilder<Book, String, QQueryOperations> authorProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'author');
     });
   }
 

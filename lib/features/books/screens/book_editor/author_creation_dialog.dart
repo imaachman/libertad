@@ -101,7 +101,6 @@ class _AuthorCreationDialogState extends ConsumerState<AuthorCreationDialog> {
                       Author(
                         name: nameController.text,
                         bio: bioController.text,
-                        books: [],
                       ),
                     );
                   },
