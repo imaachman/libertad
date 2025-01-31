@@ -31,7 +31,12 @@ class TotalCopiesField extends ConsumerWidget {
               filled: true,
               fillColor: Colors.white,
               errorMaxLines: 2,
+              prefixIcon: Icon(
+                Icons.my_library_books_rounded,
+                size: 20,
+              ),
             ),
+            textAlign: TextAlign.right,
             keyboardType: TextInputType.number,
             inputFormatters: [FilteringTextInputFormatter.digitsOnly],
             validator: ref

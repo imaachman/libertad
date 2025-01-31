@@ -157,6 +157,8 @@ class BookEditorViewModel extends _$BookEditorViewModel {
     totalCopies = int.parse(value);
   }
 
+  /// Checks if the input for total copies is valid.
+  /// Returned string is displayed to the user as feedback.
   String? validateTotalCopies(String? value) {
     if (value == null || value.isEmpty) return 'Add at least one copy';
     return null;
