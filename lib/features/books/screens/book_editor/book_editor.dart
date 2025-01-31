@@ -20,21 +20,7 @@ class BookEditor extends ConsumerStatefulWidget {
 }
 
 class _BookEditorState extends ConsumerState<BookEditor> {
-  late final TextEditingController titleController;
-
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-
-  @override
-  void initState() {
-    super.initState();
-    titleController = TextEditingController(text: 'title');
-  }
-
-  @override
-  void dispose() {
-    titleController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,9 +54,7 @@ class _BookEditorState extends ConsumerState<BookEditor> {
                           SizedBox(
                             width:
                                 buildColumn ? (maxWidth / 2) : (maxWidth / 3),
-                            child: BookCover(
-                              titleController: titleController,
-                            ),
+                            child: BookCover(),
                           ),
                           SizedBox(
                             width: buildColumn ? null : gap,
@@ -81,7 +65,7 @@ class _BookEditorState extends ConsumerState<BookEditor> {
                                 buildColumn ? maxWidth : (maxWidth / 1.5 - gap),
                             child: Column(
                               children: [
-                                TitleField(controller: titleController),
+                                TitleField(),
                                 SizedBox(height: 16),
                                 AuthorField(),
                               ],

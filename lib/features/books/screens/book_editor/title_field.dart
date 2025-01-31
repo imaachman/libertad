@@ -3,9 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:libertad/features/books/viewmodels/book_editor_viewmodel.dart';
 
 class TitleField extends ConsumerWidget {
-  final TextEditingController controller;
-
-  const TitleField({super.key, required this.controller});
+  const TitleField({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -20,7 +18,6 @@ class TitleField extends ConsumerWidget {
               ?.copyWith(fontWeight: FontWeight.bold),
         ),
         TextFormField(
-          controller: controller,
           decoration: InputDecoration(
             hintText: 'Enter book\'s title',
           ),

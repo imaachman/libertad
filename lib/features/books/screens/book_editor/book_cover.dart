@@ -2,36 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:libertad/data/models/author.dart';
 import 'package:libertad/features/books/viewmodels/author_field_viewmodel.dart';
+import 'package:libertad/features/books/viewmodels/book_editor_viewmodel.dart';
 
-class BookCover extends StatefulWidget {
-  final TextEditingController titleController;
-
-  const BookCover({
-    super.key,
-    required this.titleController,
-  });
+class BookCover extends ConsumerWidget {
+  const BookCover({super.key});
 
   @override
-  State<BookCover> createState() => _BookCoverState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    // Listen to [BookEditorViewModel] provider to update the UI with the book's
+    // title.
+    ref.watch(bookEditorViewModelProvider());
 
-class _BookCoverState extends State<BookCover> {
-  @override
-  void initState() {
-    super.initState();
-    widget.titleController.addListener(rebuild);
-  }
-
-  @override
-  void dispose() {
-    widget.titleController.removeListener(rebuild);
-    super.dispose();
-  }
-
-  void rebuild() => setState(() {});
-
-  @override
-  Widget build(BuildContext context) {
     return AspectRatio(
       aspectRatio: 10 / 16,
       child: Container(
@@ -45,7 +26,7 @@ class _BookCoverState extends State<BookCover> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              widget.titleController.text,
+              ref.watch(bookEditorViewModelProvider().notifier).title,
               style: Theme.of(context).textTheme.headlineSmall,
               maxLines: 3,
               overflow: TextOverflow.ellipsis,

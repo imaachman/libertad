@@ -95,6 +95,7 @@ class BookEditorViewModel extends _$BookEditorViewModel {
   /// Updates [title].
   void setTitle(String value) {
     title = value;
+    ref.notifyListeners();
   }
 
   /// Checks if the input for book's title is valid.
