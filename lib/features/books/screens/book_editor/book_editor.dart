@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:libertad/core/constants/breakpoints.dart';
+import 'package:libertad/features/books/screens/book_editor/genre_field.dart';
 import 'package:libertad/features/books/viewmodels/book_editor_viewmodel.dart';
 import 'package:libertad/widgets/row_column_switch.dart';
 
@@ -89,10 +90,12 @@ class _BookEditorState extends ConsumerState<BookEditor> {
                   }),
                   SizedBox(height: 16),
                   SummaryField(controller: summaryController),
+                  SizedBox(height: 16),
+                  GenreField(),
                   SizedBox(height: 32),
                   TextButton(
                     onPressed: () => ref
-                        .read(bookEditorViewModelProvider.notifier)
+                        .read(bookEditorViewModelProvider().notifier)
                         .addBook(context, formKey),
                     style: ButtonStyle(
                       shape: WidgetStatePropertyAll(RoundedRectangleBorder(
@@ -122,13 +125,7 @@ class _BookEditorState extends ConsumerState<BookEditor> {
                       },
                     ),
                   ),
-                  // SizedBox(height: 16),
-                  // TextField(
-                  //   decoration: InputDecoration(
-                  //     border: OutlineInputBorder(),
-                  //     hintText: 'Enter genre',
-                  //   ),
-                  // ),
+
                   // SizedBox(height: 16),
                   // OutlinedButton(
                   //   child: Text('Select release date'),

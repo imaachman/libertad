@@ -1,10 +1,12 @@
+import 'package:libertad/data/models/genre.dart';
+
 import '../models/book.dart';
 
 List<Book> mockBooks = [
   Book(
     title: 'To Kill a Mockingbird',
     // author: 'Harper Lee',
-    genre: 'Fiction',
+    genre: Genre.fiction,
     releaseDate: DateTime(1960, 7, 11),
     summary:
         'A gripping, heart-wrenching tale of racial injustice and childhood innocence in the Deep South.',
@@ -15,7 +17,7 @@ List<Book> mockBooks = [
   Book(
     title: '1984',
     // author: 'George Orwell',
-    genre: 'Dystopian',
+    genre: Genre.dystopian,
     releaseDate: DateTime(1949, 6, 8),
     summary:
         'A haunting depiction of a dystopian future under a totalitarian regime.',
@@ -26,7 +28,7 @@ List<Book> mockBooks = [
   Book(
     title: 'The Great Gatsby',
     // author: 'F. Scott Fitzgerald',
-    genre: 'Classic',
+    genre: Genre.classic,
     releaseDate: DateTime(1925, 4, 10),
     summary:
         'A story of the Jazz Age, exploring themes of wealth, love, and the American Dream.',
@@ -37,7 +39,7 @@ List<Book> mockBooks = [
   Book(
     title: 'The Catcher in the Rye',
     // author: 'J.D. Salinger',
-    genre: 'Fiction',
+    genre: Genre.fiction,
     releaseDate: DateTime(1951, 7, 16),
     summary:
         'The journey of a disenchanted teenager grappling with the loss of innocence and societal norms.',
@@ -48,7 +50,7 @@ List<Book> mockBooks = [
   Book(
     title: 'Pride and Prejudice',
     // author: 'Jane Austen',
-    genre: 'Romance',
+    genre: Genre.romance,
     releaseDate: DateTime(1813, 1, 28),
     summary:
         'A classic tale of love and misunderstandings set in the English countryside.',
@@ -59,7 +61,7 @@ List<Book> mockBooks = [
   Book(
     title: 'The Hobbit',
     // author: 'J.R.R. Tolkien',
-    genre: 'Fantasy',
+    genre: Genre.fantasy,
     releaseDate: DateTime(1937, 9, 21),
     summary:
         'A fantastical journey of Bilbo Baggins, who ventures into the unknown to help reclaim a lost kingdom.',
@@ -70,7 +72,7 @@ List<Book> mockBooks = [
   Book(
     title: 'The Alchemist',
     // author: 'Paulo Coelho',
-    genre: 'Adventure',
+    genre: Genre.adventure,
     releaseDate: DateTime(1988, 1, 1),
     summary: 'A mystical tale of self-discovery and following one\'s dreams.',
     coverImage: '',
@@ -80,7 +82,7 @@ List<Book> mockBooks = [
   Book(
     title: 'The Road',
     // author: 'Cormac McCarthy',
-    genre: 'Post-apocalyptic',
+    genre: Genre.postApocalyptic,
     releaseDate: DateTime(2006, 9, 26),
     summary:
         'A bleak yet profound journey of a father and son through a devastated landscape.',
@@ -91,7 +93,7 @@ List<Book> mockBooks = [
   Book(
     title: 'Sapiens: A Brief History of Humankind',
     // author: 'Yuval Noah Harari',
-    genre: 'Non-fiction',
+    genre: Genre.nonFiction,
     releaseDate: DateTime(2011, 2, 4),
     summary:
         'A deep dive into the history of humankind, exploring how we shaped the world.',
@@ -102,7 +104,7 @@ List<Book> mockBooks = [
   Book(
     title: 'Harry Potter and the Philosopher\'s Stone',
     // author: 'J.K. Rowling',
-    genre: 'Fantasy',
+    genre: Genre.fantasy,
     releaseDate: DateTime(1997, 6, 26),
     summary: 'The magical story of a young wizard discovering his destiny.',
     coverImage: '',
@@ -112,7 +114,7 @@ List<Book> mockBooks = [
   Book(
     title: 'The Book Thief',
     // author: 'Markus Zusak',
-    genre: 'Historical Fiction',
+    genre: Genre.historicalFiction,
     releaseDate: DateTime(2005, 3, 14),
     summary: 'A poignant story narrated by Death, set during World War II.',
     coverImage: '',
@@ -122,7 +124,7 @@ List<Book> mockBooks = [
   Book(
     title: 'The Fault in Our Stars',
     // author: 'John Green',
-    genre: 'Romance',
+    genre: Genre.romance,
     releaseDate: DateTime(2012, 1, 10),
     summary:
         'A heartbreaking yet uplifting story of two teens with cancer falling in love.',
@@ -133,7 +135,7 @@ List<Book> mockBooks = [
   Book(
     title: 'Dune',
     // author: 'Frank Herbert',
-    genre: 'Science Fiction',
+    genre: Genre.scienceFiction,
     releaseDate: DateTime(1965, 8, 1),
     summary: 'An epic tale of politics, religion, and power in a desert world.',
     coverImage: '',
@@ -143,7 +145,7 @@ List<Book> mockBooks = [
   Book(
     title: 'Becoming',
     // author: 'Michelle Obama',
-    genre: 'Memoir',
+    genre: Genre.memoir,
     releaseDate: DateTime(2018, 11, 13),
     summary:
         'A powerful and inspiring memoir from the former First Lady of the United States.',
@@ -154,7 +156,7 @@ List<Book> mockBooks = [
   Book(
     title: 'The Midnight Library',
     // author: 'Matt Haig',
-    genre: 'Fantasy',
+    genre: Genre.fantasy,
     releaseDate: DateTime(2020, 8, 13),
     summary:
         'A whimsical exploration of alternate lives through a library between life and death.',

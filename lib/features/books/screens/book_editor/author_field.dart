@@ -13,10 +13,10 @@ class AuthorField extends ConsumerWidget {
     final AsyncValue<Author?> author = ref.watch(authorFieldViewModelProvider);
 
     // Listen to the [BookEditorViewModel] to check if an author is selected.
-    ref.watch(bookEditorViewModelProvider);
+    ref.watch(bookEditorViewModelProvider());
     // Check if an author is selected.
     final bool authorNotSelected =
-        !ref.watch(bookEditorViewModelProvider.notifier).isAuthorSelected;
+        !ref.watch(bookEditorViewModelProvider().notifier).isAuthorSelected;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -59,7 +59,10 @@ class AuthorField extends ConsumerWidget {
                 SizedBox(width: 16),
                 Text(
                   author.value?.name ?? 'Select author',
-                  style: Theme.of(context).textTheme.bodyLarge,
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyLarge
+                      ?.copyWith(fontWeight: FontWeight.bold),
                 ),
               ],
             )),

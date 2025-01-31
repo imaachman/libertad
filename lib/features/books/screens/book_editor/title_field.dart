@@ -25,8 +25,8 @@ class TitleField extends ConsumerWidget {
             hintText: 'Enter book\'s title',
           ),
           validator:
-              ref.read(bookEditorViewModelProvider.notifier).validateTitle,
-          onChanged: ref.read(bookEditorViewModelProvider.notifier).setTitle,
+              ref.read(bookEditorViewModelProvider().notifier).validateTitle,
+          onChanged: ref.read(bookEditorViewModelProvider().notifier).setTitle,
         ),
       ],
     );

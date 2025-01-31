@@ -30,8 +30,9 @@ class SummaryField extends ConsumerWidget {
           ),
           maxLines: 6,
           validator:
-              ref.read(bookEditorViewModelProvider.notifier).validateSummary,
-          onChanged: ref.read(bookEditorViewModelProvider.notifier).setSummary,
+              ref.read(bookEditorViewModelProvider().notifier).validateSummary,
+          onChanged:
+              ref.read(bookEditorViewModelProvider().notifier).setSummary,
         ),
       ],
     );

@@ -25,7 +25,8 @@ const BookSchema = CollectionSchema(
     r'genre': PropertySchema(
       id: 1,
       name: r'genre',
-      type: IsarType.string,
+      type: IsarType.byte,
+      enumMap: _BookgenreEnumValueMap,
     ),
     r'issuedCopies': PropertySchema(
       id: 2,
@@ -81,7 +82,6 @@ int _bookEstimateSize(
 ) {
   var bytesCount = offsets.last;
   bytesCount += 3 + object.coverImage.length * 3;
-  bytesCount += 3 + object.genre.length * 3;
   bytesCount += 3 + object.summary.length * 3;
   bytesCount += 3 + object.title.length * 3;
   return bytesCount;
@@ -94,7 +94,7 @@ void _bookSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeString(offsets[0], object.coverImage);
-  writer.writeString(offsets[1], object.genre);
+  writer.writeByte(offsets[1], object.genre.index);
   writer.writeLong(offsets[2], object.issuedCopies);
   writer.writeDateTime(offsets[3], object.releaseDate);
   writer.writeString(offsets[4], object.summary);
@@ -110,7 +110,8 @@ Book _bookDeserialize(
 ) {
   final object = Book(
     coverImage: reader.readString(offsets[0]),
-    genre: reader.readString(offsets[1]),
+    genre: _BookgenreValueEnumMap[reader.readByteOrNull(offsets[1])] ??
+        Genre.fiction,
     issuedCopies: reader.readLong(offsets[2]),
     releaseDate: reader.readDateTime(offsets[3]),
     summary: reader.readString(offsets[4]),
@@ -131,7 +132,8 @@ P _bookDeserializeProp<P>(
     case 0:
       return (reader.readString(offset)) as P;
     case 1:
-      return (reader.readString(offset)) as P;
+      return (_BookgenreValueEnumMap[reader.readByteOrNull(offset)] ??
+          Genre.fiction) as P;
     case 2:
       return (reader.readLong(offset)) as P;
     case 3:
@@ -146,6 +148,33 @@ P _bookDeserializeProp<P>(
       throw IsarError('Unknown property with id $propertyId');
   }
 }
+
+const _BookgenreEnumValueMap = {
+  'fiction': 0,
+  'nonFiction': 1,
+  'scienceFiction': 2,
+  'historicalFiction': 3,
+  'classic': 4,
+  'romance': 5,
+  'fantasy': 6,
+  'adventure': 7,
+  'dystopian': 8,
+  'postApocalyptic': 9,
+  'memoir': 10,
+};
+const _BookgenreValueEnumMap = {
+  0: Genre.fiction,
+  1: Genre.nonFiction,
+  2: Genre.scienceFiction,
+  3: Genre.historicalFiction,
+  4: Genre.classic,
+  5: Genre.romance,
+  6: Genre.fantasy,
+  7: Genre.adventure,
+  8: Genre.dystopian,
+  9: Genre.postApocalyptic,
+  10: Genre.memoir,
+};
 
 Id _bookGetId(Book object) {
   return object.id;
@@ -366,55 +395,46 @@ extension BookQueryFilter on QueryBuilder<Book, Book, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Book, Book, QAfterFilterCondition> genreEqualTo(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+  QueryBuilder<Book, Book, QAfterFilterCondition> genreEqualTo(Genre value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'genre',
         value: value,
-        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<Book, Book, QAfterFilterCondition> genreGreaterThan(
-    String value, {
+    Genre value, {
     bool include = false,
-    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
         property: r'genre',
         value: value,
-        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<Book, Book, QAfterFilterCondition> genreLessThan(
-    String value, {
+    Genre value, {
     bool include = false,
-    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
         property: r'genre',
         value: value,
-        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<Book, Book, QAfterFilterCondition> genreBetween(
-    String lower,
-    String upper, {
+    Genre lower,
+    Genre upper, {
     bool includeLower = true,
     bool includeUpper = true,
-    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
@@ -423,73 +443,6 @@ extension BookQueryFilter on QueryBuilder<Book, Book, QFilterCondition> {
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Book, Book, QAfterFilterCondition> genreStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'genre',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Book, Book, QAfterFilterCondition> genreEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'genre',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Book, Book, QAfterFilterCondition> genreContains(String value,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'genre',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Book, Book, QAfterFilterCondition> genreMatches(String pattern,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'genre',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Book, Book, QAfterFilterCondition> genreIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'genre',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<Book, Book, QAfterFilterCondition> genreIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'genre',
-        value: '',
       ));
     });
   }
@@ -1171,10 +1124,9 @@ extension BookQueryWhereDistinct on QueryBuilder<Book, Book, QDistinct> {
     });
   }
 
-  QueryBuilder<Book, Book, QDistinct> distinctByGenre(
-      {bool caseSensitive = true}) {
+  QueryBuilder<Book, Book, QDistinct> distinctByGenre() {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'genre', caseSensitive: caseSensitive);
+      return query.addDistinctBy(r'genre');
     });
   }
 
@@ -1224,7 +1176,7 @@ extension BookQueryProperty on QueryBuilder<Book, Book, QQueryProperty> {
     });
   }
 
-  QueryBuilder<Book, String, QQueryOperations> genreProperty() {
+  QueryBuilder<Book, Genre, QQueryOperations> genreProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'genre');
     });

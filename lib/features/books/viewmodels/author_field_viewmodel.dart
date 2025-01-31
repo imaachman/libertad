@@ -21,6 +21,6 @@ class AuthorFieldViewModel extends _$AuthorFieldViewModel {
 
     // Update [author] in [BookEditorViewModel] with [selectedAuthor] to add it
     // as the book's author.
-    ref.read(bookEditorViewModelProvider.notifier).setAuthor(selectedAuthor);
+    ref.read(bookEditorViewModelProvider().notifier).setAuthor(selectedAuthor);
   }
 }

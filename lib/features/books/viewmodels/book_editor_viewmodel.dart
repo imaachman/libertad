@@ -30,12 +30,15 @@ class BookEditorViewModel extends _$BookEditorViewModel {
   /// Whether an author is selected via [AuthorField] or not.
   bool isAuthorSelected = true;
 
+  /// Whether a genre is selected via [GenreField] or not.
+  bool isGenreSelected = true;
+
   @override
   Book? build({Book? book}) {
     if (book != null) {
       title = book.title;
       author = book.author.value;
-      genre = Genre.adventure;
+      genre = book.genre;
       releaseDate = book.releaseDate;
       summary = book.summary;
       totalCopies = book.totalCopies;
@@ -47,32 +50,46 @@ class BookEditorViewModel extends _$BookEditorViewModel {
   /// database.
   Future<void> addBook(
       BuildContext context, GlobalKey<FormState> formKey) async {
-    // Check if the inputs of all [TextFormField]s are valid.
-    if (formKey.currentState!.validate()) {
-      // Check if an author is selected.
-      if (author == null) {
-        // Mark author as unselected to show invalid state in [AuthorField].
-        isAuthorSelected = false;
-        ref.notifyListeners();
-        return;
-      }
-      // Create a new [Book] object with the values of form fields.
-      final Book newBook = Book(
-        title: title,
-        genre: Genre.adventure.name,
-        releaseDate: releaseDate,
-        summary: summary,
-        coverImage: 'coverImage',
-        totalCopies: totalCopies,
-        issuedCopies: 0,
-      )..author.value = author;
-      // Add the book to the database.
-      await DatabaseRepository.instance.addBook(newBook);
-      // Context mount check to prevent memory leaks.
-      if (!context.mounted) return;
-      // Navigate back from the book editor.
-      Navigator.of(context).pop();
+    // Check if an author is selected.
+    if (author == null) {
+      // Mark author as unselected to show invalid state in [AuthorField].
+      isAuthorSelected = false;
+      ref.notifyListeners();
     }
+
+    // Check if a genre is selected.
+    if (genre == null) {
+      // Mark genre as unselected to show invalid state in [GenreField].
+      isGenreSelected = false;
+      ref.notifyListeners();
+    }
+
+    // Check if the inputs of all [TextFormField]s are valid.
+    final bool isFormValid = formKey.currentState!.validate();
+
+    // If any of the inputs are invalid, do not add the book to the database.
+    if (!isAuthorSelected || !isGenreSelected || !isFormValid) {
+      return;
+    }
+
+    // Create a new [Book] object with the values of form fields.
+    final Book newBook = Book(
+      title: title,
+      genre: genre!,
+      releaseDate: releaseDate,
+      summary: summary,
+      coverImage: 'coverImage',
+      totalCopies: totalCopies,
+      issuedCopies: 0,
+    )..author.value = author;
+
+    // Add the book to the database.
+    await DatabaseRepository.instance.addBook(newBook);
+
+    // Context mount check to prevent memory leaks.
+    if (!context.mounted) return;
+    // Navigate back from the book editor.
+    Navigator.of(context).pop();
   }
 
   /// Updates [title].
@@ -99,6 +116,9 @@ class BookEditorViewModel extends _$BookEditorViewModel {
   /// Updates [genre].
   void setGenre(Genre value) {
     genre = value;
+    // Mark genre as selected.
+    isGenreSelected = true;
+    ref.notifyListeners();
   }
 
   /// Updates [releaseDate].

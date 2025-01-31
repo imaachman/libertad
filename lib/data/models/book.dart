@@ -1,5 +1,6 @@
 import 'package:isar/isar.dart';
 import 'package:libertad/data/models/author.dart';
+import 'package:libertad/data/models/genre.dart';
 
 part 'book.g.dart';
 
@@ -8,7 +9,8 @@ class Book {
   Id id = Isar.autoIncrement;
   final String title;
   final IsarLink<Author> author = IsarLink<Author>();
-  final String genre;
+  @enumerated
+  final Genre genre;
   final DateTime releaseDate;
   final String summary;
   final String coverImage;
@@ -27,7 +29,7 @@ class Book {
 
   Book copyWith({
     String? title,
-    String? genre,
+    Genre? genre,
     DateTime? releaseDate,
     String? summary,
     String? coverImage,

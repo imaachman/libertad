@@ -39,7 +39,7 @@ class BookListTile extends StatelessWidget {
               children: [
                 Text('Released: ${book.releaseDate.year}'),
                 const SizedBox(width: 12),
-                Text('Genre: ${book.genre}'),
+                Text('Genre: ${book.genre.name}'),
               ],
             )
           ],
