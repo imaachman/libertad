@@ -8,10 +8,11 @@ class GenreField extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // Listen to the [BookEditorViewModel] to check if a genre is selected.
+    // Listen to the [BookEditorViewModel] provider to check if a genre is
+    // selected and to show the selected genre in the UI.
     ref.watch(bookEditorViewModelProvider());
 
-    // Listen to the [BookEditorViewModel] to get the selected genre.
+    // Access [BookEditorViewModel] to get the selected genre.
     final BookEditorViewModel model =
         ref.watch(bookEditorViewModelProvider().notifier);
     // Check if a genre is selected.
@@ -20,7 +21,16 @@ class GenreField extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        Text(
+          'Genre',
+          style: Theme.of(context)
+              .textTheme
+              .headlineMedium
+              ?.copyWith(fontWeight: FontWeight.bold),
+        ),
+        SizedBox(height: 8),
         PopupMenuButton(
+          tooltip: 'Select genre',
           onSelected: model.setGenre,
           itemBuilder: (context) {
             return Genre.values.map((genre) {
@@ -31,7 +41,7 @@ class GenreField extends ConsumerWidget {
             }).toList();
           },
           child: Container(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
             decoration: BoxDecoration(
               color: Theme.of(context).colorScheme.surfaceContainerHighest,
               border: genreNotSelected
@@ -42,13 +52,17 @@ class GenreField extends ConsumerWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Icon(Icons.category, size: 24),
-                SizedBox(width: 16),
-                Text(
-                  model.genre?.name ?? 'Select genre',
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyLarge
-                      ?.copyWith(fontWeight: FontWeight.bold),
+                SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    model.genre?.name ?? 'Select genre',
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyLarge
+                        ?.copyWith(fontWeight: FontWeight.bold),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
               ],
             ),

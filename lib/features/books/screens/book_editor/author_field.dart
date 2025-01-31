@@ -29,23 +29,18 @@ class AuthorField extends ConsumerWidget {
               ?.copyWith(fontWeight: FontWeight.bold),
         ),
         SizedBox(height: 4),
-        TextButton(
-          style: ButtonStyle(
-            shape: WidgetStatePropertyAll(
-              RoundedRectangleBorder(
-                side: authorNotSelected
-                    ? BorderSide(color: Theme.of(context).colorScheme.error)
-                    : BorderSide.none,
-              ),
-            ),
-            backgroundColor: WidgetStatePropertyAll(
-                Theme.of(context).colorScheme.surfaceContainerHighest),
-          ),
-          onPressed: () => ref
+        InkWell(
+          onTap: () => ref
               .read(authorFieldViewModelProvider.notifier)
               .showAuthorsSearchView(context),
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 4),
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.surfaceContainerHighest,
+              border: authorNotSelected
+                  ? Border.all(color: Theme.of(context).colorScheme.error)
+                  : null,
+            ),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             width: double.infinity,
             height: 56,
             child: Center(
@@ -57,12 +52,15 @@ class AuthorField extends ConsumerWidget {
                   color: Theme.of(context).colorScheme.onSurface,
                 ),
                 SizedBox(width: 16),
-                Text(
-                  author.value?.name ?? 'Select author',
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyLarge
-                      ?.copyWith(fontWeight: FontWeight.bold),
+                Expanded(
+                  child: Text(
+                    author.value?.name ?? 'Select author',
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyLarge
+                        ?.copyWith(fontWeight: FontWeight.bold),
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
               ],
             )),

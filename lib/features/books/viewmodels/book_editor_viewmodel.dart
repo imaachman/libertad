@@ -121,9 +121,21 @@ class BookEditorViewModel extends _$BookEditorViewModel {
     ref.notifyListeners();
   }
 
-  /// Updates [releaseDate].
-  void setReleaseDate(DateTime value) {
-    releaseDate = value;
+  /// Opens date picker and selects the release date of the book.
+  Future<void> openDatePicker(BuildContext context) async {
+    // Show date picker dialog.
+    final DateTime? selectedDate = await showDatePicker(
+      context: context,
+      initialDate: releaseDate,
+      firstDate: DateTime(1900),
+      lastDate: DateTime.now(),
+    );
+
+    // If a date is selected, update the release date.
+    if (selectedDate != null) {
+      releaseDate = selectedDate;
+      ref.notifyListeners();
+    }
   }
 
   /// Updates [summary].
