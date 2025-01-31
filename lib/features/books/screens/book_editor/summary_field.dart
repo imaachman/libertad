@@ -3,9 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:libertad/features/books/viewmodels/book_editor_viewmodel.dart';
 
 class SummaryField extends ConsumerWidget {
-  final TextEditingController controller;
-
-  const SummaryField({super.key, required this.controller});
+  const SummaryField({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -21,7 +19,6 @@ class SummaryField extends ConsumerWidget {
         ),
         SizedBox(height: 8),
         TextFormField(
-          controller: controller,
           decoration: InputDecoration(
             border: OutlineInputBorder(),
             hintText: 'Enter book\'s summary',

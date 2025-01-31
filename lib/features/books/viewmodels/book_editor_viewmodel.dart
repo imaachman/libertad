@@ -151,7 +151,13 @@ class BookEditorViewModel extends _$BookEditorViewModel {
   }
 
   /// Updates [totalCopies].
-  void setTotalCopies(int value) {
-    totalCopies = value;
+  void setTotalCopies(String value) {
+    if (value.isEmpty) return;
+    totalCopies = int.parse(value);
+  }
+
+  String? validateTotalCopies(String? value) {
+    if (value == null || value.isEmpty) return 'Add at least one copy';
+    return null;
   }
 }

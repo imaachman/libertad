@@ -4,6 +4,7 @@ import 'package:libertad/core/constants/breakpoints.dart';
 import 'package:libertad/features/books/screens/book_editor/add_book_button.dart';
 import 'package:libertad/features/books/screens/book_editor/genre_field.dart';
 import 'package:libertad/features/books/screens/book_editor/release_date_field.dart';
+import 'package:libertad/features/books/screens/book_editor/total_copies_field.dart';
 import 'package:libertad/widgets/row_column_switch.dart';
 
 import 'author_field.dart';
@@ -20,7 +21,6 @@ class BookEditor extends ConsumerStatefulWidget {
 
 class _BookEditorState extends ConsumerState<BookEditor> {
   late final TextEditingController titleController;
-  late final TextEditingController summaryController;
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
@@ -28,13 +28,11 @@ class _BookEditorState extends ConsumerState<BookEditor> {
   void initState() {
     super.initState();
     titleController = TextEditingController(text: 'title');
-    summaryController = TextEditingController();
   }
 
   @override
   void dispose() {
     titleController.dispose();
-    summaryController.dispose();
     super.dispose();
   }
 
@@ -59,6 +57,7 @@ class _BookEditorState extends ConsumerState<BookEditor> {
                   final double gap = 16;
 
                   return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       RowColumnSwitch(
                         columnWhen: buildColumn,
@@ -90,9 +89,9 @@ class _BookEditorState extends ConsumerState<BookEditor> {
                           )
                         ],
                       ),
-                      SizedBox(height: 16),
-                      SummaryField(controller: summaryController),
-                      SizedBox(height: 16),
+                      SizedBox(height: 32),
+                      SummaryField(),
+                      SizedBox(height: 32),
                       RowColumnSwitch(
                         columnWhen: buildColumn,
                         crossAxisAlignment: buildColumn
@@ -115,27 +114,10 @@ class _BookEditorState extends ConsumerState<BookEditor> {
                           ),
                         ],
                       ),
+                      SizedBox(height: 16),
+                      TotalCopiesField(),
                       SizedBox(height: 32),
-                      AddBookButton(formKey: formKey),
-
-                      // SizedBox(height: 16),
-                      // SizedBox(
-                      //   width: 200,
-                      //   child: Row(
-                      //     children: [
-                      //       Expanded(
-                      //         child: Row(
-                      //           mainAxisSize: MainAxisSize.min,
-                      //           children: [
-                      //             Text('Total copies:'),
-                      //             TextField(
-                      //               decoration: InputDecoration(
-                      //                 border: OutlineInputBorder(),
-                      //               ),
-                      //             ),
-                      //           ],
-                      //         ),
-                      //       ),
+                      Center(child: AddBookButton(formKey: formKey)),
                     ],
                   );
                 },
