@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:libertad/data/models/author.dart';
+import 'package:libertad/features/books/viewmodels/book_editor_viewmodel.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../screens/book_editor/authors_search_delegate.dart';
@@ -12,10 +13,14 @@ class AuthorFieldViewModel extends _$AuthorFieldViewModel {
   Future<Author?> build() async => null;
 
   Future<void> showAuthorsSearchView(BuildContext context) async {
-    final Author? result = await showSearch<Author?>(
+    final Author? selectedAuthor = await showSearch<Author?>(
       context: context,
       delegate: AuthorsSearchDelegate(),
     );
-    if (result != null) state = AsyncData(result);
+    if (selectedAuthor != null) state = AsyncData(selectedAuthor);
+
+    // Update [author] in [BookEditorViewModel] with [selectedAuthor] to add it
+    // as the book's author.
+    ref.read(bookEditorViewModelProvider.notifier).setAuthor(selectedAuthor);
   }
 }

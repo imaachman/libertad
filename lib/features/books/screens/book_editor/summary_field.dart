@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:libertad/features/books/viewmodels/book_editor_viewmodel.dart';
 
-class SummaryField extends StatelessWidget {
+class SummaryField extends ConsumerWidget {
   final TextEditingController controller;
 
   const SummaryField({super.key, required this.controller});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -18,7 +20,7 @@ class SummaryField extends StatelessWidget {
               ?.copyWith(fontWeight: FontWeight.bold),
         ),
         SizedBox(height: 8),
-        TextField(
+        TextFormField(
           controller: controller,
           decoration: InputDecoration(
             border: OutlineInputBorder(),
@@ -27,6 +29,9 @@ class SummaryField extends StatelessWidget {
             fillColor: Colors.white,
           ),
           maxLines: 6,
+          validator:
+              ref.read(bookEditorViewModelProvider.notifier).validateSummary,
+          onChanged: ref.read(bookEditorViewModelProvider.notifier).setSummary,
         ),
       ],
     );

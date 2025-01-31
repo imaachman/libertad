@@ -79,6 +79,7 @@ class DatabaseRepository {
   Future<void> addBook(Book book) async {
     await _isar.writeTxn(() async {
       await _isar.books.put(book);
+      await book.author.save();
     });
   }
 
