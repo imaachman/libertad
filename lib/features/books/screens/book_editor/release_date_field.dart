@@ -49,7 +49,7 @@ class ReleaseDateField extends ConsumerWidget {
               ],
             ),
           ),
-          onTap: () => model.openDatePicker(context),
+          onTap: () => model.selectReleaseDate(context),
         ),
       ],
     );

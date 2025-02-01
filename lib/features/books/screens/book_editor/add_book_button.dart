@@ -19,21 +19,17 @@ class AddBookButton extends ConsumerWidget {
           Theme.of(context).primaryColor,
         ),
       ),
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          return SizedBox(
-            width: constraints.maxWidth / 2,
-            height: 48,
-            child: Center(
-              child: Text(
-                'Add Book',
-                style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                      color: Theme.of(context).colorScheme.onPrimary,
-                    ),
-              ),
-            ),
-          );
-        },
+      child: SizedBox(
+        height: 48,
+        child: Center(
+          child: Text(
+            'Add Book',
+            style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                  color: Theme.of(context).colorScheme.onPrimary,
+                  fontWeight: FontWeight.bold,
+                ),
+          ),
+        ),
       ),
     );
   }

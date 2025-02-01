@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:libertad/data/models/author.dart';
 import 'package:libertad/data/models/book.dart';
 import 'package:libertad/data/models/genre.dart';
 import 'package:libertad/data/repositories/database_repository.dart';
+import 'package:libertad/data/repositories/files_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'book_editor_viewmodel.g.dart';
@@ -24,6 +27,9 @@ class BookEditorViewModel extends _$BookEditorViewModel {
   /// Summary of the book.
   String summary = '';
 
+  /// Path to the cover image of the book.
+  String coverImage = '';
+
   /// Total copies of the book available in the library.
   int totalCopies = 1;
 
@@ -33,6 +39,10 @@ class BookEditorViewModel extends _$BookEditorViewModel {
   /// Whether a genre is selected via [GenreField] or not.
   bool isGenreSelected = true;
 
+  /// Temporary path to the cover image of the book. This is used to display the
+  /// book cover before the book is added to the database.
+  String temporaryCoverImage = '';
+
   @override
   Book? build({Book? book}) {
     if (book != null) {
@@ -41,6 +51,7 @@ class BookEditorViewModel extends _$BookEditorViewModel {
       genre = book.genre;
       releaseDate = book.releaseDate;
       summary = book.summary;
+      coverImage = book.coverImage;
       totalCopies = book.totalCopies;
     }
     return book;
@@ -72,13 +83,22 @@ class BookEditorViewModel extends _$BookEditorViewModel {
       return;
     }
 
+    // If a cover image has been selected, copy it to the app's documents
+    // directory and update [coverImage] with the new path.
+    if (temporaryCoverImage.isNotEmpty) {
+      final File copiedFile =
+          await FilesRepository.instance.copyImageFile(temporaryCoverImage);
+      // Update the cover image path to the new file path.
+      coverImage = copiedFile.path;
+    }
+
     // Create a new [Book] object with the values of form fields.
     final Book newBook = Book(
       title: title,
       genre: genre!,
       releaseDate: releaseDate,
       summary: summary,
-      coverImage: 'coverImage',
+      coverImage: coverImage,
       totalCopies: totalCopies,
       issuedCopies: 0,
     )..author.value = author;
@@ -114,6 +134,25 @@ class BookEditorViewModel extends _$BookEditorViewModel {
     ref.notifyListeners();
   }
 
+  /// Opens file picker to select a cover image for the book.
+  Future<void> selectCoverImage() async {
+    // Select an image file from the device.
+    final File? file = await FilesRepository.instance.selectImageFile();
+    // If no file is selected, return.
+    if (file == null) return;
+    // Get the path to the selected file and update [temporaryCoverImage] to
+    // display in [BookCover].
+    temporaryCoverImage = file.path;
+    ref.notifyListeners();
+  }
+
+  /// Clears the temporary cover image so that the default book cover is
+  /// displayed.
+  void clearCoverImage() {
+    temporaryCoverImage = '';
+    ref.notifyListeners();
+  }
+
   /// Updates [genre].
   void setGenre(Genre value) {
     genre = value;
@@ -123,7 +162,7 @@ class BookEditorViewModel extends _$BookEditorViewModel {
   }
 
   /// Opens date picker and selects the release date of the book.
-  Future<void> openDatePicker(BuildContext context) async {
+  Future<void> selectReleaseDate(BuildContext context) async {
     // Show date picker dialog.
     final DateTime? selectedDate = await showDatePicker(
       context: context,
