@@ -11,8 +11,8 @@ List<Book> mockBooks = [
     summary:
         'A gripping, heart-wrenching tale of racial injustice and childhood innocence in the Deep South.',
     coverImage: '',
-    totalCopies: 10,
-    issuedCopies: 4,
+    // totalCopies: 10,
+    // issuedCopies: 4,
   ),
   Book(
     title: '1984',
@@ -22,8 +22,8 @@ List<Book> mockBooks = [
     summary:
         'A haunting depiction of a dystopian future under a totalitarian regime.',
     coverImage: '',
-    totalCopies: 15,
-    issuedCopies: 10,
+    // totalCopies: 15,
+    // issuedCopies: 10,
   ),
   Book(
     title: 'The Great Gatsby',
@@ -33,8 +33,8 @@ List<Book> mockBooks = [
     summary:
         'A story of the Jazz Age, exploring themes of wealth, love, and the American Dream.',
     coverImage: '',
-    totalCopies: 8,
-    issuedCopies: 3,
+    // totalCopies: 8,
+    // issuedCopies: 3,
   ),
   Book(
     title: 'The Catcher in the Rye',
@@ -44,8 +44,8 @@ List<Book> mockBooks = [
     summary:
         'The journey of a disenchanted teenager grappling with the loss of innocence and societal norms.',
     coverImage: '',
-    totalCopies: 12,
-    issuedCopies: 7,
+    // totalCopies: 12,
+    // issuedCopies: 7,
   ),
   Book(
     title: 'Pride and Prejudice',
@@ -55,8 +55,8 @@ List<Book> mockBooks = [
     summary:
         'A classic tale of love and misunderstandings set in the English countryside.',
     coverImage: '',
-    totalCopies: 6,
-    issuedCopies: 2,
+    // totalCopies: 6,
+    // issuedCopies: 2,
   ),
   Book(
     title: 'The Hobbit',
@@ -66,8 +66,8 @@ List<Book> mockBooks = [
     summary:
         'A fantastical journey of Bilbo Baggins, who ventures into the unknown to help reclaim a lost kingdom.',
     coverImage: '',
-    totalCopies: 9,
-    issuedCopies: 5,
+    // totalCopies: 9,
+    // issuedCopies: 5,
   ),
   Book(
     title: 'The Alchemist',
@@ -76,8 +76,8 @@ List<Book> mockBooks = [
     releaseDate: DateTime(1988, 1, 1),
     summary: 'A mystical tale of self-discovery and following one\'s dreams.',
     coverImage: '',
-    totalCopies: 11,
-    issuedCopies: 6,
+    // totalCopies: 11,
+    // issuedCopies: 6,
   ),
   Book(
     title: 'The Road',
@@ -87,8 +87,8 @@ List<Book> mockBooks = [
     summary:
         'A bleak yet profound journey of a father and son through a devastated landscape.',
     coverImage: '',
-    totalCopies: 7,
-    issuedCopies: 4,
+    // totalCopies: 7,
+    // issuedCopies: 4,
   ),
   Book(
     title: 'Sapiens: A Brief History of Humankind',
@@ -98,8 +98,8 @@ List<Book> mockBooks = [
     summary:
         'A deep dive into the history of humankind, exploring how we shaped the world.',
     coverImage: '',
-    totalCopies: 10,
-    issuedCopies: 8,
+    // totalCopies: 10,
+    // issuedCopies: 8,
   ),
   Book(
     title: 'Harry Potter and the Philosopher\'s Stone',
@@ -108,8 +108,8 @@ List<Book> mockBooks = [
     releaseDate: DateTime(1997, 6, 26),
     summary: 'The magical story of a young wizard discovering his destiny.',
     coverImage: '',
-    totalCopies: 20,
-    issuedCopies: 18,
+    // totalCopies: 20,
+    // issuedCopies: 18,
   ),
   Book(
     title: 'The Book Thief',
@@ -118,8 +118,8 @@ List<Book> mockBooks = [
     releaseDate: DateTime(2005, 3, 14),
     summary: 'A poignant story narrated by Death, set during World War II.',
     coverImage: '',
-    totalCopies: 9,
-    issuedCopies: 5,
+    // totalCopies: 9,
+    // issuedCopies: 5,
   ),
   Book(
     title: 'The Fault in Our Stars',
@@ -129,8 +129,8 @@ List<Book> mockBooks = [
     summary:
         'A heartbreaking yet uplifting story of two teens with cancer falling in love.',
     coverImage: '',
-    totalCopies: 14,
-    issuedCopies: 9,
+    // totalCopies: 14,
+    // issuedCopies: 9,
   ),
   Book(
     title: 'Dune',
@@ -139,8 +139,8 @@ List<Book> mockBooks = [
     releaseDate: DateTime(1965, 8, 1),
     summary: 'An epic tale of politics, religion, and power in a desert world.',
     coverImage: '',
-    totalCopies: 13,
-    issuedCopies: 10,
+    // totalCopies: 13,
+    // issuedCopies: 10,
   ),
   Book(
     title: 'Becoming',
@@ -150,8 +150,8 @@ List<Book> mockBooks = [
     summary:
         'A powerful and inspiring memoir from the former First Lady of the United States.',
     coverImage: '',
-    totalCopies: 12,
-    issuedCopies: 7,
+    // totalCopies: 12,
+    // issuedCopies: 7,
   ),
   Book(
     title: 'The Midnight Library',
@@ -161,7 +161,7 @@ List<Book> mockBooks = [
     summary:
         'A whimsical exploration of alternate lives through a library between life and death.',
     coverImage: '',
-    totalCopies: 11,
-    issuedCopies: 6,
+    // totalCopies: 11,
+    // issuedCopies: 6,
   ),
 ];

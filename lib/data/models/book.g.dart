@@ -28,30 +28,20 @@ const BookSchema = CollectionSchema(
       type: IsarType.byte,
       enumMap: _BookgenreEnumValueMap,
     ),
-    r'issuedCopies': PropertySchema(
-      id: 2,
-      name: r'issuedCopies',
-      type: IsarType.long,
-    ),
     r'releaseDate': PropertySchema(
-      id: 3,
+      id: 2,
       name: r'releaseDate',
       type: IsarType.dateTime,
     ),
     r'summary': PropertySchema(
-      id: 4,
+      id: 3,
       name: r'summary',
       type: IsarType.string,
     ),
     r'title': PropertySchema(
-      id: 5,
+      id: 4,
       name: r'title',
       type: IsarType.string,
-    ),
-    r'totalCopies': PropertySchema(
-      id: 6,
-      name: r'totalCopies',
-      type: IsarType.long,
     )
   },
   estimateSize: _bookEstimateSize,
@@ -66,6 +56,13 @@ const BookSchema = CollectionSchema(
       name: r'author',
       target: r'Author',
       single: true,
+    ),
+    r'totalCopies': LinkSchema(
+      id: -6894184429194425030,
+      name: r'totalCopies',
+      target: r'BookCopy',
+      single: false,
+      linkName: r'book',
     )
   },
   embeddedSchemas: {},
@@ -95,11 +92,9 @@ void _bookSerialize(
 ) {
   writer.writeString(offsets[0], object.coverImage);
   writer.writeByte(offsets[1], object.genre.index);
-  writer.writeLong(offsets[2], object.issuedCopies);
-  writer.writeDateTime(offsets[3], object.releaseDate);
-  writer.writeString(offsets[4], object.summary);
-  writer.writeString(offsets[5], object.title);
-  writer.writeLong(offsets[6], object.totalCopies);
+  writer.writeDateTime(offsets[2], object.releaseDate);
+  writer.writeString(offsets[3], object.summary);
+  writer.writeString(offsets[4], object.title);
 }
 
 Book _bookDeserialize(
@@ -112,11 +107,9 @@ Book _bookDeserialize(
     coverImage: reader.readString(offsets[0]),
     genre: _BookgenreValueEnumMap[reader.readByteOrNull(offsets[1])] ??
         Genre.fiction,
-    issuedCopies: reader.readLong(offsets[2]),
-    releaseDate: reader.readDateTime(offsets[3]),
-    summary: reader.readString(offsets[4]),
-    title: reader.readString(offsets[5]),
-    totalCopies: reader.readLong(offsets[6]),
+    releaseDate: reader.readDateTime(offsets[2]),
+    summary: reader.readString(offsets[3]),
+    title: reader.readString(offsets[4]),
   );
   object.id = id;
   return object;
@@ -135,15 +128,11 @@ P _bookDeserializeProp<P>(
       return (_BookgenreValueEnumMap[reader.readByteOrNull(offset)] ??
           Genre.fiction) as P;
     case 2:
-      return (reader.readLong(offset)) as P;
-    case 3:
       return (reader.readDateTime(offset)) as P;
+    case 3:
+      return (reader.readString(offset)) as P;
     case 4:
       return (reader.readString(offset)) as P;
-    case 5:
-      return (reader.readString(offset)) as P;
-    case 6:
-      return (reader.readLong(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -181,12 +170,14 @@ Id _bookGetId(Book object) {
 }
 
 List<IsarLinkBase<dynamic>> _bookGetLinks(Book object) {
-  return [object.author];
+  return [object.author, object.totalCopies];
 }
 
 void _bookAttach(IsarCollection<dynamic> col, Id id, Book object) {
   object.id = id;
   object.author.attach(col, col.isar.collection<Author>(), r'author', id);
+  object.totalCopies
+      .attach(col, col.isar.collection<BookCopy>(), r'totalCopies', id);
 }
 
 extension BookQueryWhereSort on QueryBuilder<Book, Book, QWhere> {
@@ -491,59 +482,6 @@ extension BookQueryFilter on QueryBuilder<Book, Book, QFilterCondition> {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
         property: r'id',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-      ));
-    });
-  }
-
-  QueryBuilder<Book, Book, QAfterFilterCondition> issuedCopiesEqualTo(
-      int value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'issuedCopies',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<Book, Book, QAfterFilterCondition> issuedCopiesGreaterThan(
-    int value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'issuedCopies',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<Book, Book, QAfterFilterCondition> issuedCopiesLessThan(
-    int value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'issuedCopies',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<Book, Book, QAfterFilterCondition> issuedCopiesBetween(
-    int lower,
-    int upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'issuedCopies',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -860,59 +798,6 @@ extension BookQueryFilter on QueryBuilder<Book, Book, QFilterCondition> {
       ));
     });
   }
-
-  QueryBuilder<Book, Book, QAfterFilterCondition> totalCopiesEqualTo(
-      int value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'totalCopies',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<Book, Book, QAfterFilterCondition> totalCopiesGreaterThan(
-    int value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'totalCopies',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<Book, Book, QAfterFilterCondition> totalCopiesLessThan(
-    int value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'totalCopies',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<Book, Book, QAfterFilterCondition> totalCopiesBetween(
-    int lower,
-    int upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'totalCopies',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-      ));
-    });
-  }
 }
 
 extension BookQueryObject on QueryBuilder<Book, Book, QFilterCondition> {}
@@ -928,6 +813,62 @@ extension BookQueryLinks on QueryBuilder<Book, Book, QFilterCondition> {
   QueryBuilder<Book, Book, QAfterFilterCondition> authorIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.linkLength(r'author', 0, true, 0, true);
+    });
+  }
+
+  QueryBuilder<Book, Book, QAfterFilterCondition> totalCopies(
+      FilterQuery<BookCopy> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.link(q, r'totalCopies');
+    });
+  }
+
+  QueryBuilder<Book, Book, QAfterFilterCondition> totalCopiesLengthEqualTo(
+      int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'totalCopies', length, true, length, true);
+    });
+  }
+
+  QueryBuilder<Book, Book, QAfterFilterCondition> totalCopiesIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'totalCopies', 0, true, 0, true);
+    });
+  }
+
+  QueryBuilder<Book, Book, QAfterFilterCondition> totalCopiesIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'totalCopies', 0, false, 999999, true);
+    });
+  }
+
+  QueryBuilder<Book, Book, QAfterFilterCondition> totalCopiesLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'totalCopies', 0, true, length, include);
+    });
+  }
+
+  QueryBuilder<Book, Book, QAfterFilterCondition> totalCopiesLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'totalCopies', length, include, 999999, true);
+    });
+  }
+
+  QueryBuilder<Book, Book, QAfterFilterCondition> totalCopiesLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(
+          r'totalCopies', lower, includeLower, upper, includeUpper);
     });
   }
 }
@@ -954,18 +895,6 @@ extension BookQuerySortBy on QueryBuilder<Book, Book, QSortBy> {
   QueryBuilder<Book, Book, QAfterSortBy> sortByGenreDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'genre', Sort.desc);
-    });
-  }
-
-  QueryBuilder<Book, Book, QAfterSortBy> sortByIssuedCopies() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'issuedCopies', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Book, Book, QAfterSortBy> sortByIssuedCopiesDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'issuedCopies', Sort.desc);
     });
   }
 
@@ -1002,18 +931,6 @@ extension BookQuerySortBy on QueryBuilder<Book, Book, QSortBy> {
   QueryBuilder<Book, Book, QAfterSortBy> sortByTitleDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'title', Sort.desc);
-    });
-  }
-
-  QueryBuilder<Book, Book, QAfterSortBy> sortByTotalCopies() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'totalCopies', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Book, Book, QAfterSortBy> sortByTotalCopiesDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'totalCopies', Sort.desc);
     });
   }
 }
@@ -1055,18 +972,6 @@ extension BookQuerySortThenBy on QueryBuilder<Book, Book, QSortThenBy> {
     });
   }
 
-  QueryBuilder<Book, Book, QAfterSortBy> thenByIssuedCopies() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'issuedCopies', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Book, Book, QAfterSortBy> thenByIssuedCopiesDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'issuedCopies', Sort.desc);
-    });
-  }
-
   QueryBuilder<Book, Book, QAfterSortBy> thenByReleaseDate() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'releaseDate', Sort.asc);
@@ -1102,18 +1007,6 @@ extension BookQuerySortThenBy on QueryBuilder<Book, Book, QSortThenBy> {
       return query.addSortBy(r'title', Sort.desc);
     });
   }
-
-  QueryBuilder<Book, Book, QAfterSortBy> thenByTotalCopies() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'totalCopies', Sort.asc);
-    });
-  }
-
-  QueryBuilder<Book, Book, QAfterSortBy> thenByTotalCopiesDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'totalCopies', Sort.desc);
-    });
-  }
 }
 
 extension BookQueryWhereDistinct on QueryBuilder<Book, Book, QDistinct> {
@@ -1127,12 +1020,6 @@ extension BookQueryWhereDistinct on QueryBuilder<Book, Book, QDistinct> {
   QueryBuilder<Book, Book, QDistinct> distinctByGenre() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'genre');
-    });
-  }
-
-  QueryBuilder<Book, Book, QDistinct> distinctByIssuedCopies() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'issuedCopies');
     });
   }
 
@@ -1153,12 +1040,6 @@ extension BookQueryWhereDistinct on QueryBuilder<Book, Book, QDistinct> {
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'title', caseSensitive: caseSensitive);
-    });
-  }
-
-  QueryBuilder<Book, Book, QDistinct> distinctByTotalCopies() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'totalCopies');
     });
   }
 }
@@ -1182,12 +1063,6 @@ extension BookQueryProperty on QueryBuilder<Book, Book, QQueryProperty> {
     });
   }
 
-  QueryBuilder<Book, int, QQueryOperations> issuedCopiesProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'issuedCopies');
-    });
-  }
-
   QueryBuilder<Book, DateTime, QQueryOperations> releaseDateProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'releaseDate');
@@ -1203,12 +1078,6 @@ extension BookQueryProperty on QueryBuilder<Book, Book, QQueryProperty> {
   QueryBuilder<Book, String, QQueryOperations> titleProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'title');
-    });
-  }
-
-  QueryBuilder<Book, int, QQueryOperations> totalCopiesProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'totalCopies');
     });
   }
 }

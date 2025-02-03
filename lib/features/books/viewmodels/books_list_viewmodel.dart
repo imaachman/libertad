@@ -21,9 +21,4 @@ class BooksListViewModel extends _$BooksListViewModel {
     });
     return books;
   }
-
-  /// Adds a new book to the database.
-  Future<void> addBook(Book book) async {
-    await DatabaseRepository.instance.addBook(book);
-  }
 }

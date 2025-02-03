@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:isar/isar.dart';
 import 'package:libertad/data/mock/mock_authors.dart';
 import 'package:libertad/data/mock/mock_books.dart';
+import 'package:libertad/data/models/book_copy.dart';
+import 'package:libertad/data/models/borrower.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../models/author.dart';
@@ -27,7 +29,7 @@ class DatabaseRepository {
     final Directory directory = await getApplicationDocumentsDirectory();
     // Load Isar instance with the relevant collections.
     _isar = await Isar.open(
-      [BookSchema, AuthorSchema],
+      [BookSchema, AuthorSchema, BookCopySchema, BorrowerSchema],
       directory: directory.path,
     );
   }
@@ -76,10 +78,46 @@ class DatabaseRepository {
   Future<List<Author>> getAllAuthors() => _isar.authors.where().findAll();
 
   /// Adds a new book to the collection.
-  Future<void> addBook(Book book) async {
+  ///
+  /// [author] and [totalCopies] are required because they are [IsarLinks] and
+  /// we need to create them before adding them to the [Book] object.
+  ///
+  /// If the author is not present in the database, it will be added.
+  /// And [totalCopies] number of [BookCopy] objects will be created, added to
+  /// the [Book] object, and saved to the database.
+  Future<void> addBook(
+    Book book,
+    Author author,
+    int totalCopies,
+  ) async {
     await _isar.writeTxn(() async {
+      // Check if the author is already present in the database.
+      final Author? existingAuthor =
+          await _isar.authors.where().idEqualTo(author.id).findFirst();
+      final bool authorNotPresent = existingAuthor == null;
+      // If the author is not present, add it to the database.
+      if (authorNotPresent) await _isar.authors.put(author);
+      // Link the author to the book.
+      book.author.value = author;
+
+      // Create [totalCopies] number of [BookCopy] objects.
+      // Each copy will have a link to the book.
+      final List<BookCopy> copies = List.generate(
+        totalCopies,
+        (index) => BookCopy()..book.value = book,
+      );
+      // Add the copies to the database.
+      await _isar.bookCopys.putAll(copies);
+      // Link the copies set to the book.
+      book.totalCopies.addAll(copies);
+
+      // Add the book to the database.
       await _isar.books.put(book);
+
+      // Save the author and copies links.
+      // Always the last step, required to update the links in the database.
       await book.author.save();
+      await book.totalCopies.save();
     });
   }
 

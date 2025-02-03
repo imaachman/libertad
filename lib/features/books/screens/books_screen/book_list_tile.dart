@@ -117,7 +117,7 @@ class BookListTile extends StatelessWidget {
                       color: Theme.of(context).colorScheme.secondaryContainer,
                     ),
                     child: Text(
-                      'Issued: ${book.issuedCopies}',
+                      'Issued: ${book.issuedCopies.length}',
                       style: Theme.of(context).textTheme.labelSmall,
                     ),
                   ),
@@ -129,7 +129,7 @@ class BookListTile extends StatelessWidget {
                       color: Theme.of(context).colorScheme.tertiaryContainer,
                     ),
                     child: Text(
-                      'Total: ${book.totalCopies}',
+                      'Total: ${book.totalCopies.length}',
                       style: Theme.of(context).textTheme.labelSmall,
                     ),
                   ),

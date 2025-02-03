@@ -1,5 +1,6 @@
 import 'package:isar/isar.dart';
 import 'package:libertad/data/models/author.dart';
+import 'package:libertad/data/models/book_copy.dart';
 import 'package:libertad/data/models/genre.dart';
 
 part 'book.g.dart';
@@ -14,8 +15,12 @@ class Book {
   final DateTime releaseDate;
   final String summary;
   final String coverImage;
-  final int totalCopies;
-  final int issuedCopies;
+  @Backlink(to: 'book')
+  final IsarLinks<BookCopy> totalCopies = IsarLinks<BookCopy>();
+
+  @ignore
+  Set<BookCopy> get issuedCopies =>
+      totalCopies.where((copy) => copy.status == IssueStatus.issued).toSet();
 
   Book({
     required this.title,
@@ -23,8 +28,6 @@ class Book {
     required this.releaseDate,
     required this.summary,
     required this.coverImage,
-    required this.totalCopies,
-    required this.issuedCopies,
   });
 
   Book copyWith({
@@ -33,8 +36,6 @@ class Book {
     DateTime? releaseDate,
     String? summary,
     String? coverImage,
-    int? totalCopies,
-    int? issuedCopies,
   }) =>
       Book(
         title: title ?? this.title,
@@ -42,7 +43,5 @@ class Book {
         releaseDate: releaseDate ?? this.releaseDate,
         summary: summary ?? this.summary,
         coverImage: coverImage ?? this.coverImage,
-        totalCopies: totalCopies ?? this.totalCopies,
-        issuedCopies: issuedCopies ?? this.issuedCopies,
       );
 }

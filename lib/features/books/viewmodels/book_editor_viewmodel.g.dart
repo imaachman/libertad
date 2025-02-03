@@ -7,7 +7,7 @@ part of 'book_editor_viewmodel.dart';
 // **************************************************************************
 
 String _$bookEditorViewModelHash() =>
-    r'4b7a7012ffe5651d04a527374904e5da8357f2d5';
+    r'68b2682cd4db4cb7870c9eb739aeef2814bf2925';
 
 /// Copied from Dart SDK
 class _SystemHash {

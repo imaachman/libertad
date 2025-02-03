@@ -7,7 +7,7 @@ part of 'author_field_viewmodel.dart';
 // **************************************************************************
 
 String _$authorFieldViewModelHash() =>
-    r'2251252d948635e75bfd45a2fd174f884acef1d8';
+    r'c79e9dc4c9c40c3d93f6b19e0d874c2bf48354e3';
 
 /// See also [AuthorFieldViewModel].
 @ProviderFor(AuthorFieldViewModel)

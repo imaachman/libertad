@@ -52,7 +52,7 @@ class BookEditorViewModel extends _$BookEditorViewModel {
       releaseDate = book.releaseDate;
       summary = book.summary;
       coverImage = book.coverImage;
-      totalCopies = book.totalCopies;
+      totalCopies = book.totalCopies.length;
     }
     return book;
   }
@@ -99,12 +99,10 @@ class BookEditorViewModel extends _$BookEditorViewModel {
       releaseDate: releaseDate,
       summary: summary,
       coverImage: coverImage,
-      totalCopies: totalCopies,
-      issuedCopies: 0,
-    )..author.value = author;
+    );
 
     // Add the book to the database.
-    await DatabaseRepository.instance.addBook(newBook);
+    await DatabaseRepository.instance.addBook(newBook, author!, totalCopies);
 
     // Context mount check to prevent memory leaks.
     if (!context.mounted) return;
