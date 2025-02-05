@@ -102,10 +102,7 @@ class DatabaseRepository {
 
       // Create [totalCopies] number of [BookCopy] objects.
       // Each copy will have a link to the book.
-      final List<BookCopy> copies = List.generate(
-        totalCopies,
-        (index) => BookCopy()..book.value = book,
-      );
+      final List<BookCopy> copies = _generateCopies(book, totalCopies);
       // Add the copies to the database.
       await _isar.bookCopys.putAll(copies);
       // Link the copies set to the book.
@@ -121,10 +118,33 @@ class DatabaseRepository {
     });
   }
 
+  Future<bool> deleteBook(Book book) async {
+    // Get book's author.
+    final Author author = book.author.value!;
+    // This is author's only book in the library.
+    final bool authorsOnlyBook = author.books.length == 1;
+
+    return await _isar.writeTxn<bool>(() async {
+      // Delete author is this is their only book in the library.
+      if (authorsOnlyBook) {
+        await _isar.authors.delete(author.id);
+      }
+      // Delete the book from the database.
+      return await _isar.books.delete(book.id);
+    });
+  }
+
   Future<List<Author>> searchAuthors(String name) async {
     return _isar.authors
         .filter()
         .nameContains(name, caseSensitive: false)
         .findAll();
+  }
+
+  List<BookCopy> _generateCopies(Book book, int totalCopies) {
+    return List.generate(
+      totalCopies,
+      (index) => BookCopy()..book.value = book,
+    );
   }
 }
