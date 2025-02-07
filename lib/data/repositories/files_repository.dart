@@ -35,4 +35,16 @@ class FilesRepository {
     final File copiedFile = await File(originalImagePath).copy(newImagePath);
     return copiedFile;
   }
+
+  /// Delete the file from the app's documents directory.
+  Future<void> deleteFile(String path) => File(path).delete();
+
+  /// Replace the old file with the new file.
+  Future<String> replaceFile(String oldPath, String newPath) async {
+    // Delete the old file.
+    await deleteFile(oldPath);
+    // Create a copy of the new file.
+    final File copiedFile = await copyImageFile(newPath);
+    return copiedFile.path;
+  }
 }

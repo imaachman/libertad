@@ -118,6 +118,90 @@ class DatabaseRepository {
     });
   }
 
+  /// Updates an existing book in the collection.
+  ///
+  /// In case the author is changed:
+  /// 1. If the old author has only one book in the library, delete the author.
+  /// 2. If the new author is not present in the database, add it.
+  ///
+  /// In case the total copies are changed:
+  /// 1. If the new total copies are more than the old total copies, create the
+  ///   new copies and add them to the database.
+  /// 2. If the new total copies are less than the old total copies, delete the
+  ///   all the copies and replace them with the new copies. We don't want to
+  ///   update the existing copies because they might have been borrowed.
+  ///   TODO: Un-issue the borrowed copies before deletion.
+  Future<void> updateBook(
+      Book book, Author newAuthor, int newTotalCopies) async {
+    // Get the old author.
+    final Author oldAuthor = book.author.value!;
+    // If author updated.
+    final bool authorUpdated = oldAuthor != newAuthor;
+    // This is old author's only book in the library.
+    final bool oldAuthorsOnlyBook = oldAuthor.books.length == 1;
+
+    // If number of total copies has been changed.
+    final bool totalCopiesChanged = book.totalCopies.length != newTotalCopies;
+
+    await _isar.writeTxn(() async {
+      // If author updated.
+      if (authorUpdated) {
+        // Delete the old author if this is their only book in the library.
+        if (oldAuthorsOnlyBook) await _isar.authors.delete(oldAuthor.id);
+
+        // Check if the new author is already present in the database.
+        final Author? existingAuthor =
+            await _isar.authors.where().idEqualTo(newAuthor.id).findFirst();
+        final bool newAuthorNotPresent = existingAuthor == null;
+        // If the new author is not present, add it to the database.
+        if (newAuthorNotPresent) await _isar.authors.put(newAuthor);
+
+        // Link the new author to the book.
+        book.author.value = newAuthor;
+      }
+
+      // If the new number of total copies is more than the old, create and add
+      // the new copies to the database.
+      if (newTotalCopies > book.totalCopies.length) {
+        // Create the new number of [BookCopy] objects.
+        // Each copy will have a link to the book.
+        final List<BookCopy> newCopies = _generateCopies(
+          book,
+          newTotalCopies - book.totalCopies.length,
+        );
+        // Add the copies to the database.
+        await _isar.bookCopys.putAll(newCopies);
+        // Link the copies set to the book.
+        book.totalCopies.addAll(newCopies);
+      }
+      // If the new number of total copies is less than the old, delete all the
+      // copies and replace them with the new copies.
+      else if (newTotalCopies < book.totalCopies.length) {
+        // Delete old copies.
+        await _isar.bookCopys.deleteAll(
+          book.totalCopies.map((copy) => copy.id).toList(),
+        );
+        // Generate new copies.
+        final List<BookCopy> copies = _generateCopies(
+          book,
+          newTotalCopies,
+        );
+        // Add the copies to the database.
+        await _isar.bookCopys.putAll(copies);
+        // Link the copies set to the book.
+        book.totalCopies.addAll(copies);
+      }
+
+      // Update the book in the database.
+      await _isar.books.put(book);
+
+      // Save the author and copies links. Always the last step, required to
+      // update the links in the database.
+      if (authorUpdated) await book.author.save();
+      if (totalCopiesChanged) await book.totalCopies.save();
+    });
+  }
+
   Future<bool> deleteBook(Book book) async {
     // Get book's author.
     final Author author = book.author.value!;
@@ -126,9 +210,8 @@ class DatabaseRepository {
 
     return await _isar.writeTxn<bool>(() async {
       // Delete author is this is their only book in the library.
-      if (authorsOnlyBook) {
-        await _isar.authors.delete(author.id);
-      }
+      if (authorsOnlyBook) await _isar.authors.delete(author.id);
+
       // Delete the book from the database.
       return await _isar.books.delete(book.id);
     });

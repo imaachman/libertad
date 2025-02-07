@@ -2,9 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:libertad/data/models/author.dart';
 import 'package:libertad/data/models/book.dart';
-import 'package:libertad/features/books/viewmodels/author_field_viewmodel.dart';
 import 'package:libertad/features/books/viewmodels/book_editor_viewmodel.dart';
 
 class BookCover extends ConsumerWidget {
@@ -15,9 +13,8 @@ class BookCover extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // Listen to [BookEditorViewModel] provider to update the UI with the book's
-    // title.
+    // title and author.
     ref.watch(bookEditorViewModelProvider(book: book));
-
     // Access [BookEditorViewModel] to display the uploaded cover image.
     final BookEditorViewModel model =
         ref.watch(bookEditorViewModelProvider(book: book).notifier);
@@ -38,21 +35,19 @@ class BookCover extends ConsumerWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        ref.watch(bookEditorViewModelProvider().notifier).title,
+                        model.title,
                         style: Theme.of(context).textTheme.headlineSmall,
                         maxLines: 3,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      Consumer(builder: (context, ref, child) {
-                        final AsyncValue<Author?> author =
-                            ref.watch(authorFieldViewModelProvider);
-                        return Text(
-                          author.value?.name ?? 'author',
+                      Consumer(
+                        builder: (context, ref, child) => Text(
+                          model.author?.name ?? 'author',
                           style: Theme.of(context).textTheme.labelMedium,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                        );
-                      }),
+                        ),
+                      ),
                     ],
                   )
                 : Image.file(

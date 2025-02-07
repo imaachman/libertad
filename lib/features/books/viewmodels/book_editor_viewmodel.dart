@@ -6,6 +6,7 @@ import 'package:libertad/data/models/book.dart';
 import 'package:libertad/data/models/genre.dart';
 import 'package:libertad/data/repositories/database_repository.dart';
 import 'package:libertad/data/repositories/files_repository.dart';
+import 'package:libertad/features/books/screens/book_editor/authors_search_delegate.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'book_editor_viewmodel.g.dart';
@@ -52,6 +53,9 @@ class BookEditorViewModel extends _$BookEditorViewModel {
       releaseDate = book.releaseDate;
       summary = book.summary;
       coverImage = book.coverImage;
+      // [temporaryCoverImage] is used to display the book cover in the editor,
+      // and to check if the cover image has been changed.
+      temporaryCoverImage = coverImage;
       totalCopies = book.totalCopies.length;
     }
     return book;
@@ -110,6 +114,51 @@ class BookEditorViewModel extends _$BookEditorViewModel {
     Navigator.of(context).pop();
   }
 
+  Future<void> updateBook(
+      BuildContext context, GlobalKey<FormState> formKey, Book book) async {
+    // If any of the inputs are invalid, do not update the book in the database.
+    if (!formKey.currentState!.validate()) return;
+
+    // If the cover image has been added.
+    if (temporaryCoverImage.isNotEmpty && coverImage.isEmpty) {
+      // Copy the selected cover image to the app's documents directory.
+      final File copiedFile =
+          await FilesRepository.instance.copyImageFile(temporaryCoverImage);
+      // Update the cover image path to the new file path.
+      coverImage = copiedFile.path;
+    }
+    // If the cover image has been removed.
+    else if (temporaryCoverImage.isEmpty && coverImage.isNotEmpty) {
+      // Delete the cover image from the app's documents directory.
+      await FilesRepository.instance.deleteFile(coverImage);
+      // Update the cover image path to an empty string.
+      coverImage = '';
+    }
+    // If the cover image has been changed.
+    else if (temporaryCoverImage.isNotEmpty &&
+        temporaryCoverImage != coverImage) {
+      // Replace the old cover image with the new one.
+      coverImage = await FilesRepository.instance
+          .replaceFile(coverImage, temporaryCoverImage);
+    }
+
+    // Create a new [Book] object with the values of form fields.
+    book
+      ..title = title
+      ..genre = genre!
+      ..releaseDate = releaseDate
+      ..summary = summary
+      ..coverImage = coverImage;
+
+    // Update the book in the database.
+    await DatabaseRepository.instance.updateBook(book, author!, totalCopies);
+
+    // Context mount check to prevent memory leaks.
+    if (!context.mounted) return;
+    // Navigate back from the book editor.
+    Navigator.of(context).pop();
+  }
+
   /// Updates [title].
   void setTitle(String value) {
     title = value;
@@ -123,10 +172,15 @@ class BookEditorViewModel extends _$BookEditorViewModel {
     return null;
   }
 
-  /// Updates [author] and makes the author as selected to show valid state in
-  /// [AuthorField].
-  void setAuthor(Author? value) {
-    author = value;
+  /// Opens author search view to select an author for the book.
+  /// Also marks the author as selected to validate the state of [AuthorField].
+  Future<void> selectAuthor(BuildContext context) async {
+    // Show author search view to select an author.
+    author = await showSearch<Author?>(
+      context: context,
+      delegate: AuthorsSearchDelegate(),
+    );
+    if (author == null) return;
     // Mark author as selected.
     isAuthorSelected = true;
     ref.notifyListeners();

@@ -1,20 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:libertad/data/models/book.dart';
 import 'package:libertad/data/models/genre.dart';
 import 'package:libertad/features/books/viewmodels/book_editor_viewmodel.dart';
 
 class GenreField extends ConsumerWidget {
-  const GenreField({super.key});
+  final Book? book;
+
+  const GenreField({super.key, this.book});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // Listen to the [BookEditorViewModel] provider to check if a genre is
     // selected and to show the selected genre in the UI.
-    ref.watch(bookEditorViewModelProvider());
+    ref.watch(bookEditorViewModelProvider(book: book));
 
     // Access [BookEditorViewModel] to get the selected genre.
     final BookEditorViewModel model =
-        ref.watch(bookEditorViewModelProvider().notifier);
+        ref.watch(bookEditorViewModelProvider(book: book).notifier);
     // Check if a genre is selected.
     final bool genreNotSelected = !model.isGenreSelected;
 

@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:libertad/data/models/book.dart';
 import 'package:libertad/features/books/viewmodels/book_editor_viewmodel.dart';
 
 class TotalCopiesField extends ConsumerWidget {
-  const TotalCopiesField({super.key});
+  final Book? book;
+
+  const TotalCopiesField({super.key, this.book});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -23,7 +26,7 @@ class TotalCopiesField extends ConsumerWidget {
           width: 100,
           child: TextFormField(
             initialValue: ref
-                .watch(bookEditorViewModelProvider().notifier)
+                .watch(bookEditorViewModelProvider(book: book).notifier)
                 .totalCopies
                 .toString(),
             decoration: InputDecoration(
@@ -40,10 +43,11 @@ class TotalCopiesField extends ConsumerWidget {
             keyboardType: TextInputType.number,
             inputFormatters: [FilteringTextInputFormatter.digitsOnly],
             validator: ref
-                .read(bookEditorViewModelProvider().notifier)
+                .read(bookEditorViewModelProvider(book: book).notifier)
                 .validateTotalCopies,
-            onChanged:
-                ref.read(bookEditorViewModelProvider().notifier).setTotalCopies,
+            onChanged: ref
+                .read(bookEditorViewModelProvider(book: book).notifier)
+                .setTotalCopies,
           ),
         ),
       ],

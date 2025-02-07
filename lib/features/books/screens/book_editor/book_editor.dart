@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:libertad/core/constants/breakpoints.dart';
-import 'package:libertad/features/books/screens/book_editor/add_book_button.dart';
+import 'package:libertad/data/models/book.dart';
+import 'package:libertad/features/books/screens/book_editor/book_add_update_button.dart';
 import 'package:libertad/features/books/screens/book_editor/genre_field.dart';
 import 'package:libertad/features/books/screens/book_editor/release_date_field.dart';
 import 'package:libertad/features/books/screens/book_editor/total_copies_field.dart';
@@ -13,7 +14,9 @@ import 'summary_field.dart';
 import 'title_field.dart';
 
 class BookEditor extends ConsumerStatefulWidget {
-  const BookEditor({super.key});
+  final Book? book;
+
+  const BookEditor({super.key, this.book});
 
   @override
   ConsumerState<BookEditor> createState() => _BookEditorState();
@@ -54,7 +57,7 @@ class _BookEditorState extends ConsumerState<BookEditor> {
                           SizedBox(
                             width:
                                 buildColumn ? (maxWidth / 2) : (maxWidth / 3),
-                            child: BookCover(),
+                            child: BookCover(book: widget.book),
                           ),
                           SizedBox(
                             width: buildColumn ? null : gap,
@@ -65,16 +68,16 @@ class _BookEditorState extends ConsumerState<BookEditor> {
                                 buildColumn ? maxWidth : (maxWidth / 1.5 - gap),
                             child: Column(
                               children: [
-                                TitleField(),
+                                TitleField(book: widget.book),
                                 SizedBox(height: 16),
-                                AuthorField(),
+                                AuthorField(book: widget.book),
                               ],
                             ),
                           )
                         ],
                       ),
                       SizedBox(height: 32),
-                      SummaryField(),
+                      SummaryField(book: widget.book),
                       SizedBox(height: 32),
                       RowColumnSwitch(
                         columnWhen: buildColumn,
@@ -85,7 +88,7 @@ class _BookEditorState extends ConsumerState<BookEditor> {
                           SizedBox(
                             width:
                                 buildColumn ? maxWidth : (maxWidth - gap) / 2,
-                            child: GenreField(),
+                            child: GenreField(book: widget.book),
                           ),
                           SizedBox(
                             width: buildColumn ? null : gap,
@@ -94,14 +97,19 @@ class _BookEditorState extends ConsumerState<BookEditor> {
                           SizedBox(
                             width:
                                 buildColumn ? maxWidth : (maxWidth - gap) / 2,
-                            child: ReleaseDateField(),
+                            child: ReleaseDateField(book: widget.book),
                           ),
                         ],
                       ),
                       SizedBox(height: 16),
-                      TotalCopiesField(),
+                      TotalCopiesField(book: widget.book),
                       SizedBox(height: 32),
-                      Center(child: AddBookButton(formKey: formKey)),
+                      Center(
+                        child: BookAddUpdateButton(
+                          formKey: formKey,
+                          book: widget.book,
+                        ),
+                      ),
                     ],
                   );
                 },

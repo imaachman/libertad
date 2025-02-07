@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:libertad/data/models/book.dart';
 import 'package:libertad/data/repositories/database_repository.dart';
+import 'package:libertad/features/books/screens/book_editor/book_editor.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'book_details_viewmodel.g.dart';
@@ -23,6 +24,7 @@ class BookDetailsViewModel extends _$BookDetailsViewModel {
           TextButton(
             onPressed: () async {
               await deleteBook(book);
+              if (!context.mounted) return;
               Navigator.of(context)
                   .popUntil((route) => route.settings.name == '/');
             },
@@ -35,5 +37,14 @@ class BookDetailsViewModel extends _$BookDetailsViewModel {
 
   Future<bool> deleteBook(Book book) async {
     return await DatabaseRepository.instance.deleteBook(book);
+  }
+
+  Future<void> showBookEditor(BuildContext context, Book book) async {
+    await showModalBottomSheet(
+      context: context,
+      builder: (context) => BookEditor(book: book),
+      isScrollControlled: true,
+      showDragHandle: true,
+    );
   }
 }

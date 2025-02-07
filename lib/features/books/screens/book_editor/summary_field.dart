@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:libertad/data/models/book.dart';
 import 'package:libertad/features/books/viewmodels/book_editor_viewmodel.dart';
 
 class SummaryField extends ConsumerWidget {
-  const SummaryField({super.key});
+  final Book? book;
+
+  const SummaryField({super.key, this.book});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final BookEditorViewModel model =
+        ref.watch(bookEditorViewModelProvider(book: book).notifier);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -26,10 +32,9 @@ class SummaryField extends ConsumerWidget {
             fillColor: Colors.white,
           ),
           maxLines: 6,
-          validator:
-              ref.read(bookEditorViewModelProvider().notifier).validateSummary,
-          onChanged:
-              ref.read(bookEditorViewModelProvider().notifier).setSummary,
+          initialValue: model.summary,
+          validator: model.validateSummary,
+          onChanged: model.setSummary,
         ),
       ],
     );

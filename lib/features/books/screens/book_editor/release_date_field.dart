@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:libertad/core/utils/extensions.dart';
+import 'package:libertad/data/models/book.dart';
 import 'package:libertad/features/books/viewmodels/book_editor_viewmodel.dart';
 
 class ReleaseDateField extends ConsumerWidget {
-  const ReleaseDateField({super.key});
+  final Book? book;
+
+  const ReleaseDateField({super.key, this.book});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // Listen to [BookEditorViewModel] provider to update the release date in
     // the UI.
-    ref.watch(bookEditorViewModelProvider());
+    ref.watch(bookEditorViewModelProvider(book: book));
     // Access [BookEditorViewModel] to get the release date.
     final BookEditorViewModel model =
-        ref.watch(bookEditorViewModelProvider().notifier);
+        ref.watch(bookEditorViewModelProvider(book: book).notifier);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

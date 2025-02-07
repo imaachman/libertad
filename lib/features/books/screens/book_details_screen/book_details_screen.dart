@@ -21,6 +21,28 @@ class BookDetailsPage extends ConsumerWidget {
                 child: Row(
                   children: [
                     Icon(
+                      Icons.edit,
+                      size: 18,
+                      color: Theme.of(context).colorScheme.secondary,
+                    ),
+                    SizedBox(width: 8),
+                    Text(
+                      'Edit',
+                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                            color: Theme.of(context).colorScheme.secondary,
+                          ),
+                    ),
+                  ],
+                ),
+                onTap: () => ref
+                    .read(bookDetailsViewModelProvider.notifier)
+                    .showBookEditor(context, book),
+              ),
+              PopupMenuItem(
+                value: 1,
+                child: Row(
+                  children: [
+                    Icon(
                       Icons.delete_outline,
                       size: 18,
                       color: Theme.of(context).colorScheme.error,

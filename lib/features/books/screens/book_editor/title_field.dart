@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:libertad/data/models/book.dart';
 import 'package:libertad/features/books/viewmodels/book_editor_viewmodel.dart';
 
 class TitleField extends ConsumerWidget {
-  const TitleField({super.key});
+  final Book? book;
+
+  const TitleField({super.key, this.book});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final BookEditorViewModel model =
+        ref.watch(bookEditorViewModelProvider(book: book).notifier);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -21,9 +27,9 @@ class TitleField extends ConsumerWidget {
           decoration: InputDecoration(
             hintText: 'Enter book\'s title',
           ),
-          validator:
-              ref.read(bookEditorViewModelProvider().notifier).validateTitle,
-          onChanged: ref.read(bookEditorViewModelProvider().notifier).setTitle,
+          initialValue: model.title,
+          validator: model.validateTitle,
+          onChanged: model.setTitle,
         ),
       ],
     );

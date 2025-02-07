@@ -1,18 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:libertad/data/models/book.dart';
 import 'package:libertad/features/books/viewmodels/book_editor_viewmodel.dart';
 
-class AddBookButton extends ConsumerWidget {
+class BookAddUpdateButton extends ConsumerWidget {
   final GlobalKey<FormState> formKey;
+  final Book? book;
 
-  const AddBookButton({super.key, required this.formKey});
+  const BookAddUpdateButton({super.key, required this.formKey, this.book});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final BookEditorViewModel model =
+        ref.watch(bookEditorViewModelProvider(book: book).notifier);
+
     return TextButton(
-      onPressed: () => ref
-          .read(bookEditorViewModelProvider().notifier)
-          .addBook(context, formKey),
+      onPressed: () {
+        if (book == null) {
+          model.addBook(context, formKey);
+        } else {
+          model.updateBook(context, formKey, book!);
+        }
+      },
       style: ButtonStyle(
         shape: WidgetStatePropertyAll(RoundedRectangleBorder()),
         backgroundColor: WidgetStatePropertyAll(
@@ -23,7 +32,7 @@ class AddBookButton extends ConsumerWidget {
         height: 48,
         child: Center(
           child: Text(
-            'Add Book',
+            book == null ? 'Add Book' : 'Update Book',
             style: Theme.of(context).textTheme.labelLarge?.copyWith(
                   color: Theme.of(context).colorScheme.onPrimary,
                   fontWeight: FontWeight.bold,
