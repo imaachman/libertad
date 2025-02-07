@@ -30,7 +30,7 @@ class FilesRepository {
         await getApplicationDocumentsDirectory();
     // Path to the new image file.
     final String newImagePath =
-        '${applicationDocumentsDirectory.path}/${originalImagePath.split('/').last}';
+        '${applicationDocumentsDirectory.path}/${originalImagePath.split('\\').last}';
     // Copy the selected cover image to the app's documents directory.
     final File copiedFile = await File(originalImagePath).copy(newImagePath);
     return copiedFile;

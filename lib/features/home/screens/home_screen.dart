@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:libertad/features/authors/screens/authors_screen.dart';
 import 'package:libertad/features/books/screens/books_screen/books_screen.dart';
 import 'package:libertad/features/home/viewmodels/home_viewmodel.dart';
-import 'package:libertad/features/books/screens/book_editor/book_editor.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
@@ -64,12 +63,9 @@ class _HomePageState extends ConsumerState<HomePage>
         children: _tabs.map((tab) => _tabViews[_tabs.indexOf(tab)]).toList(),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          ref.read(homeViewModelProvider.notifier).openAddBookBottomsheet(
-                context: context,
-                builder: (context) => BookEditor(),
-              );
-        },
+        onPressed: () => ref
+            .read(homeViewModelProvider.notifier)
+            .showBookEditor(context: context),
         tooltip: 'Add new book',
         child: const Icon(Icons.add),
       ),

@@ -62,7 +62,10 @@ class BookListTile extends StatelessWidget {
                             ),
                           ],
                         )
-                      : Image.file(File(book.coverImage)),
+                      : Image.file(
+                          File(book.coverImage),
+                          fit: BoxFit.fitHeight,
+                        ),
                 ),
               ),
             ),
