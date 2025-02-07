@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:libertad/data/models/book.dart';
 import 'package:libertad/data/repositories/database_repository.dart';
+import 'package:libertad/data/repositories/files_repository.dart';
 import 'package:libertad/features/books/screens/book_editor/book_editor.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -36,7 +37,11 @@ class BookDetailsViewModel extends _$BookDetailsViewModel {
   }
 
   Future<bool> deleteBook(Book book) async {
-    return await DatabaseRepository.instance.deleteBook(book);
+    final bool bookDeleted = await DatabaseRepository.instance.deleteBook(book);
+    if (!bookDeleted) return false;
+    // Delete cover image file only if the book was deleted succesfully.
+    await FilesRepository.instance.deleteFile(book.coverImage);
+    return bookDeleted;
   }
 
   Future<void> showBookEditor(BuildContext context, Book book) async {

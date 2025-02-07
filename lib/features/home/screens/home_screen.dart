@@ -43,12 +43,21 @@ class _HomePageState extends ConsumerState<HomePage>
         title: const Text('Libertad'),
         actions: [
           IconButton(
+            onPressed: () => ref
+                .read(homeViewModelProvider.notifier)
+                .showDocumentsDirectory(context),
+            icon: Icon(Icons.file_present_outlined),
+            tooltip: 'View app files',
+          ),
+          IconButton(
             onPressed: ref.read(homeViewModelProvider.notifier).clearDatabase,
             icon: Icon(Icons.clear_all),
+            tooltip: 'Clear database',
           ),
           IconButton(
             onPressed: ref.read(homeViewModelProvider.notifier).resetDatabase,
             icon: Icon(Icons.restart_alt_rounded),
+            tooltip: 'Reset database',
           ),
         ],
         bottom: TabBar(

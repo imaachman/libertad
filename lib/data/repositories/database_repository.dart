@@ -25,12 +25,17 @@ class DatabaseRepository {
   /// This method needs to be called before we can interact with the database.
   /// Typically called in the [main] method before running the app.
   Future<void> initialize() async {
-    // Get application documents directory to be used as the database.
-    final Directory directory = await getApplicationDocumentsDirectory();
+    // Get application documents directory.
+    final Directory applicationDocumentsDirectory =
+        await getApplicationDocumentsDirectory();
+    // Create sub-directory to be used for app's database and file storage.
+    final Directory appDirectory =
+        await Directory('${applicationDocumentsDirectory.path}/Libertad')
+            .create();
     // Load Isar instance with the relevant collections.
     _isar = await Isar.open(
       [BookSchema, AuthorSchema, BookCopySchema, BorrowerSchema],
-      directory: directory.path,
+      directory: appDirectory.path,
     );
   }
 
