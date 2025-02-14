@@ -10,9 +10,14 @@ part 'book_details_viewmodel.g.dart';
 @riverpod
 class BookDetailsViewModel extends _$BookDetailsViewModel {
   @override
-  void build() {}
+  Book build(Book book) {
+    DatabaseRepository.instance
+        .bookStream(book.id)
+        .listen((_) => ref.notifyListeners());
+    return book;
+  }
 
-  Future<void> showDeletionDialog(BuildContext context, Book book) async {
+  Future<void> showDeletionDialog(BuildContext context) async {
     await showAdaptiveDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -44,7 +49,7 @@ class BookDetailsViewModel extends _$BookDetailsViewModel {
     return bookDeleted;
   }
 
-  Future<void> showBookEditor(BuildContext context, Book book) async {
+  Future<void> showBookEditor(BuildContext context) async {
     await showModalBottomSheet(
       context: context,
       builder: (context) => BookEditor(book: book),

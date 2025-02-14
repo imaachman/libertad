@@ -43,10 +43,20 @@ class DatabaseRepository {
   /// collection and update UI.
   Stream<void> get booksStream => _isar.books.watchLazy(fireImmediately: true);
 
+  /// A stream of book data. Allows us to watch for changes to a particular book
+  /// from the collection and update UI.
+  Stream<void> bookStream(Id id) =>
+      _isar.books.watchObject(id, fireImmediately: true);
+
   /// A stream of authors data. Allows us to watch for changes in the authors
   /// collection and update UI.
   Stream<void> get authorsStream =>
       _isar.authors.watchLazy(fireImmediately: true);
+
+  /// A stream of author data. Allows us to watch for changes to a particular
+  /// author from the collection and update UI.
+  Stream<void> authorStream(Id id) =>
+      _isar.authors.watchObject(id, fireImmediately: true);
 
   /// Clear entire database. (for development purposes only)
   Future<void> clearDatabase() async {
