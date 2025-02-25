@@ -26,6 +26,11 @@ const AuthorSchema = CollectionSchema(
       id: 1,
       name: r'name',
       type: IsarType.string,
+    ),
+    r'profilePicture': PropertySchema(
+      id: 2,
+      name: r'profilePicture',
+      type: IsarType.string,
     )
   },
   estimateSize: _authorEstimateSize,
@@ -58,6 +63,7 @@ int _authorEstimateSize(
   var bytesCount = offsets.last;
   bytesCount += 3 + object.bio.length * 3;
   bytesCount += 3 + object.name.length * 3;
+  bytesCount += 3 + object.profilePicture.length * 3;
   return bytesCount;
 }
 
@@ -69,6 +75,7 @@ void _authorSerialize(
 ) {
   writer.writeString(offsets[0], object.bio);
   writer.writeString(offsets[1], object.name);
+  writer.writeString(offsets[2], object.profilePicture);
 }
 
 Author _authorDeserialize(
@@ -80,6 +87,7 @@ Author _authorDeserialize(
   final object = Author(
     bio: reader.readString(offsets[0]),
     name: reader.readString(offsets[1]),
+    profilePicture: reader.readStringOrNull(offsets[2]) ?? '',
   );
   object.id = id;
   return object;
@@ -96,6 +104,8 @@ P _authorDeserializeProp<P>(
       return (reader.readString(offset)) as P;
     case 1:
       return (reader.readString(offset)) as P;
+    case 2:
+      return (reader.readStringOrNull(offset) ?? '') as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -498,6 +508,137 @@ extension AuthorQueryFilter on QueryBuilder<Author, Author, QFilterCondition> {
       ));
     });
   }
+
+  QueryBuilder<Author, Author, QAfterFilterCondition> profilePictureEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'profilePicture',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Author, Author, QAfterFilterCondition> profilePictureGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'profilePicture',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Author, Author, QAfterFilterCondition> profilePictureLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'profilePicture',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Author, Author, QAfterFilterCondition> profilePictureBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'profilePicture',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Author, Author, QAfterFilterCondition> profilePictureStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'profilePicture',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Author, Author, QAfterFilterCondition> profilePictureEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'profilePicture',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Author, Author, QAfterFilterCondition> profilePictureContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'profilePicture',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Author, Author, QAfterFilterCondition> profilePictureMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'profilePicture',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Author, Author, QAfterFilterCondition> profilePictureIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'profilePicture',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Author, Author, QAfterFilterCondition>
+      profilePictureIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'profilePicture',
+        value: '',
+      ));
+    });
+  }
 }
 
 extension AuthorQueryObject on QueryBuilder<Author, Author, QFilterCondition> {}
@@ -584,6 +725,18 @@ extension AuthorQuerySortBy on QueryBuilder<Author, Author, QSortBy> {
       return query.addSortBy(r'name', Sort.desc);
     });
   }
+
+  QueryBuilder<Author, Author, QAfterSortBy> sortByProfilePicture() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'profilePicture', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Author, Author, QAfterSortBy> sortByProfilePictureDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'profilePicture', Sort.desc);
+    });
+  }
 }
 
 extension AuthorQuerySortThenBy on QueryBuilder<Author, Author, QSortThenBy> {
@@ -622,6 +775,18 @@ extension AuthorQuerySortThenBy on QueryBuilder<Author, Author, QSortThenBy> {
       return query.addSortBy(r'name', Sort.desc);
     });
   }
+
+  QueryBuilder<Author, Author, QAfterSortBy> thenByProfilePicture() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'profilePicture', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Author, Author, QAfterSortBy> thenByProfilePictureDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'profilePicture', Sort.desc);
+    });
+  }
 }
 
 extension AuthorQueryWhereDistinct on QueryBuilder<Author, Author, QDistinct> {
@@ -636,6 +801,14 @@ extension AuthorQueryWhereDistinct on QueryBuilder<Author, Author, QDistinct> {
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'name', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<Author, Author, QDistinct> distinctByProfilePicture(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'profilePicture',
+          caseSensitive: caseSensitive);
     });
   }
 }
@@ -656,6 +829,12 @@ extension AuthorQueryProperty on QueryBuilder<Author, Author, QQueryProperty> {
   QueryBuilder<Author, String, QQueryOperations> nameProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'name');
+    });
+  }
+
+  QueryBuilder<Author, String, QQueryOperations> profilePictureProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'profilePicture');
     });
   }
 }

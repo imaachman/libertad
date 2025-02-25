@@ -28,7 +28,7 @@ class AuthorsSearchPage extends ConsumerWidget {
           InkWell(
             onTap: () => ref
                 .read(authorsSearchViewModelProvider(query).notifier)
-                .showAuthorCreationDialog(context, query),
+                .showAuthorEditorDialog(context, query),
             child: Container(
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.primaryContainer,
