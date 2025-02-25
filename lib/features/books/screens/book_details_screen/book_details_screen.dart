@@ -5,7 +5,7 @@ import 'package:libertad/core/utils/extensions.dart';
 import 'package:libertad/data/models/book.dart';
 import 'package:libertad/data/models/book_copy.dart';
 import 'package:libertad/features/books/viewmodels/book_details_viewmodel.dart';
-import 'package:libertad/widgets/reusable_book_cover.dart';
+import 'package:libertad/widgets/book_cover.dart';
 
 class BookDetailsPage extends ConsumerWidget {
   final Book book;
@@ -77,7 +77,7 @@ class BookDetailsPage extends ConsumerWidget {
                 Container(
                   constraints: BoxConstraints(maxWidth: kSmallPhone / 2),
                   width: MediaQuery.of(context).size.width / 2,
-                  child: ReusableBookCover(
+                  child: BookCover(
                     book: book,
                     titleStyle: Theme.of(context).textTheme.titleLarge,
                     authorStyle: Theme.of(context)

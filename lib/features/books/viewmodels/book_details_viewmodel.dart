@@ -21,7 +21,22 @@ class BookDetailsViewModel extends _$BookDetailsViewModel {
     await showAdaptiveDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Are you sure you want to delete "${book.title}"?'),
+        title: RichText(
+          text: TextSpan(
+            style: Theme.of(context).textTheme.bodyLarge,
+            children: [
+              TextSpan(text: 'Are you sure you want to delete '),
+              TextSpan(
+                text: book.title,
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                      color: Theme.of(context).colorScheme.error,
+                      fontWeight: FontWeight.bold,
+                    ),
+              ),
+              TextSpan(text: '?'),
+            ],
+          ),
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),

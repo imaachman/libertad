@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:libertad/data/models/book.dart';
 import 'package:libertad/navigation/routes.dart';
-import 'package:libertad/widgets/reusable_book_cover.dart';
+import 'package:libertad/widgets/book_cover.dart';
 
 class BookListTile extends StatelessWidget {
   final Book book;
@@ -25,7 +25,7 @@ class BookListTile extends StatelessWidget {
             const SizedBox(width: 16),
             Expanded(
               flex: 3,
-              child: ReusableBookCover(book: book),
+              child: BookCover(book: book),
             ),
             const SizedBox(width: 16),
             Expanded(

@@ -5,10 +5,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:libertad/data/models/book.dart';
 import 'package:libertad/features/books/viewmodels/book_editor_viewmodel.dart';
 
-class BookCover extends ConsumerWidget {
+class EditableBookCover extends ConsumerWidget {
   final Book? book;
 
-  const BookCover({super.key, this.book});
+  const EditableBookCover({super.key, this.book});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

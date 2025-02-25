@@ -142,7 +142,7 @@ class BookEditorViewModel extends _$BookEditorViewModel {
           .replaceFile(coverImage, temporaryCoverImage);
     }
 
-    // Create a new [Book] object with the values of form fields.
+    // Update the existing [Book] object with the values of form fields.
     book
       ..title = title
       ..genre = genre!

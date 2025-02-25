@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:libertad/data/models/book.dart';
 
-class ReusableBookCover extends ConsumerWidget {
+class BookCover extends ConsumerWidget {
   final Book book;
   final TextStyle? titleStyle;
   final TextStyle? authorStyle;
 
-  const ReusableBookCover({
+  const BookCover({
     super.key,
     required this.book,
     this.titleStyle,

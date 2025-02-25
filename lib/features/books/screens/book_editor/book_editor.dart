@@ -9,7 +9,7 @@ import 'package:libertad/features/books/screens/book_editor/total_copies_field.d
 import 'package:libertad/widgets/row_column_switch.dart';
 
 import 'author_field.dart';
-import 'book_cover.dart';
+import 'editable_book_cover.dart';
 import 'summary_field.dart';
 import 'title_field.dart';
 
@@ -57,7 +57,7 @@ class _BookEditorState extends ConsumerState<BookEditor> {
                           SizedBox(
                             width:
                                 buildColumn ? (maxWidth / 2) : (maxWidth / 3),
-                            child: BookCover(book: widget.book),
+                            child: EditableBookCover(book: widget.book),
                           ),
                           SizedBox(
                             width: buildColumn ? null : gap,
