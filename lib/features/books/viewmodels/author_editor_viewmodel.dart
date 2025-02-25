@@ -35,9 +35,10 @@ class AuthorEditorViewModel extends _$AuthorEditorViewModel {
     return author;
   }
 
-  Future<void> updateAuthor(BuildContext context) async {
+  Future<void> updateAuthor(
+      BuildContext context, GlobalKey<FormState> formKey) async {
     // Author must have a name and bio.
-    if (name.isEmpty || bio.isEmpty) return;
+    if (!formKey.currentState!.validate()) return;
 
     // If the profile picture has been added.
     if (temporaryProfilePicture.isNotEmpty && profilePicture.isEmpty) {
