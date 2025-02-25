@@ -4,7 +4,7 @@ import 'package:libertad/core/constants/breakpoints.dart';
 import 'package:libertad/data/models/author.dart';
 import 'package:libertad/data/models/book.dart';
 import 'package:libertad/widgets/book_list_tile.dart';
-import 'package:libertad/features/books/viewmodels/author_details_viewmodel.dart';
+import 'package:libertad/features/authors/viewmodels/author_details_viewmodel.dart';
 import 'package:libertad/widgets/profile_picture.dart';
 
 class AuthorDetailsPage extends ConsumerWidget {
@@ -91,11 +91,6 @@ class AuthorDetailsPage extends ConsumerWidget {
                   textAlign: TextAlign.center,
                 ),
                 SizedBox(height: 4),
-                // Text(
-                //   book.author.value!.name,
-                //   style: Theme.of(context).textTheme.titleLarge,
-                //   textAlign: TextAlign.center,
-                // ),
                 SizedBox(height: 16),
                 Container(
                   width: MediaQuery.of(context).size.width / 1.2,
@@ -103,57 +98,6 @@ class AuthorDetailsPage extends ConsumerWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 8),
                   child: Text(author.bio),
                 ),
-                // SizedBox(height: 16),
-                // Wrap(
-                //   runAlignment: WrapAlignment.spaceBetween,
-                //   children: [
-                //     RichText(
-                //       text: TextSpan(
-                //         children: [
-                //           TextSpan(
-                //               text: 'First published on ',
-                //               style: Theme.of(context).textTheme.labelLarge),
-                //           TextSpan(
-                //             text: book.releaseDate.prettify,
-                //             style: Theme.of(context)
-                //                 .textTheme
-                //                 .labelLarge
-                //                 ?.copyWith(
-                //                   fontWeight: FontWeight.bold,
-                //                   decoration: TextDecoration.underline,
-                //                   decorationColor:
-                //                       Theme.of(context).primaryColor,
-                //                   color: Theme.of(context).primaryColor,
-                //                 ),
-                //           ),
-                //         ],
-                //       ),
-                //     ),
-                //     SizedBox(width: 32),
-                //     RichText(
-                //       text: TextSpan(
-                //         children: [
-                //           TextSpan(
-                //               text: 'Genre: ',
-                //               style: Theme.of(context).textTheme.labelLarge),
-                //           TextSpan(
-                //             text: book.genre.name,
-                //             style: Theme.of(context)
-                //                 .textTheme
-                //                 .labelLarge
-                //                 ?.copyWith(
-                //                   fontWeight: FontWeight.bold,
-                //                   decoration: TextDecoration.underline,
-                //                   decorationColor:
-                //                       Theme.of(context).primaryColor,
-                //                   color: Theme.of(context).primaryColor,
-                //                 ),
-                //           ),
-                //         ],
-                //       ),
-                //     ),
-                //   ],
-                // ),
                 Container(
                   constraints: BoxConstraints(maxWidth: kSmallPhone + 48),
                   child: Divider(height: 48),

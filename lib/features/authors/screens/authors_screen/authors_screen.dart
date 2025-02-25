@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:libertad/data/models/author.dart';
-import 'package:libertad/features/authors/screens/author_list_tile.dart';
+import 'package:libertad/features/authors/screens/authors_screen/author_list_tile.dart';
 import 'package:libertad/features/authors/viewmodels/authors_list_viewmodel.dart';
 
 class AuthorsPage extends ConsumerWidget {

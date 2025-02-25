@@ -1,9 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class ProfilePicture extends ConsumerWidget {
+class ProfilePicture extends StatelessWidget {
   final String imageFilePath;
   final double? iconSize;
   final double? borderWidth;
@@ -16,7 +15,7 @@ class ProfilePicture extends ConsumerWidget {
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return AspectRatio(
       aspectRatio: 1,
       child: Container(

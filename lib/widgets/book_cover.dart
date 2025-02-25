@@ -1,10 +1,9 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:libertad/data/models/book.dart';
 
-class BookCover extends ConsumerWidget {
+class BookCover extends StatelessWidget {
   final Book book;
   final TextStyle? titleStyle;
   final TextStyle? authorStyle;
@@ -17,7 +16,7 @@ class BookCover extends ConsumerWidget {
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return AspectRatio(
       aspectRatio: 10 / 16,
       child: Container(

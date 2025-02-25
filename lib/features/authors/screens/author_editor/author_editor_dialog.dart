@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:libertad/data/models/author.dart';
-import 'package:libertad/features/books/viewmodels/author_editor_viewmodel.dart';
+import 'package:libertad/features/authors/viewmodels/author_editor_viewmodel.dart';
 
 class AuthorEditorDialog extends ConsumerStatefulWidget {
   final Author? author;

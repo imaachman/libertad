@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:libertad/data/models/author.dart';
 import 'package:libertad/data/repositories/database_repository.dart';
-import 'package:libertad/features/books/screens/book_editor/author_editor_dialog.dart';
+import 'package:libertad/features/authors/screens/author_editor/author_editor_dialog.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'authors_search_viewmodel.g.dart';
