@@ -59,8 +59,10 @@ class BookDetailsViewModel extends _$BookDetailsViewModel {
   Future<bool> deleteBook(Book book) async {
     final bool bookDeleted = await DatabaseRepository.instance.deleteBook(book);
     if (!bookDeleted) return false;
-    // Delete cover image file only if the book was deleted succesfully.
-    await FilesRepository.instance.deleteFile(book.coverImage);
+    if (book.coverImage.isNotEmpty) {
+      // Delete cover image file only if the book was deleted succesfully.
+      await FilesRepository.instance.deleteFile(book.coverImage);
+    }
     return bookDeleted;
   }
 

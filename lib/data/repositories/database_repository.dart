@@ -242,8 +242,12 @@ class DatabaseRepository {
   /// Deletes the author and their books (along with all the copies of book).
   Future<bool> deleteAuthor(Author author) async {
     return await _isar.writeTxn<bool>(() async {
+      // Load books link from the database.
+      await author.books.load();
       // Delete all books written by the author.
       for (final Book book in author.books) {
+        // Load copies link from the database.
+        await book.totalCopies.load();
         // Delete all the copies of the books first.
         for (final BookCopy copy in book.totalCopies) {
           await _isar.bookCopys.delete(copy.id);
@@ -251,7 +255,7 @@ class DatabaseRepository {
         // Delete book object.
         await _isar.books.delete(book.id);
       }
-      // Delete author.
+      // Finally, delete the author.
       return await _isar.authors.delete(author.id);
     });
   }
