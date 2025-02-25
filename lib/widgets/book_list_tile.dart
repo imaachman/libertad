@@ -6,8 +6,14 @@ import 'package:libertad/widgets/book_cover.dart';
 class BookListTile extends StatelessWidget {
   final Book book;
   final int index;
+  final bool minimal;
 
-  const BookListTile({super.key, required this.book, required this.index});
+  const BookListTile({
+    super.key,
+    required this.book,
+    required this.index,
+    this.minimal = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -40,10 +46,11 @@ class BookListTile extends StatelessWidget {
                         .titleMedium
                         ?.copyWith(fontWeight: FontWeight.bold),
                   ),
-                  Text(
-                    'by ${book.author.value?.name}',
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
+                  if (!minimal)
+                    Text(
+                      'by ${book.author.value?.name}',
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
                   const SizedBox(height: 8),
                   Wrap(
                     children: [
@@ -65,38 +72,40 @@ class BookListTile extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(width: 16),
-            Expanded(
-              flex: 2,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(4),
-                      color: Theme.of(context).colorScheme.secondaryContainer,
+            if (!minimal) ...[
+              const SizedBox(width: 16),
+              Expanded(
+                flex: 2,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(4),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(4),
+                        color: Theme.of(context).colorScheme.secondaryContainer,
+                      ),
+                      child: Text(
+                        'Issued: ${book.issuedCopies.length}',
+                        style: Theme.of(context).textTheme.labelSmall,
+                      ),
                     ),
-                    child: Text(
-                      'Issued: ${book.issuedCopies.length}',
-                      style: Theme.of(context).textTheme.labelSmall,
+                    SizedBox(height: 8),
+                    Container(
+                      padding: const EdgeInsets.all(4),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(4),
+                        color: Theme.of(context).colorScheme.tertiaryContainer,
+                      ),
+                      child: Text(
+                        'Total: ${book.totalCopies.length}',
+                        style: Theme.of(context).textTheme.labelSmall,
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 8),
-                  Container(
-                    padding: const EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(4),
-                      color: Theme.of(context).colorScheme.tertiaryContainer,
-                    ),
-                    child: Text(
-                      'Total: ${book.totalCopies.length}',
-                      style: Theme.of(context).textTheme.labelSmall,
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
+            ]
           ],
         ),
       ),

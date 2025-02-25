@@ -14,6 +14,8 @@ class AuthorDetailsViewModel extends _$AuthorDetailsViewModel {
     DatabaseRepository.instance
         .authorStream(author.id)
         .listen((_) => ref.notifyListeners());
+    DatabaseRepository.instance.booksStream
+        .listen((_) => ref.notifyListeners());
     return author;
   }
 

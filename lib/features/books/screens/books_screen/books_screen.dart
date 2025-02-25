@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:libertad/core/constants/breakpoints.dart';
-import 'package:libertad/features/books/screens/books_screen/book_list_tile.dart';
+import 'package:libertad/widgets/book_list_tile.dart';
 import 'package:libertad/features/books/viewmodels/books_list_viewmodel.dart';
 
 import '../../../../data/models/book.dart';

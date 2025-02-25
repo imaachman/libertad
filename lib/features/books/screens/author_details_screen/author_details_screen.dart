@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:libertad/core/constants/breakpoints.dart';
 import 'package:libertad/data/models/author.dart';
+import 'package:libertad/data/models/book.dart';
+import 'package:libertad/widgets/book_list_tile.dart';
 import 'package:libertad/features/books/viewmodels/author_details_viewmodel.dart';
 import 'package:libertad/widgets/profile_picture.dart';
 
@@ -94,13 +96,13 @@ class AuthorDetailsPage extends ConsumerWidget {
                 //   style: Theme.of(context).textTheme.titleLarge,
                 //   textAlign: TextAlign.center,
                 // ),
-                // SizedBox(height: 16),
-                // Container(
-                //   width: MediaQuery.of(context).size.width / 1.2,
-                //   constraints: BoxConstraints(maxWidth: kSmallPhone),
-                //   padding: const EdgeInsets.symmetric(horizontal: 8),
-                //   child: Text(book.summary),
-                // ),
+                SizedBox(height: 16),
+                Container(
+                  width: MediaQuery.of(context).size.width / 1.2,
+                  constraints: BoxConstraints(maxWidth: kSmallPhone),
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: Text(author.bio),
+                ),
                 // SizedBox(height: 16),
                 // Wrap(
                 //   runAlignment: WrapAlignment.spaceBetween,
@@ -152,45 +154,33 @@ class AuthorDetailsPage extends ConsumerWidget {
                 //     ),
                 //   ],
                 // ),
-                // Container(
-                //   constraints: BoxConstraints(maxWidth: kSmallPhone + 48),
-                //   child: Divider(height: 48),
-                // ),
-                // Column(
-                //   children: [
-                //     Text(
-                //       'Copies',
-                //       style: Theme.of(context)
-                //           .textTheme
-                //           .headlineLarge
-                //           ?.copyWith(fontWeight: FontWeight.bold),
-                //     ),
-                //     ...List.generate(
-                //       book.totalCopies.length,
-                //       (index) {
-                //         final BookCopy copy = book.totalCopies.toList()[index];
-                //         return ListTile(
-                //           leading: Text('${index + 1}.'),
-                //           title: Text('Copy ${copy.id}'),
-                //           titleTextStyle: Theme.of(context)
-                //               .textTheme
-                //               .bodyMedium
-                //               ?.copyWith(fontWeight: FontWeight.bold),
-                //           trailing: Text(
-                //             copy.status == IssueStatus.issued
-                //                 ? 'Borrowed by ${copy.currentBorrower.value?.name}'
-                //                 : 'Available',
-                //           ),
-                //           leadingAndTrailingTextStyle:
-                //               Theme.of(context).textTheme.labelMedium?.copyWith(
-                //                     color: Theme.of(context).primaryColor,
-                //                     fontWeight: FontWeight.bold,
-                //                   ),
-                //         );
-                //       },
-                //     ),
-                //   ],
-                // )
+                Container(
+                  constraints: BoxConstraints(maxWidth: kSmallPhone + 48),
+                  child: Divider(height: 48),
+                ),
+                Column(
+                  children: [
+                    Text(
+                      'Books',
+                      style: Theme.of(context)
+                          .textTheme
+                          .headlineLarge
+                          ?.copyWith(fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 16),
+                    ...List.generate(
+                      author.books.length,
+                      (index) {
+                        final Book book = author.books.toList()[index];
+                        return BookListTile(
+                          book: book,
+                          index: index,
+                          minimal: true,
+                        );
+                      },
+                    ),
+                  ],
+                )
               ],
             ),
           ),
