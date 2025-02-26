@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:libertad/features/authors/screens/authors_screen/authors_screen.dart';
+import 'package:libertad/features/book_copies/screens/issued_copies_screen.dart';
 import 'package:libertad/features/books/screens/books_screen/books_screen.dart';
+import 'package:libertad/features/borrowers/screens/borrowers_screen.dart';
 import 'package:libertad/features/home/viewmodels/home_viewmodel.dart';
 
 class HomePage extends ConsumerStatefulWidget {
@@ -23,8 +25,8 @@ class _HomePageState extends ConsumerState<HomePage>
   final List<Widget> _tabViews = const [
     BooksPage(),
     AuthorsPage(),
-    BooksPage(),
-    AuthorsPage(),
+    IssuedBooksPage(),
+    BorrowersPage(),
   ];
 
   late final TabController _tabController;

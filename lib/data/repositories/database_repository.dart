@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:isar/isar.dart';
 import 'package:libertad/data/mock/mock_authors.dart';
 import 'package:libertad/data/mock/mock_books.dart';
+import 'package:libertad/data/mock/mock_borrowers.dart';
 import 'package:libertad/data/models/book_copy.dart';
 import 'package:libertad/data/models/borrower.dart';
 import 'package:path_provider/path_provider.dart';
@@ -58,6 +59,26 @@ class DatabaseRepository {
   Stream<void> authorStream(Id id) =>
       _isar.authors.watchObject(id, fireImmediately: true);
 
+  /// A stream of book copies data. Allows us to watch for changes in the book
+  /// copies collection and update UI.
+  Stream<void> get bookCopiesStream =>
+      _isar.bookCopys.watchLazy(fireImmediately: true);
+
+  /// A stream of book copy data. Allows us to watch for changes to a particular
+  /// book copy from the collection and update UI.
+  Stream<void> bookCopyStream(Id id) =>
+      _isar.bookCopys.watchObject(id, fireImmediately: true);
+
+  /// A stream of borrowers data. Allows us to watch for changes in the
+  /// borrowers collection and update UI.
+  Stream<void> get borrowersStream =>
+      _isar.borrowers.watchLazy(fireImmediately: true);
+
+  /// A stream of borrower data. Allows us to watch for changes to a particular
+  /// borrower from the collection and update UI.
+  Stream<void> borrowerStream(Id id) =>
+      _isar.borrowers.watchObject(id, fireImmediately: true);
+
   /// Clear entire database. (for development purposes only)
   Future<void> clearDatabase() async {
     await _isar.writeTxn(() async {
@@ -83,6 +104,7 @@ class DatabaseRepository {
         await book.author.save();
         await author.books.save();
       }
+      await _isar.borrowers.putAll(mockBorrowers);
     });
   }
 
@@ -91,6 +113,13 @@ class DatabaseRepository {
 
   /// Returns all the authors in the collection.
   Future<List<Author>> getAllAuthors() => _isar.authors.where().findAll();
+
+  /// Returns the issued book copies from the collection.
+  Future<List<BookCopy>> getIssuedCopies() =>
+      _isar.bookCopys.filter().statusEqualTo(IssueStatus.issued).findAll();
+
+  /// Returns all the borrowers in the collection.
+  Future<List<Borrower>> getAllBorrowers() => _isar.borrowers.where().findAll();
 
   /// Adds a new book to the collection.
   ///

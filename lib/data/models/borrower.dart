@@ -6,12 +6,12 @@ part 'borrower.g.dart';
 @collection
 class Borrower {
   Id id = Isar.autoIncrement;
-  final String name;
-  final String contact;
-  final DateTime membershipStartDate;
-  final int membershipDuration;
-  final bool isDefaulter;
-  final double fineDue;
+  String name;
+  String contact;
+  DateTime membershipStartDate;
+  int membershipDuration;
+  bool isDefaulter;
+  double fineDue;
   @Backlink(to: 'currentBorrower')
   final IsarLinks<BookCopy> currentlyIssuedBooks = IsarLinks<BookCopy>();
   @Backlink(to: 'previousBorrowers')
