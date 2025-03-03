@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:libertad/data/models/author.dart';
+import 'package:libertad/core/utils/extensions.dart';
+import 'package:libertad/data/models/borrower.dart';
 import 'package:libertad/navigation/routes.dart';
 import 'package:libertad/widgets/profile_picture.dart';
 
-class AuthorListTile extends StatelessWidget {
-  final Author author;
+class BorrowerListTile extends StatelessWidget {
+  final Borrower borrower;
   final int index;
 
-  const AuthorListTile({super.key, required this.author, required this.index});
+  const BorrowerListTile(
+      {super.key, required this.borrower, required this.index});
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () =>
-          Navigator.of(context).pushNamed(Routes.author, arguments: author),
+          Navigator.of(context).pushNamed(Routes.borrower, arguments: borrower),
       child: ListTile(
         leading: Row(
           mainAxisSize: MainAxisSize.min,
@@ -26,14 +28,14 @@ class AuthorListTile extends StatelessWidget {
             SizedBox.square(
               dimension: 40,
               child: ProfilePicture(
-                imageFilePath: author.profilePicture,
+                imageFilePath: borrower.profilePicture,
                 iconSize: 30,
                 borderWidth: 2,
               ),
             ),
           ],
         ),
-        title: Text(author.name),
+        title: Text(borrower.name),
         titleTextStyle: Theme.of(context)
             .textTheme
             .bodyLarge
@@ -41,13 +43,13 @@ class AuthorListTile extends StatelessWidget {
         subtitle: RichText(
             text: TextSpan(children: [
           TextSpan(
-              text: 'author of ',
+              text: 'member since ',
               style: Theme.of(context)
                   .textTheme
                   .labelSmall
                   ?.copyWith(fontStyle: FontStyle.italic)),
           TextSpan(
-            text: author.books.first.title,
+            text: borrower.membershipStartDate.prettify,
             style: Theme.of(context).textTheme.labelSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                   decoration: TextDecoration.underline,

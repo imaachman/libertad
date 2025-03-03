@@ -49,7 +49,10 @@ class BookListTile extends StatelessWidget {
                   if (!minimal)
                     Text(
                       'by ${book.author.value?.name}',
-                      style: Theme.of(context).textTheme.bodyMedium,
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyMedium
+                          ?.copyWith(fontStyle: FontStyle.italic),
                     ),
                   const SizedBox(height: 8),
                   Wrap(

@@ -94,6 +94,7 @@ class BorrowerDetailsPage extends ConsumerWidget {
                   runAlignment: WrapAlignment.spaceBetween,
                   children: [
                     RichText(
+                      textAlign: TextAlign.center,
                       text: TextSpan(
                         children: [
                           TextSpan(
