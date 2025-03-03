@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:libertad/features/authors/screens/authors_screen/authors_screen.dart';
 import 'package:libertad/features/book_copies/screens/issued_copies_screen.dart';
 import 'package:libertad/features/books/screens/books_screen/books_screen.dart';
-import 'package:libertad/features/borrowers/screens/borrowers_screen.dart';
+import 'package:libertad/features/borrowers/screens/borrowers_screen/borrowers_screen.dart';
 import 'package:libertad/features/home/viewmodels/home_viewmodel.dart';
 
 class HomePage extends ConsumerStatefulWidget {

@@ -296,6 +296,29 @@ class DatabaseRepository {
         .findAll();
   }
 
+  /// Adds a new borrower to the collection.
+  Future<void> addBorrower(Borrower borrower) async {
+    await _isar.writeTxn(() async {
+      // Add the borrower to the database.
+      await _isar.borrowers.put(borrower);
+    });
+  }
+
+  /// Updates an existing borrower in the collection.
+  Future<void> updateBorrower(Borrower borrower) async {
+    await _isar.writeTxn(() async {
+      // Update the borrower in the database.
+      await _isar.borrowers.put(borrower);
+    });
+  }
+
+  /// Deletes the borrower.
+  Future<bool> deleteBorrower(Borrower borrower) async {
+    return await _isar.writeTxn<bool>(() async {
+      return await _isar.borrowers.delete(borrower.id);
+    });
+  }
+
   List<BookCopy> _generateCopies(Book book, int totalCopies) {
     return List.generate(
       totalCopies,

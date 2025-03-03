@@ -40,13 +40,11 @@ class EditableBookCover extends ConsumerWidget {
                         maxLines: 3,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      Consumer(
-                        builder: (context, ref, child) => Text(
-                          model.author?.name ?? 'author',
-                          style: Theme.of(context).textTheme.labelMedium,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
+                      Text(
+                        model.author?.name ?? 'author',
+                        style: Theme.of(context).textTheme.labelMedium,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ],
                   )

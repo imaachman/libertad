@@ -90,7 +90,6 @@ class AuthorDetailsPage extends ConsumerWidget {
                       ?.copyWith(fontWeight: FontWeight.bold),
                   textAlign: TextAlign.center,
                 ),
-                SizedBox(height: 4),
                 SizedBox(height: 16),
                 Container(
                   width: MediaQuery.of(context).size.width / 1.2,

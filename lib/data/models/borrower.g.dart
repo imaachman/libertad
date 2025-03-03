@@ -46,6 +46,11 @@ const BorrowerSchema = CollectionSchema(
       id: 5,
       name: r'name',
       type: IsarType.string,
+    ),
+    r'profilePicture': PropertySchema(
+      id: 6,
+      name: r'profilePicture',
+      type: IsarType.string,
     )
   },
   estimateSize: _borrowerEstimateSize,
@@ -85,6 +90,7 @@ int _borrowerEstimateSize(
   var bytesCount = offsets.last;
   bytesCount += 3 + object.contact.length * 3;
   bytesCount += 3 + object.name.length * 3;
+  bytesCount += 3 + object.profilePicture.length * 3;
   return bytesCount;
 }
 
@@ -100,6 +106,7 @@ void _borrowerSerialize(
   writer.writeLong(offsets[3], object.membershipDuration);
   writer.writeDateTime(offsets[4], object.membershipStartDate);
   writer.writeString(offsets[5], object.name);
+  writer.writeString(offsets[6], object.profilePicture);
 }
 
 Borrower _borrowerDeserialize(
@@ -110,13 +117,14 @@ Borrower _borrowerDeserialize(
 ) {
   final object = Borrower(
     contact: reader.readString(offsets[0]),
-    fineDue: reader.readDouble(offsets[1]),
-    isDefaulter: reader.readBool(offsets[2]),
     membershipDuration: reader.readLong(offsets[3]),
     membershipStartDate: reader.readDateTime(offsets[4]),
     name: reader.readString(offsets[5]),
+    profilePicture: reader.readStringOrNull(offsets[6]) ?? '',
   );
+  object.fineDue = reader.readDouble(offsets[1]);
   object.id = id;
+  object.isDefaulter = reader.readBool(offsets[2]);
   return object;
 }
 
@@ -139,6 +147,8 @@ P _borrowerDeserializeProp<P>(
       return (reader.readDateTime(offset)) as P;
     case 5:
       return (reader.readString(offset)) as P;
+    case 6:
+      return (reader.readStringOrNull(offset) ?? '') as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -732,6 +742,141 @@ extension BorrowerQueryFilter
       ));
     });
   }
+
+  QueryBuilder<Borrower, Borrower, QAfterFilterCondition> profilePictureEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'profilePicture',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Borrower, Borrower, QAfterFilterCondition>
+      profilePictureGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'profilePicture',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Borrower, Borrower, QAfterFilterCondition>
+      profilePictureLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'profilePicture',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Borrower, Borrower, QAfterFilterCondition> profilePictureBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'profilePicture',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Borrower, Borrower, QAfterFilterCondition>
+      profilePictureStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'profilePicture',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Borrower, Borrower, QAfterFilterCondition>
+      profilePictureEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'profilePicture',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Borrower, Borrower, QAfterFilterCondition>
+      profilePictureContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'profilePicture',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Borrower, Borrower, QAfterFilterCondition> profilePictureMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'profilePicture',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Borrower, Borrower, QAfterFilterCondition>
+      profilePictureIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'profilePicture',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Borrower, Borrower, QAfterFilterCondition>
+      profilePictureIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'profilePicture',
+        value: '',
+      ));
+    });
+  }
 }
 
 extension BorrowerQueryObject
@@ -942,6 +1087,18 @@ extension BorrowerQuerySortBy on QueryBuilder<Borrower, Borrower, QSortBy> {
       return query.addSortBy(r'name', Sort.desc);
     });
   }
+
+  QueryBuilder<Borrower, Borrower, QAfterSortBy> sortByProfilePicture() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'profilePicture', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Borrower, Borrower, QAfterSortBy> sortByProfilePictureDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'profilePicture', Sort.desc);
+    });
+  }
 }
 
 extension BorrowerQuerySortThenBy
@@ -1031,6 +1188,18 @@ extension BorrowerQuerySortThenBy
       return query.addSortBy(r'name', Sort.desc);
     });
   }
+
+  QueryBuilder<Borrower, Borrower, QAfterSortBy> thenByProfilePicture() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'profilePicture', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Borrower, Borrower, QAfterSortBy> thenByProfilePictureDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'profilePicture', Sort.desc);
+    });
+  }
 }
 
 extension BorrowerQueryWhereDistinct
@@ -1070,6 +1239,14 @@ extension BorrowerQueryWhereDistinct
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'name', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<Borrower, Borrower, QDistinct> distinctByProfilePicture(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'profilePicture',
+          caseSensitive: caseSensitive);
     });
   }
 }
@@ -1116,6 +1293,12 @@ extension BorrowerQueryProperty
   QueryBuilder<Borrower, String, QQueryOperations> nameProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'name');
+    });
+  }
+
+  QueryBuilder<Borrower, String, QQueryOperations> profilePictureProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'profilePicture');
     });
   }
 }

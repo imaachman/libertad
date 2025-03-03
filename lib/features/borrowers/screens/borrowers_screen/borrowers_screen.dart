@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:libertad/data/models/borrower.dart';
 import 'package:libertad/features/borrowers/viewmodels/borrowers_list_viewmodel.dart';
+import 'package:libertad/navigation/routes.dart';
 
 class BorrowersPage extends ConsumerWidget {
   const BorrowersPage({super.key});
@@ -18,8 +19,12 @@ class BorrowersPage extends ConsumerWidget {
               itemCount: data.length,
               separatorBuilder: (context, index) => const Divider(),
               itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text(data[index].name),
+                return InkWell(
+                  onTap: () => Navigator.of(context)
+                      .pushNamed(Routes.borrower, arguments: data[index]),
+                  child: ListTile(
+                    title: Text(data[index].name),
+                  ),
                 );
               },
             ),

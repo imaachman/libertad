@@ -41,7 +41,7 @@ class BookEditorViewModel extends _$BookEditorViewModel {
   bool isGenreSelected = true;
 
   /// Temporary path to the cover image of the book. This is used to display the
-  /// book cover before the book is added to the database.
+  /// book cover before the book is added/updated in the database.
   String temporaryCoverImage = '';
 
   @override

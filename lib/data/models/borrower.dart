@@ -8,10 +8,11 @@ class Borrower {
   Id id = Isar.autoIncrement;
   String name;
   String contact;
+  String profilePicture;
   DateTime membershipStartDate;
   int membershipDuration;
-  bool isDefaulter;
-  double fineDue;
+  bool isDefaulter = false;
+  double fineDue = 0;
   @Backlink(to: 'currentBorrower')
   final IsarLinks<BookCopy> currentlyIssuedBooks = IsarLinks<BookCopy>();
   @Backlink(to: 'previousBorrowers')
@@ -20,15 +21,15 @@ class Borrower {
   Borrower({
     required this.name,
     required this.contact,
+    this.profilePicture = '',
     required this.membershipStartDate,
     required this.membershipDuration,
-    required this.isDefaulter,
-    required this.fineDue,
   });
 
   Borrower copyWith({
     String? name,
     String? contact,
+    String? profilePicture,
     DateTime? membershipStartDate,
     int? membershipDuration,
     bool? isDefaulter,
@@ -37,9 +38,8 @@ class Borrower {
       Borrower(
         name: name ?? this.name,
         contact: contact ?? this.contact,
+        profilePicture: profilePicture ?? this.profilePicture,
         membershipStartDate: membershipStartDate ?? this.membershipStartDate,
         membershipDuration: membershipDuration ?? this.membershipDuration,
-        isDefaulter: isDefaulter ?? this.isDefaulter,
-        fineDue: fineDue ?? this.fineDue,
       );
 }
