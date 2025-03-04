@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:libertad/core/constants/breakpoints.dart';
 import 'package:libertad/core/utils/extensions.dart';
+import 'package:libertad/data/models/book_copy.dart';
 import 'package:libertad/data/models/borrower.dart';
 import 'package:libertad/features/borrowers/viewmodels/borrower_details_viewmodel.dart';
 import 'package:libertad/widgets/profile_picture.dart';
@@ -89,6 +90,14 @@ class BorrowerDetailsPage extends ConsumerWidget {
                       ?.copyWith(fontWeight: FontWeight.bold),
                   textAlign: TextAlign.center,
                 ),
+                SizedBox(height: 4),
+                Text(
+                  prettifyContact(borrower.contact),
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        color: Theme.of(context).colorScheme.secondary,
+                        fontWeight: FontWeight.bold,
+                      ),
+                ),
                 SizedBox(height: 16),
                 Wrap(
                   runAlignment: WrapAlignment.spaceBetween,
@@ -139,44 +148,92 @@ class BorrowerDetailsPage extends ConsumerWidget {
                     ),
                   ],
                 ),
-                // Container(
-                //   width: MediaQuery.of(context).size.width / 1.2,
-                //   constraints: BoxConstraints(maxWidth: kSmallPhone),
-                //   padding: const EdgeInsets.symmetric(horizontal: 8),
-                //   child: Text(borrower.bio),
-                // ),
-                // Container(
-                //   constraints: BoxConstraints(maxWidth: kSmallPhone + 48),
-                //   child: Divider(height: 48),
-                // ),
-                // Column(
-                //   children: [
-                //     Text(
-                //       'Books',
-                //       style: Theme.of(context)
-                //           .textTheme
-                //           .headlineLarge
-                //           ?.copyWith(fontWeight: FontWeight.bold),
-                //     ),
-                //     const SizedBox(height: 16),
-                //     ...List.generate(
-                //       author.books.length,
-                //       (index) {
-                //         final Book book = author.books.toList()[index];
-                //         return BookListTile(
-                //           book: book,
-                //           index: index,
-                //           minimal: true,
-                //         );
-                //       },
-                //     ),
-                //   ],
-                // )
+                Container(
+                  constraints: BoxConstraints(maxWidth: kSmallPhone + 48),
+                  child: Divider(height: 48),
+                ),
+                Column(
+                  children: [
+                    Text(
+                      'Issued Books',
+                      style: Theme.of(context)
+                          .textTheme
+                          .headlineLarge
+                          ?.copyWith(fontWeight: FontWeight.bold),
+                    ),
+                    ...List.generate(
+                      borrower.currentlyIssuedBooks.length,
+                      (index) {
+                        final BookCopy copy =
+                            borrower.currentlyIssuedBooks.toList()[index];
+                        return ListTile(
+                          leading: Text('${index + 1}.'),
+                          title: Text('${copy.book.value?.title}'),
+                          titleTextStyle: Theme.of(context)
+                              .textTheme
+                              .bodyMedium
+                              ?.copyWith(fontWeight: FontWeight.bold),
+                          trailing: Text(
+                            copy.status == IssueStatus.issued
+                                ? 'Borrowed by ${copy.currentBorrower.value?.name}'
+                                : 'Available',
+                          ),
+                          leadingAndTrailingTextStyle:
+                              Theme.of(context).textTheme.labelMedium?.copyWith(
+                                    color: Theme.of(context).primaryColor,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+                Column(
+                  children: [
+                    Text(
+                      'Previously Issued',
+                      style: Theme.of(context)
+                          .textTheme
+                          .headlineLarge
+                          ?.copyWith(fontWeight: FontWeight.bold),
+                    ),
+                    ...List.generate(
+                      borrower.previouslyIssuedBooks.length,
+                      (index) {
+                        final BookCopy copy =
+                            borrower.previouslyIssuedBooks.toList()[index];
+                        return ListTile(
+                          leading: Text('${index + 1}.'),
+                          title: Text('${copy.book.value?.title}'),
+                          titleTextStyle: Theme.of(context)
+                              .textTheme
+                              .bodyMedium
+                              ?.copyWith(fontWeight: FontWeight.bold),
+                          trailing: Text(
+                            copy.status == IssueStatus.issued
+                                ? 'Borrowed by ${copy.currentBorrower.value?.name}'
+                                : 'Available',
+                          ),
+                          leadingAndTrailingTextStyle:
+                              Theme.of(context).textTheme.labelMedium?.copyWith(
+                                    color: Theme.of(context).primaryColor,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
               ],
             ),
           ),
         ),
       ),
     );
+  }
+
+  /// Formats the contact number to interanational format: (+1 XXX-XXX-XXXX).
+  String prettifyContact(String contact) {
+    return '+1 ${contact.substring(0, 3)}-${contact.substring(3, 6)}-${contact.substring(6)}';
   }
 }

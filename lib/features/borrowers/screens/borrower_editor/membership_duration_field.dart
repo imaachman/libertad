@@ -23,7 +23,7 @@ class MembershipDurationField extends ConsumerWidget {
         ),
         SizedBox(height: 12),
         SizedBox(
-          width: 100,
+          width: 120,
           child: TextFormField(
             initialValue: ref
                 .watch(borrowerEditorViewModelProvider(borrower: borrower)
@@ -38,7 +38,7 @@ class MembershipDurationField extends ConsumerWidget {
               border: OutlineInputBorder(),
               filled: true,
               fillColor: Colors.white,
-              errorMaxLines: 2,
+              errorMaxLines: 3,
               suffixText: 'months',
               suffixStyle: Theme.of(context)
                   .textTheme

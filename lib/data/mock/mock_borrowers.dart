@@ -3,7 +3,7 @@ import 'package:libertad/data/models/borrower.dart';
 List<Borrower> mockBorrowers = [
   Borrower(
     name: 'Michael Johnson',
-    contact: '9876543210',
+    contact: '4155551023',
     membershipStartDate: DateTime(2020, 5, 12),
     membershipDuration: 5,
     // isDefaulter: false,
@@ -11,7 +11,7 @@ List<Borrower> mockBorrowers = [
   ),
   Borrower(
     name: 'Sophia Martinez',
-    contact: '9812345678',
+    contact: '2135557845',
     membershipStartDate: DateTime(2022, 3, 25),
     membershipDuration: 3,
     // isDefaulter: true,
@@ -19,7 +19,7 @@ List<Borrower> mockBorrowers = [
   ),
   Borrower(
     name: 'Liam O\'Connor',
-    contact: '9898989898',
+    contact: '6465556734',
     membershipStartDate: DateTime(2019, 7, 19),
     membershipDuration: 6,
     // isDefaulter: false,
@@ -27,7 +27,7 @@ List<Borrower> mockBorrowers = [
   ),
   Borrower(
     name: 'Aiko Tanaka',
-    contact: '9765432109',
+    contact: '5105558942',
     membershipStartDate: DateTime(2021, 11, 8),
     membershipDuration: 4,
     // isDefaulter: false,
@@ -35,7 +35,7 @@ List<Borrower> mockBorrowers = [
   ),
   Borrower(
     name: 'Carlos Mendes',
-    contact: '9988776655',
+    contact: '3055553281',
     membershipStartDate: DateTime(2018, 2, 14),
     membershipDuration: 7,
     // isDefaulter: true,
@@ -43,7 +43,7 @@ List<Borrower> mockBorrowers = [
   ),
   Borrower(
     name: 'Emma Becker',
-    contact: '9856473820',
+    contact: '7205556493',
     membershipStartDate: DateTime(2023, 6, 10),
     membershipDuration: 2,
     // isDefaulter: false,
@@ -51,7 +51,7 @@ List<Borrower> mockBorrowers = [
   ),
   Borrower(
     name: 'Javier Rodríguez',
-    contact: '9123456780',
+    contact: '7025559956',
     membershipStartDate: DateTime(2020, 9, 5),
     membershipDuration: 5,
     // isDefaulter: true,
@@ -59,7 +59,7 @@ List<Borrower> mockBorrowers = [
   ),
   Borrower(
     name: 'Fatima Hassan',
-    contact: '9871122334',
+    contact: '3125554378',
     membershipStartDate: DateTime(2021, 1, 22),
     membershipDuration: 3,
     // isDefaulter: false,
@@ -67,7 +67,7 @@ List<Borrower> mockBorrowers = [
   ),
   Borrower(
     name: 'Ethan Williams',
-    contact: '9822334455',
+    contact: '8185552094',
     membershipStartDate: DateTime(2019, 12, 30),
     membershipDuration: 4,
     // isDefaulter: false,
@@ -75,7 +75,7 @@ List<Borrower> mockBorrowers = [
   ),
   Borrower(
     name: 'Isla MacKenzie',
-    contact: '9786543210',
+    contact: '4155557782',
     membershipStartDate: DateTime(2023, 4, 15),
     membershipDuration: 2,
     // isDefaulter: true,
@@ -83,7 +83,7 @@ List<Borrower> mockBorrowers = [
   ),
   Borrower(
     name: 'Abdul Rahman',
-    contact: '9900112233',
+    contact: '6465551123',
     membershipStartDate: DateTime(2017, 8, 7),
     membershipDuration: 8,
     // isDefaulter: false,
@@ -91,7 +91,7 @@ List<Borrower> mockBorrowers = [
   ),
   Borrower(
     name: 'Samantha Cohen',
-    contact: '9812345671',
+    contact: '2025553654',
     membershipStartDate: DateTime(2022, 10, 1),
     membershipDuration: 3,
     // isDefaulter: false,
@@ -99,7 +99,7 @@ List<Borrower> mockBorrowers = [
   ),
   Borrower(
     name: 'Dmitri Ivanov',
-    contact: '9877654321',
+    contact: '2125558410',
     membershipStartDate: DateTime(2016, 5, 20),
     membershipDuration: 10,
     // isDefaulter: true,
@@ -107,7 +107,7 @@ List<Borrower> mockBorrowers = [
   ),
   Borrower(
     name: 'Linda Berg',
-    contact: '9825674310',
+    contact: '4145556279',
     membershipStartDate: DateTime(2020, 11, 11),
     membershipDuration: 5,
     // isDefaulter: false,
@@ -115,7 +115,7 @@ List<Borrower> mockBorrowers = [
   ),
   Borrower(
     name: 'Marco Rossi',
-    contact: '9887766554',
+    contact: '3105559981',
     membershipStartDate: DateTime(2018, 6, 17),
     membershipDuration: 6,
     // isDefaulter: true,

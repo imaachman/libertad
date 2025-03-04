@@ -26,7 +26,8 @@ class ContactField extends ConsumerWidget {
         ),
         TextFormField(
           decoration: InputDecoration(
-            hintText: 'Enter borrower\'s phone number',
+            hintText: 'Enter phone number',
+            prefixText: '+1 ',
           ),
           initialValue: model.contact,
           inputFormatters: [FilteringTextInputFormatter.digitsOnly],
