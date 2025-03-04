@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:isar/isar.dart';
 import 'package:libertad/data/mock/mock_authors.dart';
@@ -99,11 +100,27 @@ class DatabaseRepository {
         final Book book = mockBooks[index].copyWith();
         final Author author = mockAuthors[index].copyWith();
         book.author.value = author;
+
+        // Create random number of [BookCopy] objects up to 15.
+        // Each copy will have a link to the book.
+        final List<BookCopy> copies =
+            _generateCopies(book, Random().nextInt(15) + 1);
+        // Add the copies to the database.
+        await _isar.bookCopys.putAll(copies);
+        // Link the copies set to the book.
+        book.totalCopies.addAll(copies);
+
+        // Add the book and author to the database.
         await _isar.books.put(book);
         await _isar.authors.put(author);
+
+        // Save the book, book copies, and author links.
+        // Always the last step, required to update the links in the database.
         await book.author.save();
+        await book.totalCopies.save();
         await author.books.save();
       }
+      // Add all the borrowers to the database.
       await _isar.borrowers.putAll(mockBorrowers);
     });
   }
