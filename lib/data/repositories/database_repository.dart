@@ -7,6 +7,7 @@ import 'package:libertad/data/mock/mock_books.dart';
 import 'package:libertad/data/mock/mock_borrowers.dart';
 import 'package:libertad/data/models/book_copy.dart';
 import 'package:libertad/data/models/borrower.dart';
+import 'package:libertad/data/models/search_result.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../models/author.dart';
@@ -355,6 +356,38 @@ class DatabaseRepository {
     return List.generate(
       totalCopies,
       (index) => BookCopy()..book.value = book,
+    );
+  }
+
+  Future<SearchResult> searchDatabase(String query) async {
+    final List<Book> books = await _isar.books
+        .filter()
+        .titleContains(query, caseSensitive: false)
+        .or()
+        .author((q) => q.nameContains(query, caseSensitive: false))
+        .findAll();
+    final List<Author> authors = await _isar.authors
+        .filter()
+        .nameContains(query, caseSensitive: false)
+        .or()
+        .books((q) => q.titleContains(query, caseSensitive: false))
+        .findAll();
+    final List<BookCopy> issuedCopies = await _isar.bookCopys
+        .filter()
+        .statusEqualTo(IssueStatus.issued)
+        .and()
+        .book((q) => q.titleContains(query, caseSensitive: false))
+        .findAll();
+    final List<Borrower> borrowers = await _isar.borrowers
+        .filter()
+        .nameContains(query, caseSensitive: false)
+        .findAll();
+
+    return SearchResult(
+      books: books,
+      authors: authors,
+      issuedCopies: issuedCopies,
+      borrowers: borrowers,
     );
   }
 }

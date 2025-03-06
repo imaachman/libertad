@@ -2,12 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:libertad/data/repositories/database_repository.dart';
 import 'package:libertad/data/repositories/files_repository.dart';
 import 'package:libertad/features/books/screens/book_editor/book_editor.dart';
+import 'package:libertad/features/search/screens/database_search_delegate.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'home_viewmodel.g.dart';
 
 @riverpod
 class HomeViewModel extends _$HomeViewModel {
+  /// Index of the selected tab in the home page.
+  /// Used to sync the tab when search page is opened.
+  int selectedTabIndex = 0;
+
   @override
   void build() {}
 
@@ -49,6 +54,10 @@ class HomeViewModel extends _$HomeViewModel {
 
   Future<void> resetDatabase() async =>
       await DatabaseRepository.instance.resetDatabase();
+
+  Future<void> searchDatabase(
+          BuildContext context, int selectedTabIndex) async =>
+      showSearch(context: context, delegate: DatabaseSearchDelegate());
 
   void showBookEditor({required BuildContext context}) {
     showModalBottomSheet(

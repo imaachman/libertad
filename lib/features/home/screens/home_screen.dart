@@ -39,27 +39,32 @@ class _HomePageState extends ConsumerState<HomePage>
 
   @override
   Widget build(BuildContext context) {
+    final HomeViewModel model = ref.watch(homeViewModelProvider.notifier);
+
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text('Libertad'),
         actions: [
           IconButton(
-            onPressed: () => ref
-                .read(homeViewModelProvider.notifier)
-                .showDocumentsDirectory(context),
+            onPressed: () => model.showDocumentsDirectory(context),
             icon: Icon(Icons.file_present_outlined),
             tooltip: 'View app files',
           ),
           IconButton(
-            onPressed: ref.read(homeViewModelProvider.notifier).clearDatabase,
+            onPressed: model.clearDatabase,
             icon: Icon(Icons.clear_all),
             tooltip: 'Clear database',
           ),
           IconButton(
-            onPressed: ref.read(homeViewModelProvider.notifier).resetDatabase,
+            onPressed: model.resetDatabase,
             icon: Icon(Icons.restart_alt_rounded),
             tooltip: 'Reset database',
+          ),
+          IconButton(
+            onPressed: () =>
+                model.searchDatabase(context, _tabController.index),
+            icon: Icon(Icons.search),
+            tooltip: 'Search database',
           ),
         ],
         bottom: TabBar(
@@ -67,6 +72,7 @@ class _HomePageState extends ConsumerState<HomePage>
           tabs: _tabs,
           tabAlignment: TabAlignment.center,
           isScrollable: true,
+          onTap: (value) => model.selectedTabIndex = value,
         ),
       ),
       body: TabBarView(
@@ -74,12 +80,16 @@ class _HomePageState extends ConsumerState<HomePage>
         children: _tabs.map((tab) => _tabViews[_tabs.indexOf(tab)]).toList(),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => ref
-            .read(homeViewModelProvider.notifier)
-            .showBookEditor(context: context),
+        onPressed: () => model.showBookEditor(context: context),
         tooltip: 'Add new book',
         child: const Icon(Icons.add),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
   }
 }
