@@ -5,6 +5,7 @@ import 'package:libertad/core/utils/extensions.dart';
 import 'package:libertad/data/models/book.dart';
 import 'package:libertad/data/models/book_copy.dart';
 import 'package:libertad/features/books/viewmodels/book_details_viewmodel.dart';
+import 'package:libertad/navigation/routes.dart';
 import 'package:libertad/widgets/book_cover.dart';
 
 class BookDetailsPage extends ConsumerWidget {
@@ -172,27 +173,67 @@ class BookDetailsPage extends ConsumerWidget {
                           .headlineLarge
                           ?.copyWith(fontWeight: FontWeight.bold),
                     ),
+                    SizedBox(height: 8),
                     ...List.generate(
                       book.totalCopies.length,
                       (index) {
                         final BookCopy copy = book.totalCopies.toList()[index];
-                        return ListTile(
-                          leading: Text('${index + 1}.'),
-                          title: Text('Copy ${copy.id}'),
-                          titleTextStyle: Theme.of(context)
-                              .textTheme
-                              .bodyMedium
-                              ?.copyWith(fontWeight: FontWeight.bold),
-                          trailing: Text(
-                            copy.status == IssueStatus.issued
-                                ? 'Borrowed by ${copy.currentBorrower.value?.name}'
-                                : 'Available',
-                          ),
-                          leadingAndTrailingTextStyle:
-                              Theme.of(context).textTheme.labelMedium?.copyWith(
-                                    color: Theme.of(context).primaryColor,
+                        return InkWell(
+                          onTap: () => Navigator.of(context)
+                              .pushNamed(Routes.bookCopy, arguments: copy),
+                          child: ListTile(
+                            leading: Text(
+                              '${index + 1}.',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .labelMedium
+                                  ?.copyWith(
                                     fontWeight: FontWeight.bold,
                                   ),
+                            ),
+                            title: Text('Copy ${copy.id}'),
+                            titleTextStyle: Theme.of(context)
+                                .textTheme
+                                .bodyMedium
+                                ?.copyWith(fontWeight: FontWeight.bold),
+                            trailing: copy.status == IssueStatus.issued
+                                ? RichText(
+                                    text: TextSpan(
+                                      children: [
+                                        TextSpan(
+                                          text: 'borrowed by ',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .labelMedium,
+                                        ),
+                                        TextSpan(
+                                          text:
+                                              copy.currentBorrower.value?.name,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .labelMedium
+                                              ?.copyWith(
+                                                color: Theme.of(context)
+                                                    .primaryColor,
+                                                fontWeight: FontWeight.bold,
+                                                decoration:
+                                                    TextDecoration.underline,
+                                              ),
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                : Text(
+                                    'Available',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .labelMedium
+                                        ?.copyWith(
+                                          color: Theme.of(context).primaryColor,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                  ),
+                          ),
                         );
                       },
                     ),

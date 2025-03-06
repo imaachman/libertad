@@ -48,4 +48,14 @@ extension DateExtension on DateTime {
   }
 
   String get prettify => '${monthToWord()} ${appendOrdinals()}, $year';
+
+  String get prettifyShort => '${monthToWord()} ${appendOrdinals()}';
+
+  String get prettifySmart {
+    if (year == DateTime.now().year) {
+      return prettifyShort;
+    } else {
+      return prettify;
+    }
+  }
 }

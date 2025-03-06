@@ -336,6 +336,21 @@ class DatabaseRepository {
     });
   }
 
+  Future<List<Borrower>> searchBorrowers(String name) async {
+    return _isar.borrowers
+        .filter()
+        .nameContains(name, caseSensitive: false)
+        .findAll();
+  }
+
+  Future<void> issueCopy(BookCopy copy, Borrower borrower) async {
+    return _isar.writeTxn(() async {
+      copy.currentBorrower.value = borrower;
+      await _isar.bookCopys.put(copy);
+      copy.currentBorrower.save();
+    });
+  }
+
   List<BookCopy> _generateCopies(Book book, int totalCopies) {
     return List.generate(
       totalCopies,

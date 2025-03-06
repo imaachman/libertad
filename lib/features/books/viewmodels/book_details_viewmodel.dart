@@ -14,6 +14,8 @@ class BookDetailsViewModel extends _$BookDetailsViewModel {
     DatabaseRepository.instance
         .bookStream(book.id)
         .listen((_) => ref.notifyListeners());
+    DatabaseRepository.instance.bookCopiesStream
+        .listen((_) => ref.notifyListeners());
     return book;
   }
 

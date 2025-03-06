@@ -57,7 +57,6 @@ class AuthorListTile extends StatelessWidget {
                 ),
           ),
         ])),
-        subtitleTextStyle: Theme.of(context).textTheme.labelSmall,
       ),
     );
   }
