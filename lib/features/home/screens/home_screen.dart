@@ -46,25 +46,74 @@ class _HomePageState extends ConsumerState<HomePage>
         title: const Text('Libertad'),
         actions: [
           IconButton(
-            onPressed: () => model.showDocumentsDirectory(context),
-            icon: Icon(Icons.file_present_outlined),
-            tooltip: 'View app files',
-          ),
-          IconButton(
-            onPressed: model.clearDatabase,
-            icon: Icon(Icons.clear_all),
-            tooltip: 'Clear database',
-          ),
-          IconButton(
-            onPressed: model.resetDatabase,
-            icon: Icon(Icons.restart_alt_rounded),
-            tooltip: 'Reset database',
-          ),
-          IconButton(
             onPressed: () =>
                 model.searchDatabase(context, _tabController.index),
             icon: Icon(Icons.search),
             tooltip: 'Search database',
+          ),
+          PopupMenuButton(
+            itemBuilder: (context) => [
+              PopupMenuItem(
+                value: 0,
+                onTap: () => model.showDocumentsDirectory(context),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.file_present_outlined,
+                      size: 18,
+                      color: Theme.of(context).colorScheme.secondary,
+                    ),
+                    SizedBox(width: 8),
+                    Text(
+                      'View app files',
+                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                            color: Theme.of(context).colorScheme.secondary,
+                          ),
+                    ),
+                  ],
+                ),
+              ),
+              PopupMenuItem(
+                value: 1,
+                onTap: model.clearDatabase,
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.clear_all,
+                      size: 18,
+                      color: Theme.of(context).colorScheme.error,
+                    ),
+                    SizedBox(width: 8),
+                    Text(
+                      'Clear database',
+                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                            color: Theme.of(context).colorScheme.error,
+                          ),
+                    ),
+                  ],
+                ),
+              ),
+              PopupMenuItem(
+                value: 2,
+                onTap: model.resetDatabase,
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.restart_alt_rounded,
+                      size: 18,
+                      color: Theme.of(context).colorScheme.error,
+                    ),
+                    SizedBox(width: 8),
+                    Text(
+                      'Reset database',
+                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                            color: Theme.of(context).colorScheme.error,
+                          ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ],
         bottom: TabBar(
