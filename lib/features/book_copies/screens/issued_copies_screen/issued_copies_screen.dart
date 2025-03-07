@@ -16,19 +16,30 @@ class IssuedBooksPage extends ConsumerWidget {
 
     // Check for error and loading states and build the widget accordingly.
     return issuedCopies.when(
-      data: (data) => Center(
-        child: Container(
-          constraints: BoxConstraints(maxWidth: kSmallPhone),
-          child: ListView.separated(
-            padding: const EdgeInsets.only(bottom: 64),
-            physics: BouncingScrollPhysics(),
-            itemCount: data.length,
-            separatorBuilder: (context, index) => const Divider(),
-            itemBuilder: (context, index) =>
-                IssuedCopyTile(copy: data[index], index: index),
+      data: (data) {
+        if (data.isEmpty) {
+          return Center(
+            child: Text(
+              'No books issued yet!\nThe books you issue will appear here.',
+              style: Theme.of(context).textTheme.titleMedium,
+              textAlign: TextAlign.center,
+            ),
+          );
+        }
+        return Center(
+          child: Container(
+            constraints: BoxConstraints(maxWidth: kSmallPhone),
+            child: ListView.separated(
+              padding: const EdgeInsets.only(bottom: 64),
+              physics: BouncingScrollPhysics(),
+              itemCount: data.length,
+              separatorBuilder: (context, index) => const Divider(),
+              itemBuilder: (context, index) =>
+                  IssuedCopyTile(copy: data[index], index: index),
+            ),
           ),
-        ),
-      ),
+        );
+      },
       error: (error, stackTrace) =>
           Center(child: Text('An unexpected error has occured.')),
       loading: () => Center(child: CircularProgressIndicator()),
