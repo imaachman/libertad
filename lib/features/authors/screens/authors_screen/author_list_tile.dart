@@ -11,53 +11,51 @@ class AuthorListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return ListTile(
       onTap: () =>
           Navigator.of(context).pushNamed(Routes.author, arguments: author),
-      child: ListTile(
-        leading: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              '${index + 1}.',
-              style: Theme.of(context).textTheme.bodyLarge,
-            ),
-            const SizedBox(width: 12),
-            SizedBox.square(
-              dimension: 40,
-              child: ProfilePicture(
-                imageFilePath: author.profilePicture,
-                iconSize: 30,
-                borderWidth: 2,
-              ),
-            ),
-          ],
-        ),
-        title: Text(author.name),
-        titleTextStyle: Theme.of(context)
-            .textTheme
-            .bodyLarge
-            ?.copyWith(fontWeight: FontWeight.bold),
-        subtitle: RichText(
-            text: TextSpan(children: [
-          TextSpan(
-              text: 'author of ',
-              style: Theme.of(context)
-                  .textTheme
-                  .labelSmall
-                  ?.copyWith(fontStyle: FontStyle.italic)),
-          TextSpan(
-            text: author.books.first.title,
-            style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  decoration: TextDecoration.underline,
-                  fontStyle: FontStyle.italic,
-                  decorationColor: Theme.of(context).primaryColor,
-                  color: Theme.of(context).primaryColor,
-                ),
+      leading: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            '${index + 1}.',
+            style: Theme.of(context).textTheme.bodyLarge,
           ),
-        ])),
+          const SizedBox(width: 12),
+          SizedBox.square(
+            dimension: 40,
+            child: ProfilePicture(
+              imageFilePath: author.profilePicture,
+              iconSize: 30,
+              borderWidth: 2,
+            ),
+          ),
+        ],
       ),
+      title: Text(author.name),
+      titleTextStyle: Theme.of(context)
+          .textTheme
+          .bodyLarge
+          ?.copyWith(fontWeight: FontWeight.bold),
+      subtitle: RichText(
+          text: TextSpan(children: [
+        TextSpan(
+            text: 'author of ',
+            style: Theme.of(context)
+                .textTheme
+                .labelSmall
+                ?.copyWith(fontStyle: FontStyle.italic)),
+        TextSpan(
+          text: author.books.first.title,
+          style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                fontWeight: FontWeight.bold,
+                decoration: TextDecoration.underline,
+                fontStyle: FontStyle.italic,
+                decorationColor: Theme.of(context).primaryColor,
+                color: Theme.of(context).primaryColor,
+              ),
+        ),
+      ])),
     );
   }
 }

@@ -178,62 +178,59 @@ class BookDetailsPage extends ConsumerWidget {
                       book.totalCopies.length,
                       (index) {
                         final BookCopy copy = book.totalCopies.toList()[index];
-                        return InkWell(
+                        return ListTile(
                           onTap: () => Navigator.of(context)
                               .pushNamed(Routes.bookCopy, arguments: copy),
-                          child: ListTile(
-                            leading: Text(
-                              '${index + 1}.',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .labelMedium
-                                  ?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                            ),
-                            title: Text('Copy ${copy.id}'),
-                            titleTextStyle: Theme.of(context)
+                          leading: Text(
+                            '${index + 1}.',
+                            style: Theme.of(context)
                                 .textTheme
-                                .bodyMedium
-                                ?.copyWith(fontWeight: FontWeight.bold),
-                            trailing: copy.status == IssueStatus.issued
-                                ? RichText(
-                                    text: TextSpan(
-                                      children: [
-                                        TextSpan(
-                                          text: 'borrowed by ',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .labelMedium,
-                                        ),
-                                        TextSpan(
-                                          text:
-                                              copy.currentBorrower.value?.name,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .labelMedium
-                                              ?.copyWith(
-                                                color: Theme.of(context)
-                                                    .primaryColor,
-                                                fontWeight: FontWeight.bold,
-                                                decoration:
-                                                    TextDecoration.underline,
-                                              ),
-                                        ),
-                                      ],
-                                    ),
-                                  )
-                                : Text(
-                                    'Available',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .labelMedium
-                                        ?.copyWith(
-                                          color: Theme.of(context).primaryColor,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                  ),
+                                .labelMedium
+                                ?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
                           ),
+                          title: Text('Copy ${copy.id}'),
+                          titleTextStyle: Theme.of(context)
+                              .textTheme
+                              .bodyMedium
+                              ?.copyWith(fontWeight: FontWeight.bold),
+                          trailing: copy.status == IssueStatus.issued
+                              ? RichText(
+                                  text: TextSpan(
+                                    children: [
+                                      TextSpan(
+                                        text: 'borrowed by ',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .labelMedium,
+                                      ),
+                                      TextSpan(
+                                        text: copy.currentBorrower.value?.name,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .labelMedium
+                                            ?.copyWith(
+                                              color: Theme.of(context)
+                                                  .primaryColor,
+                                              fontWeight: FontWeight.bold,
+                                              decoration:
+                                                  TextDecoration.underline,
+                                            ),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              : Text(
+                                  'Available',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .labelMedium
+                                      ?.copyWith(
+                                        color: Theme.of(context).primaryColor,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                ),
                         );
                       },
                     ),

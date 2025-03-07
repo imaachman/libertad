@@ -25,20 +25,18 @@ class BorrowersSearchPage extends ConsumerWidget {
         itemCount: data.length,
         itemBuilder: (context, index) {
           final Borrower borrower = data[index];
-          return InkWell(
+          return ListTile(
             onTap: () => close(context, borrower),
-            child: ListTile(
-              leading: ProfilePicture(
-                imageFilePath: borrower.profilePicture,
-                borderWidth: 2,
-                iconSize: 30,
-              ),
-              title: Text(borrower.name),
-              titleTextStyle: Theme.of(context).textTheme.bodyLarge,
-              subtitle:
-                  Text('member since ${borrower.membershipStartDate.prettify}'),
-              subtitleTextStyle: Theme.of(context).textTheme.labelSmall,
+            leading: ProfilePicture(
+              imageFilePath: borrower.profilePicture,
+              borderWidth: 2,
+              iconSize: 30,
             ),
+            title: Text(borrower.name),
+            titleTextStyle: Theme.of(context).textTheme.bodyLarge,
+            subtitle:
+                Text('member since ${borrower.membershipStartDate.prettify}'),
+            subtitleTextStyle: Theme.of(context).textTheme.labelSmall,
           );
         },
       ),

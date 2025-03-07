@@ -25,53 +25,47 @@ class AuthorsSearchPage extends ConsumerWidget {
     return authors.when(
       data: (data) => Column(
         children: [
-          InkWell(
-            onTap: () => ref
-                .read(authorsSearchViewModelProvider(query).notifier)
-                .showAuthorEditorDialog(context, query),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primaryContainer,
-                boxShadow: [BoxShadow(offset: Offset(0, -10), blurRadius: 10)],
-              ),
-              child: ListTile(
-                // TODO: Replace with author image.
-                leading: const Icon(Icons.person_add_alt_rounded),
-                iconColor: Theme.of(context).colorScheme.primary,
-                title: Text('CREATE A NEW AUTHOR'),
-                titleTextStyle: Theme.of(context).textTheme.bodyLarge,
-                tileColor: Theme.of(context).colorScheme.primaryContainer,
-                subtitle: query.isNotEmpty ? Text(query.toUpperCase()) : null,
-                subtitleTextStyle: Theme.of(context).textTheme.labelSmall,
-              ),
+          Container(
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.primaryContainer,
+              boxShadow: [BoxShadow(offset: Offset(0, -10), blurRadius: 10)],
+            ),
+            child: ListTile(
+              onTap: () => ref
+                  .read(authorsSearchViewModelProvider(query).notifier)
+                  .showAuthorEditorDialog(context, query),
+              // TODO: Replace with author image.
+              leading: const Icon(Icons.person_add_alt_rounded),
+              iconColor: Theme.of(context).colorScheme.primary,
+              title: Text('CREATE A NEW AUTHOR'),
+              titleTextStyle: Theme.of(context).textTheme.bodyLarge,
+              tileColor: Theme.of(context).colorScheme.primaryContainer,
+              subtitle: query.isNotEmpty ? Text(query.toUpperCase()) : null,
+              subtitleTextStyle: Theme.of(context).textTheme.labelSmall,
             ),
           ),
           Expanded(
             child: ListView(
               children: [
                 if (newlyAddedAuthor != null)
-                  InkWell(
+                  ListTile(
                     onTap: () => close(context, newlyAddedAuthor),
-                    child: ListTile(
-                      // TODO: Replace with author image.
-                      leading: const Icon(Icons.person),
-                      title: Text(newlyAddedAuthor.name),
-                      titleTextStyle: Theme.of(context).textTheme.bodyLarge,
-                      subtitle: Text('newly created author'),
-                      subtitleTextStyle: Theme.of(context).textTheme.labelSmall,
-                    ),
+                    // TODO: Replace with author image.
+                    leading: const Icon(Icons.person),
+                    title: Text(newlyAddedAuthor.name),
+                    titleTextStyle: Theme.of(context).textTheme.bodyLarge,
+                    subtitle: Text('newly created author'),
+                    subtitleTextStyle: Theme.of(context).textTheme.labelSmall,
                   ),
                 ...data.map(
-                  (author) => InkWell(
+                  (author) => ListTile(
                     onTap: () => close(context, author),
-                    child: ListTile(
-                      // TODO: Replace with author image.
-                      leading: const Icon(Icons.person),
-                      title: Text(author.name),
-                      titleTextStyle: Theme.of(context).textTheme.bodyLarge,
-                      subtitle: Text('author of "${author.books.first.title}"'),
-                      subtitleTextStyle: Theme.of(context).textTheme.labelSmall,
-                    ),
+                    // TODO: Replace with author image.
+                    leading: const Icon(Icons.person),
+                    title: Text(author.name),
+                    titleTextStyle: Theme.of(context).textTheme.bodyLarge,
+                    subtitle: Text('author of "${author.books.first.title}"'),
+                    subtitleTextStyle: Theme.of(context).textTheme.labelSmall,
                   ),
                 ),
               ],
