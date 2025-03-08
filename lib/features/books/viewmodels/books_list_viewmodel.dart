@@ -29,22 +29,28 @@ class BooksListViewModel extends _$BooksListViewModel {
     return books;
   }
 
-  Future<void> showSortDialog(BuildContext context) async {
-    showDialog(context: context, builder: (context) => BookSortDialog());
-  }
+  /// Show sort dialog to select the sort type and order.
+  void showSortDialog(BuildContext context) =>
+      showDialog(context: context, builder: (context) => BookSortDialog());
 
+  /// Select sort order -- ascending or descending.
   void selectSortOrder(SortOrder sortOrder) {
     selectedSortOrder = sortOrder;
     ref.notifyListeners();
   }
 
+  /// Sort the books according to the selected [BookSort] type.
   Future<void> sort(BookSort sortBy) async {
+    // Update [bookSort] to show the selected sort type in the UI.
     bookSort = sortBy;
+    // Retrieve the books again in the selected sort type and update the state.
     state = AsyncData(
       await DatabaseRepository.instance.getAllBooks(
         sortBy: bookSort,
         sortOrder: selectedSortOrder,
       ),
     );
+    // Keep provider alive to preserve the order.
+    ref.keepAlive();
   }
 }
