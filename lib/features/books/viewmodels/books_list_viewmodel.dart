@@ -11,7 +11,7 @@ part 'books_list_viewmodel.g.dart';
 @riverpod
 class BooksListViewModel extends _$BooksListViewModel {
   SortOrder selectedSortOrder = SortOrder.ascending;
-  BookSort? _sortBy;
+  BookSort? bookSort;
 
   @override
   Future<List<Book>> build() async {
@@ -22,7 +22,7 @@ class BooksListViewModel extends _$BooksListViewModel {
     // as well.
     DatabaseRepository.instance.booksStream.listen((_) async {
       // Retrieve all books from the database.
-      books = await DatabaseRepository.instance.getAllBooks(sortBy: _sortBy);
+      books = await DatabaseRepository.instance.getAllBooks(sortBy: bookSort);
       // Update state and notify listeners to rebuild the UI.
       state = AsyncData(books);
     });
@@ -38,9 +38,9 @@ class BooksListViewModel extends _$BooksListViewModel {
     ref.notifyListeners();
   }
 
-  Future<void> sortBy(BookSort sortBy) async {
-    _sortBy = sortBy;
+  Future<void> sort(BookSort sortBy) async {
+    bookSort = sortBy;
     state = AsyncData(
-        await DatabaseRepository.instance.getAllBooks(sortBy: _sortBy));
+        await DatabaseRepository.instance.getAllBooks(sortBy: bookSort));
   }
 }

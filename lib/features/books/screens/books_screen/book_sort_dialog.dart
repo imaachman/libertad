@@ -58,18 +58,28 @@ class BookSortDialog extends ConsumerWidget {
           ),
           Divider(height: 0),
           ...BookSort.values.map(
-            (sort) => ListTile(
+            (bookSort) => ListTile(
               title: Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
                 child: Text(
-                  sort.prettify,
+                  bookSort.prettify,
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
               ),
-              leading: Icon(sort.icon),
+              leading: Icon(bookSort.icon),
+              trailing: bookSort == model.bookSort
+                  ? Icon(
+                      Icons.check,
+                      size: 16,
+                      color: Theme.of(context).primaryColor,
+                    )
+                  : null,
+              tileColor: bookSort == model.bookSort
+                  ? Theme.of(context).colorScheme.primaryContainer
+                  : null,
               onTap: () async {
-                await model.sortBy(sort);
+                await model.sort(bookSort);
                 if (!context.mounted) return;
                 Navigator.of(context).pop();
               },
