@@ -5,6 +5,7 @@ import 'package:libertad/features/authors/screens/authors_screen/author_sort_dia
 import 'package:libertad/features/book_copies/screens/issued_copies_screen/issued_copies_sort_dialog.dart';
 import 'package:libertad/features/books/screens/book_editor/book_editor.dart';
 import 'package:libertad/features/books/screens/books_screen/book_sort_dialog.dart';
+import 'package:libertad/features/borrowers/screens/borrowers_screen/borrower_sort_dialog.dart';
 import 'package:libertad/features/search/screens/database_search_delegate.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -63,17 +64,24 @@ class HomeViewModel extends _$HomeViewModel {
       showSearch(context: context, delegate: DatabaseSearchDelegate());
 
   /// Show sort dialog to select the sort type and order.
-  void showSortDialog(BuildContext context) {
-    // Show sort dialog according to the current tab.
-    if (_tabController.index == 0) {
-      showDialog(context: context, builder: (context) => BookSortDialog());
-    } else if (_tabController.index == 1) {
-      showDialog(context: context, builder: (context) => AuthorSortDialog());
-    } else if (_tabController.index == 2) {
-      showDialog(
-          context: context, builder: (context) => IssuedCopiesSortDialog());
-    }
-  }
+  void showSortDialog(BuildContext context) => showDialog(
+        context: context,
+        builder: (context) {
+          // Show sort dialog according to the current tab.
+          switch (_tabController.index) {
+            case 0:
+              return BookSortDialog();
+            case 1:
+              return AuthorSortDialog();
+            case 2:
+              return IssuedCopiesSortDialog();
+            case 3:
+              return BorrowerSortDialog();
+            default:
+              return BookSortDialog();
+          }
+        },
+      );
 
   void showBookEditor({required BuildContext context}) {
     showModalBottomSheet(

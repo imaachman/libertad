@@ -20,8 +20,10 @@ class AuthorsListViewModel extends _$AuthorsListViewModel {
     // as well.
     DatabaseRepository.instance.authorsStream.listen((_) async {
       // Retrieve all authors from the database.
-      authors =
-          await DatabaseRepository.instance.getAllAuthors(sortBy: authorSort);
+      authors = await DatabaseRepository.instance.getAllAuthors(
+        sortBy: authorSort,
+        sortOrder: selectedSortOrder,
+      );
       // Update state and notify listeners to rebuild the UI.
       state = AsyncData(authors);
     });

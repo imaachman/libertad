@@ -249,12 +249,28 @@ class DatabaseRepository {
   }
 
   /// Returns all the borrowers in the collection.
-  Future<List<Borrower>> getAllBorrowers({BorrowerSort? sortBy}) async {
+  Future<List<Borrower>> getAllBorrowers(
+      {BorrowerSort? sortBy, SortOrder sortOrder = SortOrder.ascending}) async {
     switch (sortBy) {
       case BorrowerSort.name:
-        return await _isar.borrowers.where().sortByName().findAll();
+        if (sortOrder == SortOrder.ascending) {
+          return await _isar.borrowers.where().sortByName().findAll();
+        } else {
+          return await _isar.borrowers.where().sortByNameDesc().findAll();
+        }
       case BorrowerSort.membershipStartDate:
-        return await _isar.borrowers.where().anyMembershipStartDate().findAll();
+        if (sortOrder == SortOrder.ascending) {
+          return await _isar.borrowers
+              .where()
+              .anyMembershipStartDate()
+              .findAll();
+        } else {
+          return await _isar.borrowers
+              .where()
+              .anyMembershipStartDate()
+              .sortByMembershipStartDateDesc()
+              .findAll();
+        }
       default:
         return _isar.borrowers.where().findAll();
     }

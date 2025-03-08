@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:libertad/data/models/issued_copy_sort.dart';
+import 'package:libertad/data/models/borrower_sort.dart';
 import 'package:libertad/data/models/sort_order.dart';
-import 'package:libertad/features/book_copies/viewmodels/issued_copies_list_viewmodel.dart';
+import 'package:libertad/features/borrowers/viewmodels/borrowers_list_viewmodel.dart';
 
-class IssuedCopiesSortDialog extends ConsumerWidget {
-  const IssuedCopiesSortDialog({super.key});
+class BorrowerSortDialog extends ConsumerWidget {
+  const BorrowerSortDialog({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.watch(issuedCopiesListViewModelProvider);
-    final IssuedCopiesListViewModel model =
-        ref.watch(issuedCopiesListViewModelProvider.notifier);
+    ref.watch(borrowersListViewModelProvider);
+    final BorrowersListViewModel model =
+        ref.watch(borrowersListViewModelProvider.notifier);
 
     return Dialog(
       shape: RoundedRectangleBorder(),
@@ -57,29 +57,29 @@ class IssuedCopiesSortDialog extends ConsumerWidget {
             ),
           ),
           Divider(height: 0),
-          ...IssuedCopySort.values.map(
-            (issuedCopySort) => ListTile(
+          ...BorrowerSort.values.map(
+            (borrowerSort) => ListTile(
               title: Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
                 child: Text(
-                  issuedCopySort.prettify,
+                  borrowerSort.prettify,
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
               ),
-              leading: Icon(issuedCopySort.icon),
-              trailing: issuedCopySort == model.issuedCopySort
+              leading: Icon(borrowerSort.icon),
+              trailing: borrowerSort == model.borrowerSort
                   ? Icon(
                       Icons.check,
                       size: 16,
                       color: Theme.of(context).primaryColor,
                     )
                   : null,
-              tileColor: issuedCopySort == model.issuedCopySort
+              tileColor: borrowerSort == model.borrowerSort
                   ? Theme.of(context).colorScheme.primaryContainer
                   : null,
               onTap: () async {
-                await model.sort(issuedCopySort);
+                await model.sort(borrowerSort);
                 if (!context.mounted) return;
                 Navigator.of(context).pop();
               },
