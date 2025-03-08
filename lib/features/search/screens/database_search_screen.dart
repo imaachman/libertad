@@ -53,54 +53,82 @@ class _DatabaseSearchPageState extends ConsumerState<DatabaseSearchPage>
             child: TabBarView(
               controller: _tabController,
               children: [
-                ListView.separated(
-                  padding: const EdgeInsets.only(bottom: 64),
-                  physics: BouncingScrollPhysics(),
-                  itemCount: data.books.length,
-                  separatorBuilder: (context, index) => const Divider(),
-                  itemBuilder: (context, index) {
-                    return BookListTile(
-                      book: data.books[index],
-                      index: index,
-                    );
-                  },
-                ),
-                ListView.separated(
-                  padding: const EdgeInsets.only(bottom: 64),
-                  physics: BouncingScrollPhysics(),
-                  itemCount: data.authors.length,
-                  separatorBuilder: (context, index) => const Divider(),
-                  itemBuilder: (context, index) {
-                    return AuthorListTile(
-                      author: data.authors[index],
-                      index: index,
-                    );
-                  },
-                ),
-                ListView.separated(
-                  padding: const EdgeInsets.only(bottom: 64),
-                  physics: BouncingScrollPhysics(),
-                  itemCount: data.issuedCopies.length,
-                  separatorBuilder: (context, index) => const Divider(),
-                  itemBuilder: (context, index) {
-                    return IssuedCopyTile(
-                      copy: data.issuedCopies[index],
-                      index: index,
-                    );
-                  },
-                ),
-                ListView.separated(
-                  padding: const EdgeInsets.only(bottom: 64),
-                  physics: BouncingScrollPhysics(),
-                  itemCount: data.borrowers.length,
-                  separatorBuilder: (context, index) => const Divider(),
-                  itemBuilder: (context, index) {
-                    return BorrowerListTile(
-                      borrower: data.borrowers[index],
-                      index: index,
-                    );
-                  },
-                ),
+                data.books.isEmpty
+                    ? Center(
+                        child: Text(
+                          'No books in the inventory match your search...',
+                          style: Theme.of(context).textTheme.titleMedium,
+                          textAlign: TextAlign.center,
+                        ),
+                      )
+                    : ListView.separated(
+                        physics: BouncingScrollPhysics(),
+                        itemCount: data.books.length,
+                        separatorBuilder: (context, index) => const Divider(),
+                        itemBuilder: (context, index) {
+                          return BookListTile(
+                            book: data.books[index],
+                            index: index,
+                          );
+                        },
+                      ),
+                data.authors.isEmpty
+                    ? Center(
+                        child: Text(
+                          'No authors in the database match your search...',
+                          style: Theme.of(context).textTheme.titleMedium,
+                          textAlign: TextAlign.center,
+                        ),
+                      )
+                    : ListView.separated(
+                        physics: BouncingScrollPhysics(),
+                        itemCount: data.authors.length,
+                        separatorBuilder: (context, index) => const Divider(),
+                        itemBuilder: (context, index) {
+                          return AuthorListTile(
+                            author: data.authors[index],
+                            index: index,
+                          );
+                        },
+                      ),
+                data.issuedCopies.isEmpty
+                    ? Center(
+                        child: Text(
+                          'None of the issued books match your search...',
+                          style: Theme.of(context).textTheme.titleMedium,
+                          textAlign: TextAlign.center,
+                        ),
+                      )
+                    : ListView.separated(
+                        physics: BouncingScrollPhysics(),
+                        itemCount: data.issuedCopies.length,
+                        separatorBuilder: (context, index) => const Divider(),
+                        itemBuilder: (context, index) {
+                          return IssuedCopyTile(
+                            copy: data.issuedCopies[index],
+                            index: index,
+                          );
+                        },
+                      ),
+                data.borrowers.isEmpty
+                    ? Center(
+                        child: Text(
+                          'No borrowers in the database match your search...',
+                          style: Theme.of(context).textTheme.titleMedium,
+                          textAlign: TextAlign.center,
+                        ),
+                      )
+                    : ListView.separated(
+                        physics: BouncingScrollPhysics(),
+                        itemCount: data.borrowers.length,
+                        separatorBuilder: (context, index) => const Divider(),
+                        itemBuilder: (context, index) {
+                          return BorrowerListTile(
+                            borrower: data.borrowers[index],
+                            index: index,
+                          );
+                        },
+                      ),
               ],
             ),
           ),

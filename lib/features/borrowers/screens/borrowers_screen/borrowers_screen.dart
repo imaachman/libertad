@@ -16,6 +16,8 @@ class BorrowersPage extends ConsumerWidget {
     // Check for error and loading states and build the widget accordingly.
     return borrowers.when(
         data: (data) => ListView.separated(
+              padding: const EdgeInsets.only(bottom: 64),
+              physics: BouncingScrollPhysics(),
               itemCount: data.length,
               separatorBuilder: (context, index) => const Divider(),
               itemBuilder: (context, index) {
