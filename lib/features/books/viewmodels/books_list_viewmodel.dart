@@ -1,9 +1,7 @@
-import 'package:flutter/material.dart';
 import 'package:libertad/data/models/book.dart';
 import 'package:libertad/data/models/book_sort.dart';
 import 'package:libertad/data/models/sort_order.dart';
 import 'package:libertad/data/repositories/database_repository.dart';
-import 'package:libertad/features/books/screens/books_screen/book_sort_dialog.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'books_list_viewmodel.g.dart';
@@ -28,10 +26,6 @@ class BooksListViewModel extends _$BooksListViewModel {
     });
     return books;
   }
-
-  /// Show sort dialog to select the sort type and order.
-  void showSortDialog(BuildContext context) =>
-      showDialog(context: context, builder: (context) => BookSortDialog());
 
   /// Select sort order -- ascending or descending.
   void selectSortOrder(SortOrder sortOrder) {

@@ -39,7 +39,8 @@ class _HomePageState extends ConsumerState<HomePage>
 
   @override
   Widget build(BuildContext context) {
-    final HomeViewModel model = ref.watch(homeViewModelProvider.notifier);
+    final HomeViewModel model =
+        ref.watch(homeViewModelProvider(_tabController).notifier);
 
     return Scaffold(
       appBar: AppBar(
@@ -121,12 +122,37 @@ class _HomePageState extends ConsumerState<HomePage>
           tabs: _tabs,
           tabAlignment: TabAlignment.center,
           isScrollable: true,
-          onTap: (value) => model.selectedTabIndex = value,
         ),
       ),
-      body: TabBarView(
-        controller: _tabController,
-        children: _tabs.map((tab) => _tabViews[_tabs.indexOf(tab)]).toList(),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                TextButton.icon(
+                  onPressed: () => model.showSortDialog(context),
+                  icon: Icon(Icons.sort_rounded),
+                  label: Text('Sort'),
+                ),
+                TextButton.icon(
+                  onPressed: () {},
+                  icon: Icon(Icons.filter_alt),
+                  label: Text('Filter'),
+                ),
+              ],
+            ),
+          ),
+          Divider(height: 0),
+          Expanded(
+            child: TabBarView(
+              controller: _tabController,
+              children:
+                  _tabs.map((tab) => _tabViews[_tabs.indexOf(tab)]).toList(),
+            ),
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => model.showBookEditor(context: context),

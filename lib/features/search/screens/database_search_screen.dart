@@ -4,7 +4,6 @@ import 'package:libertad/data/models/search_result.dart';
 import 'package:libertad/features/authors/screens/authors_screen/author_list_tile.dart';
 import 'package:libertad/features/book_copies/screens/issued_copies_screen/issued_copy_tile.dart';
 import 'package:libertad/features/borrowers/screens/borrowers_screen/borrower_list_tile.dart';
-import 'package:libertad/features/home/viewmodels/home_viewmodel.dart';
 import 'package:libertad/features/search/viewmodels/database_search_viewmodel.dart';
 import 'package:libertad/widgets/book_list_tile.dart';
 
@@ -40,9 +39,6 @@ class _DatabaseSearchPageState extends ConsumerState<DatabaseSearchPage>
   Widget build(BuildContext context) {
     final AsyncValue<SearchResult> result =
         ref.watch(databaseSearchViewModelProvider(widget.query));
-    final HomeViewModel homeModel = ref.watch(homeViewModelProvider.notifier);
-
-    _tabController.index = homeModel.selectedTabIndex;
 
     return result.when(
       data: (data) => Column(
@@ -52,7 +48,6 @@ class _DatabaseSearchPageState extends ConsumerState<DatabaseSearchPage>
             tabs: _tabs,
             tabAlignment: TabAlignment.center,
             isScrollable: true,
-            onTap: (value) => homeModel.selectedTabIndex = value,
           ),
           Expanded(
             child: TabBarView(

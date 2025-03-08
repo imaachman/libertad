@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:libertad/data/repositories/database_repository.dart';
 import 'package:libertad/data/repositories/files_repository.dart';
 import 'package:libertad/features/books/screens/book_editor/book_editor.dart';
+import 'package:libertad/features/books/screens/books_screen/book_sort_dialog.dart';
 import 'package:libertad/features/search/screens/database_search_delegate.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -9,12 +10,12 @@ part 'home_viewmodel.g.dart';
 
 @riverpod
 class HomeViewModel extends _$HomeViewModel {
-  /// Index of the selected tab in the home page.
-  /// Used to sync the tab when search page is opened.
-  int selectedTabIndex = 0;
+  late final TabController _tabController;
 
   @override
-  void build() {}
+  void build(TabController tabController) {
+    _tabController = tabController;
+  }
 
   Future<void> showDocumentsDirectory(BuildContext context) async {
     final List<String> files =
@@ -58,6 +59,14 @@ class HomeViewModel extends _$HomeViewModel {
   Future<void> searchDatabase(
           BuildContext context, int selectedTabIndex) async =>
       showSearch(context: context, delegate: DatabaseSearchDelegate());
+
+  /// Show sort dialog to select the sort type and order.
+  void showSortDialog(BuildContext context) {
+    // Show sort dialog according to the current tab.
+    if (_tabController.index == 0) {
+      showDialog(context: context, builder: (context) => BookSortDialog());
+    }
+  }
 
   void showBookEditor({required BuildContext context}) {
     showModalBottomSheet(
