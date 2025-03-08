@@ -12,6 +12,7 @@ import 'package:libertad/data/models/borrower.dart';
 import 'package:libertad/data/models/borrower_sort.dart';
 import 'package:libertad/data/models/issued_copy_sort.dart';
 import 'package:libertad/data/models/search_result.dart';
+import 'package:libertad/data/models/sort_order.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../models/author.dart';
@@ -131,25 +132,48 @@ class DatabaseRepository {
   }
 
   /// Returns all the books in the collection.
-  Future<List<Book>> getAllBooks({BookSort? sortBy}) async {
+  Future<List<Book>> getAllBooks(
+      {BookSort? sortBy, SortOrder? sortOrder = SortOrder.ascending}) async {
     switch (sortBy) {
       // Sort the books by title.
       case BookSort.title:
-        return await _isar.books.where().sortByTitle().findAll();
+        if (sortOrder == SortOrder.ascending) {
+          return await _isar.books.where().sortByTitle().findAll();
+        } else {
+          return await _isar.books.where().sortByTitleDesc().findAll();
+        }
 
       case BookSort.releaseDate:
-        return await _isar.books.where().anyReleaseDate().findAll();
+        if (sortOrder == SortOrder.ascending) {
+          return await _isar.books.where().anyReleaseDate().findAll();
+        } else {
+          return await _isar.books
+              .where()
+              .anyReleaseDate()
+              .sortByReleaseDateDesc()
+              .findAll();
+        }
 
       case BookSort.totalCopies:
         final List<Book> books = await _isar.books.where().findAll();
-        books.sort(
-            (a, b) => a.totalCopies.length.compareTo(b.totalCopies.length));
+        books.sort((a, b) {
+          if (sortOrder == SortOrder.ascending) {
+            return a.totalCopies.length.compareTo(b.totalCopies.length);
+          } else {
+            return b.totalCopies.length.compareTo(a.totalCopies.length);
+          }
+        });
         return books;
 
       case BookSort.issuedCopies:
         final List<Book> books = await _isar.books.where().findAll();
-        books.sort(
-            (a, b) => a.issuedCopies.length.compareTo(b.totalCopies.length));
+        books.sort((a, b) {
+          if (sortOrder == SortOrder.ascending) {
+            return a.issuedCopies.length.compareTo(b.issuedCopies.length);
+          } else {
+            return b.issuedCopies.length.compareTo(a.issuedCopies.length);
+          }
+        });
         return books;
 
       default:

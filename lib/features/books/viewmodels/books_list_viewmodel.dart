@@ -41,6 +41,10 @@ class BooksListViewModel extends _$BooksListViewModel {
   Future<void> sort(BookSort sortBy) async {
     bookSort = sortBy;
     state = AsyncData(
-        await DatabaseRepository.instance.getAllBooks(sortBy: bookSort));
+      await DatabaseRepository.instance.getAllBooks(
+        sortBy: bookSort,
+        sortOrder: selectedSortOrder,
+      ),
+    );
   }
 }
