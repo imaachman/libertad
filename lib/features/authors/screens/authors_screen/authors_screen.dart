@@ -19,7 +19,7 @@ class AuthorsPage extends ConsumerWidget {
               padding: const EdgeInsets.only(bottom: 64),
               physics: BouncingScrollPhysics(),
               itemCount: data.length,
-              separatorBuilder: (context, index) => const Divider(),
+              separatorBuilder: (context, index) => const Divider(height: 0),
               itemBuilder: (context, index) {
                 return AuthorListTile(
                   author: data[index],
