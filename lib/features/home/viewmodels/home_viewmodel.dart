@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:libertad/data/repositories/database_repository.dart';
 import 'package:libertad/data/repositories/files_repository.dart';
+import 'package:libertad/features/authors/screens/authors_screen/author_sort_dialog.dart';
 import 'package:libertad/features/books/screens/book_editor/book_editor.dart';
 import 'package:libertad/features/books/screens/books_screen/book_sort_dialog.dart';
 import 'package:libertad/features/search/screens/database_search_delegate.dart';
@@ -65,6 +66,9 @@ class HomeViewModel extends _$HomeViewModel {
     // Show sort dialog according to the current tab.
     if (_tabController.index == 0) {
       showDialog(context: context, builder: (context) => BookSortDialog());
+    }
+    if (_tabController.index == 1) {
+      showDialog(context: context, builder: (context) => AuthorSortDialog());
     }
   }
 

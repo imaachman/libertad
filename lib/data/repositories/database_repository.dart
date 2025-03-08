@@ -133,21 +133,21 @@ class DatabaseRepository {
 
   /// Returns all the books in the collection.
   Future<List<Book>> getAllBooks(
-      {BookSort? sortBy, SortOrder? sortOrder = SortOrder.ascending}) async {
+      {BookSort? sortBy, SortOrder sortOrder = SortOrder.ascending}) async {
     switch (sortBy) {
       // Sort the books by title.
       case BookSort.title:
         if (sortOrder == SortOrder.ascending) {
-          return await _isar.books.where().sortByTitle().findAll();
+          return _isar.books.where().sortByTitle().findAll();
         } else {
-          return await _isar.books.where().sortByTitleDesc().findAll();
+          return _isar.books.where().sortByTitleDesc().findAll();
         }
 
       case BookSort.releaseDate:
         if (sortOrder == SortOrder.ascending) {
-          return await _isar.books.where().anyReleaseDate().findAll();
+          return _isar.books.where().anyReleaseDate().findAll();
         } else {
-          return await _isar.books
+          return _isar.books
               .where()
               .anyReleaseDate()
               .sortByReleaseDateDesc()
@@ -177,15 +177,22 @@ class DatabaseRepository {
         return books;
 
       default:
-        return await _isar.books.where().findAll();
+        return _isar.books.where().findAll();
     }
   }
 
   /// Returns all the authors in the collection.
-  Future<List<Author>> getAllAuthors({AuthorSort? sortBy}) async {
+  Future<List<Author>> getAllAuthors({
+    AuthorSort? sortBy,
+    SortOrder sortOrder = SortOrder.ascending,
+  }) async {
     switch (sortBy) {
       case AuthorSort.name:
-        return await _isar.authors.where().sortByName().findAll();
+        if (sortOrder == SortOrder.ascending) {
+          return _isar.authors.where().sortByName().findAll();
+        } else {
+          return _isar.authors.where().sortByNameDesc().findAll();
+        }
       default:
         return _isar.authors.where().findAll();
     }
