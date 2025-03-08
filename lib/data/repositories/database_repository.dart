@@ -199,22 +199,47 @@ class DatabaseRepository {
   }
 
   /// Returns the issued book copies from the collection.
-  Future<List<BookCopy>> getIssuedCopies({IssuedCopySort? sortBy}) async {
+  Future<List<BookCopy>> getIssuedCopies({
+    IssuedCopySort? sortBy,
+    SortOrder sortOrder = SortOrder.ascending,
+  }) async {
     switch (sortBy) {
       case IssuedCopySort.issueDate:
-        return _isar.bookCopys
-            .where()
-            .anyIssueDate()
-            .filter()
-            .statusEqualTo(IssueStatus.issued)
-            .findAll();
+        if (sortOrder == SortOrder.ascending) {
+          return _isar.bookCopys
+              .where()
+              .anyIssueDate()
+              .filter()
+              .statusEqualTo(IssueStatus.issued)
+              .findAll();
+        } else {
+          return _isar.bookCopys
+              .where()
+              .anyIssueDate()
+              .filter()
+              .statusEqualTo(IssueStatus.issued)
+              .sortByIssueDateDesc()
+              .findAll();
+        }
+
       case IssuedCopySort.returnDate:
-        return _isar.bookCopys
-            .where()
-            .anyReturnDate()
-            .filter()
-            .statusEqualTo(IssueStatus.issued)
-            .findAll();
+        if (sortOrder == SortOrder.ascending) {
+          return _isar.bookCopys
+              .where()
+              .anyReturnDate()
+              .filter()
+              .statusEqualTo(IssueStatus.issued)
+              .findAll();
+        } else {
+          return _isar.bookCopys
+              .where()
+              .anyReturnDate()
+              .filter()
+              .statusEqualTo(IssueStatus.issued)
+              .sortByReturnDateDesc()
+              .findAll();
+        }
+
       default:
         return _isar.bookCopys
             .filter()
