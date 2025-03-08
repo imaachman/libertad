@@ -8,13 +8,16 @@ part 'book.g.dart';
 @collection
 class Book {
   Id id = Isar.autoIncrement;
+  @Index()
   String title;
   final IsarLink<Author> author = IsarLink<Author>();
   @enumerated
   Genre genre;
+  @Index()
   DateTime releaseDate;
   String summary;
   String coverImage;
+  @Index()
   @Backlink(to: 'book')
   final IsarLinks<BookCopy> totalCopies = IsarLinks<BookCopy>();
 

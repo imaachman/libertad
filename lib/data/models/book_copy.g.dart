@@ -39,7 +39,34 @@ const BookCopySchema = CollectionSchema(
   deserialize: _bookCopyDeserialize,
   deserializeProp: _bookCopyDeserializeProp,
   idName: r'id',
-  indexes: {},
+  indexes: {
+    r'issueDate': IndexSchema(
+      id: 6801322855743028057,
+      name: r'issueDate',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'issueDate',
+          type: IndexType.value,
+          caseSensitive: false,
+        )
+      ],
+    ),
+    r'returnDate': IndexSchema(
+      id: 9180662992756784512,
+      name: r'returnDate',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'returnDate',
+          type: IndexType.value,
+          caseSensitive: false,
+        )
+      ],
+    )
+  },
   links: {
     r'book': LinkSchema(
       id: 1590639761893777908,
@@ -154,6 +181,22 @@ extension BookCopyQueryWhereSort on QueryBuilder<BookCopy, BookCopy, QWhere> {
       return query.addWhereClause(const IdWhereClause.any());
     });
   }
+
+  QueryBuilder<BookCopy, BookCopy, QAfterWhere> anyIssueDate() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        const IndexWhereClause.any(indexName: r'issueDate'),
+      );
+    });
+  }
+
+  QueryBuilder<BookCopy, BookCopy, QAfterWhere> anyReturnDate() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        const IndexWhereClause.any(indexName: r'returnDate'),
+      );
+    });
+  }
 }
 
 extension BookCopyQueryWhere on QueryBuilder<BookCopy, BookCopy, QWhereClause> {
@@ -217,6 +260,226 @@ extension BookCopyQueryWhere on QueryBuilder<BookCopy, BookCopy, QWhereClause> {
         lower: lowerId,
         includeLower: includeLower,
         upper: upperId,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<BookCopy, BookCopy, QAfterWhereClause> issueDateIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'issueDate',
+        value: [null],
+      ));
+    });
+  }
+
+  QueryBuilder<BookCopy, BookCopy, QAfterWhereClause> issueDateIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'issueDate',
+        lower: [null],
+        includeLower: false,
+        upper: [],
+      ));
+    });
+  }
+
+  QueryBuilder<BookCopy, BookCopy, QAfterWhereClause> issueDateEqualTo(
+      DateTime? issueDate) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'issueDate',
+        value: [issueDate],
+      ));
+    });
+  }
+
+  QueryBuilder<BookCopy, BookCopy, QAfterWhereClause> issueDateNotEqualTo(
+      DateTime? issueDate) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'issueDate',
+              lower: [],
+              upper: [issueDate],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'issueDate',
+              lower: [issueDate],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'issueDate',
+              lower: [issueDate],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'issueDate',
+              lower: [],
+              upper: [issueDate],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<BookCopy, BookCopy, QAfterWhereClause> issueDateGreaterThan(
+    DateTime? issueDate, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'issueDate',
+        lower: [issueDate],
+        includeLower: include,
+        upper: [],
+      ));
+    });
+  }
+
+  QueryBuilder<BookCopy, BookCopy, QAfterWhereClause> issueDateLessThan(
+    DateTime? issueDate, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'issueDate',
+        lower: [],
+        upper: [issueDate],
+        includeUpper: include,
+      ));
+    });
+  }
+
+  QueryBuilder<BookCopy, BookCopy, QAfterWhereClause> issueDateBetween(
+    DateTime? lowerIssueDate,
+    DateTime? upperIssueDate, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'issueDate',
+        lower: [lowerIssueDate],
+        includeLower: includeLower,
+        upper: [upperIssueDate],
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<BookCopy, BookCopy, QAfterWhereClause> returnDateIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'returnDate',
+        value: [null],
+      ));
+    });
+  }
+
+  QueryBuilder<BookCopy, BookCopy, QAfterWhereClause> returnDateIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'returnDate',
+        lower: [null],
+        includeLower: false,
+        upper: [],
+      ));
+    });
+  }
+
+  QueryBuilder<BookCopy, BookCopy, QAfterWhereClause> returnDateEqualTo(
+      DateTime? returnDate) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'returnDate',
+        value: [returnDate],
+      ));
+    });
+  }
+
+  QueryBuilder<BookCopy, BookCopy, QAfterWhereClause> returnDateNotEqualTo(
+      DateTime? returnDate) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'returnDate',
+              lower: [],
+              upper: [returnDate],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'returnDate',
+              lower: [returnDate],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'returnDate',
+              lower: [returnDate],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'returnDate',
+              lower: [],
+              upper: [returnDate],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<BookCopy, BookCopy, QAfterWhereClause> returnDateGreaterThan(
+    DateTime? returnDate, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'returnDate',
+        lower: [returnDate],
+        includeLower: include,
+        upper: [],
+      ));
+    });
+  }
+
+  QueryBuilder<BookCopy, BookCopy, QAfterWhereClause> returnDateLessThan(
+    DateTime? returnDate, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'returnDate',
+        lower: [],
+        upper: [returnDate],
+        includeUpper: include,
+      ));
+    });
+  }
+
+  QueryBuilder<BookCopy, BookCopy, QAfterWhereClause> returnDateBetween(
+    DateTime? lowerReturnDate,
+    DateTime? upperReturnDate, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'returnDate',
+        lower: [lowerReturnDate],
+        includeLower: includeLower,
+        upper: [upperReturnDate],
         includeUpper: includeUpper,
       ));
     });

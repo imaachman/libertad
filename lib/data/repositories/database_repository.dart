@@ -5,8 +5,12 @@ import 'package:isar/isar.dart';
 import 'package:libertad/data/mock/mock_authors.dart';
 import 'package:libertad/data/mock/mock_books.dart';
 import 'package:libertad/data/mock/mock_borrowers.dart';
+import 'package:libertad/data/models/author_sort.dart';
 import 'package:libertad/data/models/book_copy.dart';
+import 'package:libertad/data/models/book_sort.dart';
 import 'package:libertad/data/models/borrower.dart';
+import 'package:libertad/data/models/borrower_sort.dart';
+import 'package:libertad/data/models/issued_copy_sort.dart';
 import 'package:libertad/data/models/search_result.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -127,17 +131,78 @@ class DatabaseRepository {
   }
 
   /// Returns all the books in the collection.
-  Future<List<Book>> getAllBooks() => _isar.books.where().findAll();
+  Future<List<Book>> getAllBooks({BookSort? sortBy}) async {
+    switch (sortBy) {
+      // Sort the books by title.
+      case BookSort.title:
+        return await _isar.books.where().sortByTitle().findAll();
+
+      case BookSort.releaseDate:
+        return await _isar.books.where().anyReleaseDate().findAll();
+
+      case BookSort.totalCopies:
+        final List<Book> books = await _isar.books.where().findAll();
+        books.sort(
+            (a, b) => a.totalCopies.length.compareTo(b.totalCopies.length));
+        return books;
+
+      case BookSort.issuedCopies:
+        final List<Book> books = await _isar.books.where().findAll();
+        books.sort(
+            (a, b) => a.issuedCopies.length.compareTo(b.totalCopies.length));
+        return books;
+
+      default:
+        return await _isar.books.where().findAll();
+    }
+  }
 
   /// Returns all the authors in the collection.
-  Future<List<Author>> getAllAuthors() => _isar.authors.where().findAll();
+  Future<List<Author>> getAllAuthors({AuthorSort? sortBy}) async {
+    switch (sortBy) {
+      case AuthorSort.name:
+        return await _isar.authors.where().sortByName().findAll();
+      default:
+        return _isar.authors.where().findAll();
+    }
+  }
 
   /// Returns the issued book copies from the collection.
-  Future<List<BookCopy>> getIssuedCopies() =>
-      _isar.bookCopys.filter().statusEqualTo(IssueStatus.issued).findAll();
+  Future<List<BookCopy>> getIssuedCopies({IssuedCopySort? sortBy}) async {
+    switch (sortBy) {
+      case IssuedCopySort.issueDate:
+        return _isar.bookCopys
+            .where()
+            .anyIssueDate()
+            .filter()
+            .statusEqualTo(IssueStatus.issued)
+            .findAll();
+      case IssuedCopySort.returnDate:
+        return _isar.bookCopys
+            .where()
+            .anyReturnDate()
+            .filter()
+            .statusEqualTo(IssueStatus.issued)
+            .findAll();
+      default:
+        return _isar.bookCopys
+            .filter()
+            .statusEqualTo(IssueStatus.issued)
+            .findAll();
+    }
+  }
 
   /// Returns all the borrowers in the collection.
-  Future<List<Borrower>> getAllBorrowers() => _isar.borrowers.where().findAll();
+  Future<List<Borrower>> getAllBorrowers({BorrowerSort? sortBy}) async {
+    switch (sortBy) {
+      case BorrowerSort.name:
+        return await _isar.borrowers.where().sortByName().findAll();
+      case BorrowerSort.membershipStartDate:
+        return await _isar.borrowers.where().anyMembershipStartDate().findAll();
+      default:
+        return _isar.borrowers.where().findAll();
+    }
+  }
 
   /// Adds a new book to the collection.
   ///

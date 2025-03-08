@@ -6,6 +6,7 @@ part 'author.g.dart';
 @collection
 class Author {
   Id id = Isar.autoIncrement;
+  @Index()
   String name;
   String bio;
   String profilePicture;

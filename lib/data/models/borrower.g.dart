@@ -58,7 +58,34 @@ const BorrowerSchema = CollectionSchema(
   deserialize: _borrowerDeserialize,
   deserializeProp: _borrowerDeserializeProp,
   idName: r'id',
-  indexes: {},
+  indexes: {
+    r'name': IndexSchema(
+      id: 879695947855722453,
+      name: r'name',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'name',
+          type: IndexType.hash,
+          caseSensitive: true,
+        )
+      ],
+    ),
+    r'membershipStartDate': IndexSchema(
+      id: -8228581695139532011,
+      name: r'membershipStartDate',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'membershipStartDate',
+          type: IndexType.value,
+          caseSensitive: false,
+        )
+      ],
+    )
+  },
   links: {
     r'currentlyIssuedBooks': LinkSchema(
       id: -1123658905267344679,
@@ -176,6 +203,14 @@ extension BorrowerQueryWhereSort on QueryBuilder<Borrower, Borrower, QWhere> {
       return query.addWhereClause(const IdWhereClause.any());
     });
   }
+
+  QueryBuilder<Borrower, Borrower, QAfterWhere> anyMembershipStartDate() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        const IndexWhereClause.any(indexName: r'membershipStartDate'),
+      );
+    });
+  }
 }
 
 extension BorrowerQueryWhere on QueryBuilder<Borrower, Borrower, QWhereClause> {
@@ -239,6 +274,143 @@ extension BorrowerQueryWhere on QueryBuilder<Borrower, Borrower, QWhereClause> {
         lower: lowerId,
         includeLower: includeLower,
         upper: upperId,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<Borrower, Borrower, QAfterWhereClause> nameEqualTo(String name) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'name',
+        value: [name],
+      ));
+    });
+  }
+
+  QueryBuilder<Borrower, Borrower, QAfterWhereClause> nameNotEqualTo(
+      String name) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'name',
+              lower: [],
+              upper: [name],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'name',
+              lower: [name],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'name',
+              lower: [name],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'name',
+              lower: [],
+              upper: [name],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<Borrower, Borrower, QAfterWhereClause>
+      membershipStartDateEqualTo(DateTime membershipStartDate) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'membershipStartDate',
+        value: [membershipStartDate],
+      ));
+    });
+  }
+
+  QueryBuilder<Borrower, Borrower, QAfterWhereClause>
+      membershipStartDateNotEqualTo(DateTime membershipStartDate) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'membershipStartDate',
+              lower: [],
+              upper: [membershipStartDate],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'membershipStartDate',
+              lower: [membershipStartDate],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'membershipStartDate',
+              lower: [membershipStartDate],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'membershipStartDate',
+              lower: [],
+              upper: [membershipStartDate],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<Borrower, Borrower, QAfterWhereClause>
+      membershipStartDateGreaterThan(
+    DateTime membershipStartDate, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'membershipStartDate',
+        lower: [membershipStartDate],
+        includeLower: include,
+        upper: [],
+      ));
+    });
+  }
+
+  QueryBuilder<Borrower, Borrower, QAfterWhereClause>
+      membershipStartDateLessThan(
+    DateTime membershipStartDate, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'membershipStartDate',
+        lower: [],
+        upper: [membershipStartDate],
+        includeUpper: include,
+      ));
+    });
+  }
+
+  QueryBuilder<Borrower, Borrower, QAfterWhereClause>
+      membershipStartDateBetween(
+    DateTime lowerMembershipStartDate,
+    DateTime upperMembershipStartDate, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'membershipStartDate',
+        lower: [lowerMembershipStartDate],
+        includeLower: includeLower,
+        upper: [upperMembershipStartDate],
         includeUpper: includeUpper,
       ));
     });

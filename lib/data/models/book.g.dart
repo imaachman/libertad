@@ -49,7 +49,34 @@ const BookSchema = CollectionSchema(
   deserialize: _bookDeserialize,
   deserializeProp: _bookDeserializeProp,
   idName: r'id',
-  indexes: {},
+  indexes: {
+    r'title': IndexSchema(
+      id: -7636685945352118059,
+      name: r'title',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'title',
+          type: IndexType.hash,
+          caseSensitive: true,
+        )
+      ],
+    ),
+    r'releaseDate': IndexSchema(
+      id: -8250003136885993757,
+      name: r'releaseDate',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'releaseDate',
+          type: IndexType.value,
+          caseSensitive: false,
+        )
+      ],
+    )
+  },
   links: {
     r'author': LinkSchema(
       id: 3556842824856575488,
@@ -186,6 +213,14 @@ extension BookQueryWhereSort on QueryBuilder<Book, Book, QWhere> {
       return query.addWhereClause(const IdWhereClause.any());
     });
   }
+
+  QueryBuilder<Book, Book, QAfterWhere> anyReleaseDate() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        const IndexWhereClause.any(indexName: r'releaseDate'),
+      );
+    });
+  }
 }
 
 extension BookQueryWhere on QueryBuilder<Book, Book, QWhereClause> {
@@ -249,6 +284,139 @@ extension BookQueryWhere on QueryBuilder<Book, Book, QWhereClause> {
         lower: lowerId,
         includeLower: includeLower,
         upper: upperId,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<Book, Book, QAfterWhereClause> titleEqualTo(String title) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'title',
+        value: [title],
+      ));
+    });
+  }
+
+  QueryBuilder<Book, Book, QAfterWhereClause> titleNotEqualTo(String title) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'title',
+              lower: [],
+              upper: [title],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'title',
+              lower: [title],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'title',
+              lower: [title],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'title',
+              lower: [],
+              upper: [title],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<Book, Book, QAfterWhereClause> releaseDateEqualTo(
+      DateTime releaseDate) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'releaseDate',
+        value: [releaseDate],
+      ));
+    });
+  }
+
+  QueryBuilder<Book, Book, QAfterWhereClause> releaseDateNotEqualTo(
+      DateTime releaseDate) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'releaseDate',
+              lower: [],
+              upper: [releaseDate],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'releaseDate',
+              lower: [releaseDate],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'releaseDate',
+              lower: [releaseDate],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'releaseDate',
+              lower: [],
+              upper: [releaseDate],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<Book, Book, QAfterWhereClause> releaseDateGreaterThan(
+    DateTime releaseDate, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'releaseDate',
+        lower: [releaseDate],
+        includeLower: include,
+        upper: [],
+      ));
+    });
+  }
+
+  QueryBuilder<Book, Book, QAfterWhereClause> releaseDateLessThan(
+    DateTime releaseDate, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'releaseDate',
+        lower: [],
+        upper: [releaseDate],
+        includeUpper: include,
+      ));
+    });
+  }
+
+  QueryBuilder<Book, Book, QAfterWhereClause> releaseDateBetween(
+    DateTime lowerReleaseDate,
+    DateTime upperReleaseDate, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'releaseDate',
+        lower: [lowerReleaseDate],
+        includeLower: includeLower,
+        upper: [upperReleaseDate],
         includeUpper: includeUpper,
       ));
     });

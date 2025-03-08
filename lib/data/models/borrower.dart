@@ -6,9 +6,11 @@ part 'borrower.g.dart';
 @collection
 class Borrower {
   Id id = Isar.autoIncrement;
+  @Index()
   String name;
   String contact;
   String profilePicture;
+  @Index()
   DateTime membershipStartDate;
   int membershipDuration;
   bool isDefaulter = false;

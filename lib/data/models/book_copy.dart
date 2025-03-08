@@ -10,7 +10,9 @@ enum IssueStatus { issued, available }
 class BookCopy {
   Id id = Isar.autoIncrement;
   final IsarLink<Book> book = IsarLink<Book>();
+  @Index()
   DateTime? issueDate;
+  @Index()
   DateTime? returnDate;
   final IsarLink<Borrower> currentBorrower = IsarLink<Borrower>();
   final IsarLinks<Borrower> previousBorrowers = IsarLinks<Borrower>();

@@ -26,6 +26,7 @@ class _AuthorEditorDialogState extends ConsumerState<AuthorEditorDialog> {
         ref.watch(authorEditorViewModelProvider(widget.author).notifier);
 
     return Dialog(
+      shape: RoundedRectangleBorder(),
       child: Padding(
         padding: const EdgeInsets.all(32),
         child: Form(

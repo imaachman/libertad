@@ -1,0 +1,4 @@
+enum IssuedCopySort {
+  issueDate,
+  returnDate;
+}
