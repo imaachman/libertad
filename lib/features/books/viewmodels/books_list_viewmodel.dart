@@ -1,6 +1,8 @@
+import 'package:flutter/material.dart';
 import 'package:libertad/data/models/author.dart';
 import 'package:libertad/data/models/author_sort.dart';
 import 'package:libertad/data/models/book.dart';
+import 'package:libertad/data/models/book_copy.dart';
 import 'package:libertad/data/models/book_sort.dart';
 import 'package:libertad/data/models/genre.dart';
 import 'package:libertad/data/models/sort_order.dart';
@@ -16,6 +18,8 @@ class BooksListViewModel extends _$BooksListViewModel {
 
   Genre? genreFilter;
   Author? authorFilter;
+  IssueStatus? issueStatusFilter;
+  MapEntry<int?, int?> totalCopiesFilterMinMax = MapEntry(null, null);
 
   /// Used to show as options in the author filter.
   List<Author> allAuthors = [];
@@ -86,6 +90,64 @@ class BooksListViewModel extends _$BooksListViewModel {
 
   void clearAuthorFilter() {
     authorFilter = null;
+    ref.notifyListeners();
+  }
+
+  void setIssueStatusFilter(bool available) {
+    if (available) {
+      issueStatusFilter = IssueStatus.available;
+    } else {
+      issueStatusFilter = IssueStatus.issued;
+    }
+    ref.notifyListeners();
+  }
+
+  void clearIssueStatusFilter() {
+    issueStatusFilter = null;
+    ref.notifyListeners();
+  }
+
+  void setTotalCopiesFilterMin(String value) {
+    if (value.isEmpty) return;
+    totalCopiesFilterMinMax =
+        MapEntry(int.parse(value), totalCopiesFilterMinMax.value);
+    ref.notifyListeners();
+  }
+
+  void setTotalCopiesFilterMax(String value) {
+    if (value.isEmpty) return;
+    totalCopiesFilterMinMax =
+        MapEntry(totalCopiesFilterMinMax.key, int.parse(value));
+    ref.notifyListeners();
+  }
+
+  String? totalCopiesFilterMinValidator(String? value) {
+    if (value == null || value.isEmpty) return null;
+    if (totalCopiesFilterMinMax.value == null) return null;
+    if (int.parse(value) > totalCopiesFilterMinMax.value!) {
+      return 'Enter a value less than the maximum';
+    } else {
+      return null;
+    }
+  }
+
+  String? totalCopiesFilterMaxValidator(String? value) {
+    if (value == null || value.isEmpty) return null;
+    if (totalCopiesFilterMinMax.key == null) return null;
+    if (int.parse(value) < totalCopiesFilterMinMax.key!) {
+      return 'Enter a value greater than the minimum';
+    } else {
+      return null;
+    }
+  }
+
+  void clearTotalCopiesFilter(
+    TextEditingController minController,
+    TextEditingController maxController,
+  ) {
+    totalCopiesFilterMinMax = MapEntry(null, null);
+    minController.text = '';
+    maxController.text = '';
     ref.notifyListeners();
   }
 }
