@@ -4,6 +4,7 @@ import 'package:libertad/data/repositories/files_repository.dart';
 import 'package:libertad/features/authors/screens/authors_screen/author_sort_dialog.dart';
 import 'package:libertad/features/book_copies/screens/issued_copies_screen/issued_copies_sort_dialog.dart';
 import 'package:libertad/features/books/screens/book_editor/book_editor.dart';
+import 'package:libertad/features/books/screens/books_screen/book_filter_dialog.dart';
 import 'package:libertad/features/books/screens/books_screen/book_sort_dialog.dart';
 import 'package:libertad/features/borrowers/screens/borrowers_screen/borrower_sort_dialog.dart';
 import 'package:libertad/features/search/screens/database_search_delegate.dart';
@@ -82,6 +83,9 @@ class HomeViewModel extends _$HomeViewModel {
           }
         },
       );
+
+  void showFilterDialog(BuildContext context) =>
+      showDialog(context: context, builder: (context) => BookFilterDialog());
 
   void showBookEditor({required BuildContext context}) {
     showModalBottomSheet(

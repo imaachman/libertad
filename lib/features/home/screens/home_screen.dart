@@ -137,7 +137,7 @@ class _HomePageState extends ConsumerState<HomePage>
                   label: Text('Sort'),
                 ),
                 TextButton.icon(
-                  onPressed: () {},
+                  onPressed: () => model.showFilterDialog(context),
                   icon: Icon(Icons.filter_alt),
                   label: Text('Filter'),
                 ),

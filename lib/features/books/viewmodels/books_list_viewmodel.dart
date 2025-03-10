@@ -1,5 +1,7 @@
+import 'package:libertad/data/models/author.dart';
 import 'package:libertad/data/models/book.dart';
 import 'package:libertad/data/models/book_sort.dart';
+import 'package:libertad/data/models/genre.dart';
 import 'package:libertad/data/models/sort_order.dart';
 import 'package:libertad/data/repositories/database_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -10,6 +12,8 @@ part 'books_list_viewmodel.g.dart';
 class BooksListViewModel extends _$BooksListViewModel {
   SortOrder selectedSortOrder = SortOrder.ascending;
   BookSort? bookSort;
+
+  Genre? genreFilter;
 
   @override
   Future<List<Book>> build() async {
@@ -46,5 +50,15 @@ class BooksListViewModel extends _$BooksListViewModel {
     );
     // Keep provider alive to preserve the order.
     ref.keepAlive();
+  }
+
+  void selectGenreFilter(Genre genre) {
+    genreFilter = genre;
+    ref.notifyListeners();
+  }
+
+  void clearGenreFilter() {
+    genreFilter = null;
+    ref.notifyListeners();
   }
 }
