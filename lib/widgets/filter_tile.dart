@@ -4,17 +4,20 @@ class FilterTile extends StatelessWidget {
   final String name;
   final Widget field;
   final VoidCallback clearFilter;
+  final bool expanded;
 
   const FilterTile({
     super.key,
     required this.name,
     required this.field,
     required this.clearFilter,
+    this.expanded = false,
   });
 
   @override
   Widget build(BuildContext context) {
     return ExpansionTile(
+      initiallyExpanded: expanded,
       title: RichText(
         text: TextSpan(
           children: [

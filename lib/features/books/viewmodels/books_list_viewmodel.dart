@@ -1,4 +1,5 @@
 import 'package:libertad/data/models/author.dart';
+import 'package:libertad/data/models/author_sort.dart';
 import 'package:libertad/data/models/book.dart';
 import 'package:libertad/data/models/book_sort.dart';
 import 'package:libertad/data/models/genre.dart';
@@ -14,6 +15,10 @@ class BooksListViewModel extends _$BooksListViewModel {
   BookSort? bookSort;
 
   Genre? genreFilter;
+  Author? authorFilter;
+
+  /// Used to show as options in the author filter.
+  List<Author> allAuthors = [];
 
   @override
   Future<List<Book>> build() async {
@@ -27,6 +32,18 @@ class BooksListViewModel extends _$BooksListViewModel {
       books = await DatabaseRepository.instance.getAllBooks(sortBy: bookSort);
       // Update state and notify listeners to rebuild the UI.
       state = AsyncData(books);
+    });
+
+    // Listen for changes in authors collection and update the state with the
+    // latest data. The stream fires a snapshot immediately, so we don't need
+    // to initialize data seperately. This listener handles the initialization
+    // as well.
+    DatabaseRepository.instance.authorsStream.listen((_) async {
+      // Retrieve all authors from the database.
+      allAuthors = await DatabaseRepository.instance.getAllAuthors(
+        sortBy: AuthorSort.name,
+        sortOrder: SortOrder.ascending,
+      );
     });
     return books;
   }
@@ -59,6 +76,16 @@ class BooksListViewModel extends _$BooksListViewModel {
 
   void clearGenreFilter() {
     genreFilter = null;
+    ref.notifyListeners();
+  }
+
+  void selectAuthorFilter(Author author) {
+    authorFilter = author;
+    ref.notifyListeners();
+  }
+
+  void clearAuthorFilter() {
+    authorFilter = null;
     ref.notifyListeners();
   }
 }
