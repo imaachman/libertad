@@ -4,6 +4,7 @@ import 'package:libertad/core/constants/breakpoints.dart';
 import 'package:libertad/core/utils/extensions.dart';
 import 'package:libertad/data/models/book_copy.dart';
 import 'package:libertad/data/models/borrower.dart';
+import 'package:libertad/features/book_copies/screens/issued_copies_screen/issued_copy_tile.dart';
 import 'package:libertad/features/borrowers/viewmodels/borrower_details_viewmodel.dart';
 import 'package:libertad/widgets/profile_picture.dart';
 
@@ -166,28 +167,16 @@ class BorrowerDetailsPage extends ConsumerWidget {
                       (index) {
                         final BookCopy copy =
                             borrower.currentlyIssuedBooks.toList()[index];
-                        return ListTile(
-                          leading: Text('${index + 1}.'),
-                          title: Text('${copy.book.value?.title}'),
-                          titleTextStyle: Theme.of(context)
-                              .textTheme
-                              .bodyMedium
-                              ?.copyWith(fontWeight: FontWeight.bold),
-                          trailing: Text(
-                            copy.status == IssueStatus.issued
-                                ? 'Borrowed by ${copy.currentBorrower.value?.name}'
-                                : 'Available',
-                          ),
-                          leadingAndTrailingTextStyle:
-                              Theme.of(context).textTheme.labelMedium?.copyWith(
-                                    color: Theme.of(context).primaryColor,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                        return IssuedCopyTile(
+                          copy: copy,
+                          index: index,
+                          minimal: true,
                         );
                       },
                     ),
                   ],
                 ),
+                Divider(),
                 Column(
                   children: [
                     Text(
@@ -202,23 +191,10 @@ class BorrowerDetailsPage extends ConsumerWidget {
                       (index) {
                         final BookCopy copy =
                             borrower.previouslyIssuedBooks.toList()[index];
-                        return ListTile(
-                          leading: Text('${index + 1}.'),
-                          title: Text('${copy.book.value?.title}'),
-                          titleTextStyle: Theme.of(context)
-                              .textTheme
-                              .bodyMedium
-                              ?.copyWith(fontWeight: FontWeight.bold),
-                          trailing: Text(
-                            copy.status == IssueStatus.issued
-                                ? 'Borrowed by ${copy.currentBorrower.value?.name}'
-                                : 'Available',
-                          ),
-                          leadingAndTrailingTextStyle:
-                              Theme.of(context).textTheme.labelMedium?.copyWith(
-                                    color: Theme.of(context).primaryColor,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                        return IssuedCopyTile(
+                          copy: copy,
+                          index: index,
+                          minimal: true,
                         );
                       },
                     ),

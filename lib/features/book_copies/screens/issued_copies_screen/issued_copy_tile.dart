@@ -6,11 +6,13 @@ import 'package:libertad/navigation/routes.dart';
 class IssuedCopyTile extends StatelessWidget {
   final BookCopy copy;
   final int index;
+  final bool minimal;
 
   const IssuedCopyTile({
     super.key,
     required this.copy,
     required this.index,
+    this.minimal = false,
   });
 
   @override
@@ -46,32 +48,35 @@ class IssuedCopyTile extends StatelessWidget {
                         .bodyMedium
                         ?.copyWith(fontStyle: FontStyle.italic),
                   ),
-                  const SizedBox(height: 8),
-                  RichText(
-                    text: TextSpan(
-                      children: [
-                        TextSpan(
-                          text: 'borrowed by ',
-                          style: Theme.of(context)
-                              .textTheme
-                              .labelSmall
-                              ?.copyWith(
-                                color: Theme.of(context).colorScheme.secondary,
-                              ),
-                        ),
-                        TextSpan(
-                          text: copy.currentBorrower.value!.name,
-                          style: Theme.of(context)
-                              .textTheme
-                              .labelMedium
-                              ?.copyWith(
-                                color: Theme.of(context).colorScheme.primary,
-                                fontWeight: FontWeight.bold,
-                              ),
-                        ),
-                      ],
+                  if (!minimal) ...[
+                    const SizedBox(height: 8),
+                    RichText(
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text: 'borrowed by ',
+                            style: Theme.of(context)
+                                .textTheme
+                                .labelSmall
+                                ?.copyWith(
+                                  color:
+                                      Theme.of(context).colorScheme.secondary,
+                                ),
+                          ),
+                          TextSpan(
+                            text: copy.currentBorrower.value!.name,
+                            style: Theme.of(context)
+                                .textTheme
+                                .labelMedium
+                                ?.copyWith(
+                                  color: Theme.of(context).colorScheme.primary,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
+                  ]
                 ],
               ),
             ),
