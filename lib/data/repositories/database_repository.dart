@@ -153,7 +153,9 @@ class DatabaseRepository {
           if (issueStatusFilter == IssueStatus.available) {
             return q.totalCopies((q) => q.statusEqualTo(IssueStatus.available));
           } else {
-            return q.totalCopies((q) => q.statusEqualTo(IssueStatus.issued));
+            return q
+                .not()
+                .totalCopies((q) => q.statusEqualTo(IssueStatus.available));
           }
         })
         .optional(minCopiesFilter != null,
