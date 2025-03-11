@@ -10,6 +10,7 @@ import 'package:libertad/data/models/book_copy.dart';
 import 'package:libertad/data/models/book_sort.dart';
 import 'package:libertad/data/models/borrower.dart';
 import 'package:libertad/data/models/borrower_sort.dart';
+import 'package:libertad/data/models/genre.dart';
 import 'package:libertad/data/models/issued_copy_sort.dart';
 import 'package:libertad/data/models/search_result.dart';
 import 'package:libertad/data/models/sort_order.dart';
@@ -132,30 +133,52 @@ class DatabaseRepository {
   }
 
   /// Returns all the books in the collection.
-  Future<List<Book>> getAllBooks(
-      {BookSort? sortBy, SortOrder sortOrder = SortOrder.ascending}) async {
+  Future<List<Book>> getAllBooks({
+    BookSort? sortBy,
+    SortOrder sortOrder = SortOrder.ascending,
+    Genre? genreFilter,
+    Author? authorFilter,
+    IssueStatus? issueStatusFilter,
+    int? minCopiesFilter,
+    int? maxCopiesFilter,
+  }) async {
+    // Apply the relevant filters using the [optional] query method.
+    final QueryBuilder<Book, Book, QAfterFilterCondition> queryBuilder = _isar
+        .books
+        .filter()
+        .optional(genreFilter != null, (q) => q.genreEqualTo(genreFilter!))
+        .optional(authorFilter != null,
+            (q) => q.author((q) => q.idEqualTo(authorFilter!.id)))
+        .optional(issueStatusFilter != null, (q) {
+          if (issueStatusFilter == IssueStatus.available) {
+            return q.totalCopies((q) => q.statusEqualTo(IssueStatus.available));
+          } else {
+            return q.totalCopies((q) => q.statusEqualTo(IssueStatus.issued));
+          }
+        })
+        .optional(minCopiesFilter != null,
+            (q) => q.totalCopiesLengthGreaterThan(minCopiesFilter!))
+        .optional(maxCopiesFilter != null,
+            (q) => q.totalCopiesLengthLessThan(maxCopiesFilter!));
+
     switch (sortBy) {
       // Sort the books by title.
       case BookSort.title:
         if (sortOrder == SortOrder.ascending) {
-          return _isar.books.where().sortByTitle().findAll();
+          return queryBuilder.sortByTitle().findAll();
         } else {
-          return _isar.books.where().sortByTitleDesc().findAll();
+          return queryBuilder.sortByTitleDesc().findAll();
         }
-
+      // Sort the books by release date.
       case BookSort.releaseDate:
         if (sortOrder == SortOrder.ascending) {
-          return _isar.books.where().anyReleaseDate().findAll();
+          return queryBuilder.sortByReleaseDate().findAll();
         } else {
-          return _isar.books
-              .where()
-              .anyReleaseDate()
-              .sortByReleaseDateDesc()
-              .findAll();
+          return queryBuilder.sortByReleaseDateDesc().findAll();
         }
-
+      // Sort the books by number of total copies.
       case BookSort.totalCopies:
-        final List<Book> books = await _isar.books.where().findAll();
+        final List<Book> books = await queryBuilder.findAll();
         books.sort((a, b) {
           if (sortOrder == SortOrder.ascending) {
             return a.totalCopies.length.compareTo(b.totalCopies.length);
@@ -164,9 +187,9 @@ class DatabaseRepository {
           }
         });
         return books;
-
+      // Sort the books by number of issued copies.
       case BookSort.issuedCopies:
-        final List<Book> books = await _isar.books.where().findAll();
+        final List<Book> books = await queryBuilder.findAll();
         books.sort((a, b) {
           if (sortOrder == SortOrder.ascending) {
             return a.issuedCopies.length.compareTo(b.issuedCopies.length);
@@ -175,9 +198,9 @@ class DatabaseRepository {
           }
         });
         return books;
-
+      // Return unsorted books.
       default:
-        return _isar.books.where().findAll();
+        return queryBuilder.findAll();
     }
   }
 

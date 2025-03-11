@@ -19,7 +19,8 @@ class BooksListViewModel extends _$BooksListViewModel {
   Genre? genreFilter;
   Author? authorFilter;
   IssueStatus? issueStatusFilter;
-  MapEntry<int?, int?> totalCopiesFilterMinMax = MapEntry(null, null);
+  int? minCopiesFilter;
+  int? maxCopiesFilter;
 
   /// Used to show as options in the author filter.
   List<Author> allAuthors = [];
@@ -59,14 +60,19 @@ class BooksListViewModel extends _$BooksListViewModel {
   }
 
   /// Sort the books according to the selected [BookSort] type.
-  Future<void> sort(BookSort sortBy) async {
+  Future<void> sort(BookSort value) async {
     // Update [bookSort] to show the selected sort type in the UI.
-    bookSort = sortBy;
+    bookSort = value;
     // Retrieve the books again in the selected sort type and update the state.
     state = AsyncData(
       await DatabaseRepository.instance.getAllBooks(
         sortBy: bookSort,
         sortOrder: selectedSortOrder,
+        genreFilter: genreFilter,
+        authorFilter: authorFilter,
+        issueStatusFilter: issueStatusFilter,
+        minCopiesFilter: minCopiesFilter,
+        maxCopiesFilter: maxCopiesFilter,
       ),
     );
     // Keep provider alive to preserve the order.
@@ -107,24 +113,22 @@ class BooksListViewModel extends _$BooksListViewModel {
     ref.notifyListeners();
   }
 
-  void setTotalCopiesFilterMin(String value) {
+  void setMinCopiesFilter(String value) {
     if (value.isEmpty) return;
-    totalCopiesFilterMinMax =
-        MapEntry(int.parse(value), totalCopiesFilterMinMax.value);
+    minCopiesFilter = int.parse(value);
     ref.notifyListeners();
   }
 
-  void setTotalCopiesFilterMax(String value) {
+  void setMaxCopiesFilter(String value) {
     if (value.isEmpty) return;
-    totalCopiesFilterMinMax =
-        MapEntry(totalCopiesFilterMinMax.key, int.parse(value));
+    maxCopiesFilter = int.parse(value);
     ref.notifyListeners();
   }
 
-  String? totalCopiesFilterMinValidator(String? value) {
+  String? minCopiesFilterValidator(String? value) {
     if (value == null || value.isEmpty) return null;
-    if (totalCopiesFilterMinMax.value == null) return null;
-    if (int.parse(value) > totalCopiesFilterMinMax.value!) {
+    if (maxCopiesFilter == null) return null;
+    if (int.parse(value) > maxCopiesFilter!) {
       return 'Enter a value less than the maximum';
     } else {
       return null;
@@ -133,8 +137,8 @@ class BooksListViewModel extends _$BooksListViewModel {
 
   String? totalCopiesFilterMaxValidator(String? value) {
     if (value == null || value.isEmpty) return null;
-    if (totalCopiesFilterMinMax.key == null) return null;
-    if (int.parse(value) < totalCopiesFilterMinMax.key!) {
+    if (minCopiesFilter == null) return null;
+    if (int.parse(value) < minCopiesFilter!) {
       return 'Enter a value greater than the minimum';
     } else {
       return null;
@@ -145,9 +149,41 @@ class BooksListViewModel extends _$BooksListViewModel {
     TextEditingController minController,
     TextEditingController maxController,
   ) {
-    totalCopiesFilterMinMax = MapEntry(null, null);
+    minCopiesFilter = null;
+    maxCopiesFilter = null;
     minController.text = '';
     maxController.text = '';
     ref.notifyListeners();
+  }
+
+  void clearAll(
+    TextEditingController minController,
+    TextEditingController maxController,
+  ) {
+    genreFilter = null;
+    authorFilter = null;
+    issueStatusFilter = null;
+    minCopiesFilter = null;
+    maxCopiesFilter = null;
+    minController.text = '';
+    maxController.text = '';
+    ref.notifyListeners();
+  }
+
+  /// Filter the books according to the selected filter values.
+  Future<void> applyFilters() async {
+    state = AsyncData(
+      await DatabaseRepository.instance.getAllBooks(
+        sortBy: bookSort,
+        sortOrder: selectedSortOrder,
+        genreFilter: genreFilter,
+        authorFilter: authorFilter,
+        issueStatusFilter: issueStatusFilter,
+        minCopiesFilter: minCopiesFilter,
+        maxCopiesFilter: maxCopiesFilter,
+      ),
+    );
+    // Keep provider alive to preserve the filtered list.
+    ref.keepAlive();
   }
 }
