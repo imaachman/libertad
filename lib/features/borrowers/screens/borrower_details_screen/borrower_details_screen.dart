@@ -73,134 +73,136 @@ class BorrowerDetailsPage extends ConsumerWidget {
         child: Padding(
           padding: const EdgeInsets.all(8),
           child: SingleChildScrollView(
-            child: Column(
-              children: [
-                Container(
-                  constraints: BoxConstraints(maxWidth: kSmallPhone / 2),
-                  width: MediaQuery.of(context).size.width / 2,
-                  child: ProfilePicture(
-                    imageFilePath: model.borrower.profilePicture,
+            child: Container(
+              constraints: BoxConstraints(maxWidth: kSmallPhone + 48),
+              child: Column(
+                children: [
+                  Container(
+                    constraints: BoxConstraints(maxWidth: kSmallPhone / 2),
+                    width: MediaQuery.of(context).size.width / 2,
+                    child: ProfilePicture(
+                      imageFilePath: model.borrower.profilePicture,
+                    ),
                   ),
-                ),
-                SizedBox(height: 16),
-                Text(
-                  model.borrower.name,
-                  style: Theme.of(context)
-                      .textTheme
-                      .headlineLarge
-                      ?.copyWith(fontWeight: FontWeight.bold),
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(height: 4),
-                Text(
-                  prettifyContact(borrower.contact),
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        color: Theme.of(context).colorScheme.secondary,
-                        fontWeight: FontWeight.bold,
+                  SizedBox(height: 16),
+                  Text(
+                    model.borrower.name,
+                    style: Theme.of(context)
+                        .textTheme
+                        .headlineLarge
+                        ?.copyWith(fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 4),
+                  Text(
+                    prettifyContact(borrower.contact),
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          color: Theme.of(context).colorScheme.secondary,
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
+                  SizedBox(height: 16),
+                  Wrap(
+                    runAlignment: WrapAlignment.spaceBetween,
+                    children: [
+                      RichText(
+                        textAlign: TextAlign.center,
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                                text: 'Member from ',
+                                style: Theme.of(context).textTheme.labelLarge),
+                            TextSpan(
+                              text: borrower.membershipStartDate.prettify,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .labelLarge
+                                  ?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    decoration: TextDecoration.underline,
+                                    decorationColor:
+                                        Theme.of(context).primaryColor,
+                                    color: Theme.of(context).primaryColor,
+                                  ),
+                            ),
+                            TextSpan(
+                              text: ' to ',
+                              style: Theme.of(context).textTheme.labelLarge,
+                            ),
+                            TextSpan(
+                              text: borrower.membershipStartDate
+                                  .copyWith(
+                                      month:
+                                          borrower.membershipStartDate.month +
+                                              borrower.membershipDuration)
+                                  .prettify,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .labelLarge
+                                  ?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    decoration: TextDecoration.underline,
+                                    decorationColor:
+                                        Theme.of(context).primaryColor,
+                                    color: Theme.of(context).primaryColor,
+                                  ),
+                            ),
+                          ],
+                        ),
                       ),
-                ),
-                SizedBox(height: 16),
-                Wrap(
-                  runAlignment: WrapAlignment.spaceBetween,
-                  children: [
-                    RichText(
-                      textAlign: TextAlign.center,
-                      text: TextSpan(
-                        children: [
-                          TextSpan(
-                              text: 'Member from ',
-                              style: Theme.of(context).textTheme.labelLarge),
-                          TextSpan(
-                            text: borrower.membershipStartDate.prettify,
-                            style: Theme.of(context)
-                                .textTheme
-                                .labelLarge
-                                ?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  decoration: TextDecoration.underline,
-                                  decorationColor:
-                                      Theme.of(context).primaryColor,
-                                  color: Theme.of(context).primaryColor,
-                                ),
-                          ),
-                          TextSpan(
-                            text: ' to ',
-                            style: Theme.of(context).textTheme.labelLarge,
-                          ),
-                          TextSpan(
-                            text: borrower.membershipStartDate
-                                .copyWith(
-                                    month: borrower.membershipStartDate.month +
-                                        borrower.membershipDuration)
-                                .prettify,
-                            style: Theme.of(context)
-                                .textTheme
-                                .labelLarge
-                                ?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  decoration: TextDecoration.underline,
-                                  decorationColor:
-                                      Theme.of(context).primaryColor,
-                                  color: Theme.of(context).primaryColor,
-                                ),
-                          ),
-                        ],
+                    ],
+                  ),
+                  Divider(height: 48),
+                  Column(
+                    children: [
+                      Text(
+                        'Issued Books',
+                        style: Theme.of(context)
+                            .textTheme
+                            .headlineLarge
+                            ?.copyWith(fontWeight: FontWeight.bold),
                       ),
-                    ),
-                  ],
-                ),
-                Container(
-                  constraints: BoxConstraints(maxWidth: kSmallPhone + 48),
-                  child: Divider(height: 48),
-                ),
-                Column(
-                  children: [
-                    Text(
-                      'Issued Books',
-                      style: Theme.of(context)
-                          .textTheme
-                          .headlineLarge
-                          ?.copyWith(fontWeight: FontWeight.bold),
-                    ),
-                    ...List.generate(
-                      borrower.currentlyIssuedBooks.length,
-                      (index) {
-                        final BookCopy copy =
-                            borrower.currentlyIssuedBooks.toList()[index];
-                        return IssuedCopyTile(
-                          copy: copy,
-                          index: index,
-                          minimal: true,
-                        );
-                      },
-                    ),
-                  ],
-                ),
-                Divider(),
-                Column(
-                  children: [
-                    Text(
-                      'Previously Issued',
-                      style: Theme.of(context)
-                          .textTheme
-                          .headlineLarge
-                          ?.copyWith(fontWeight: FontWeight.bold),
-                    ),
-                    ...List.generate(
-                      borrower.previouslyIssuedBooks.length,
-                      (index) {
-                        final BookCopy copy =
-                            borrower.previouslyIssuedBooks.toList()[index];
-                        return IssuedCopyTile(
-                          copy: copy,
-                          index: index,
-                          minimal: true,
-                        );
-                      },
-                    ),
-                  ],
-                ),
-              ],
+                      SizedBox(height: 8),
+                      ...List.generate(
+                        borrower.currentlyIssuedBooks.length,
+                        (index) {
+                          final BookCopy copy =
+                              borrower.currentlyIssuedBooks.toList()[index];
+                          return IssuedCopyTile(
+                            copy: copy,
+                            index: index,
+                            minimal: true,
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                  Divider(height: 48),
+                  Column(
+                    children: [
+                      Text(
+                        'Previously Issued',
+                        style: Theme.of(context)
+                            .textTheme
+                            .headlineLarge
+                            ?.copyWith(fontWeight: FontWeight.bold),
+                      ),
+                      ...List.generate(
+                        borrower.previouslyIssuedBooks.length,
+                        (index) {
+                          final BookCopy copy =
+                              borrower.previouslyIssuedBooks.toList()[index];
+                          return IssuedCopyTile(
+                            copy: copy,
+                            index: index,
+                            minimal: true,
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),

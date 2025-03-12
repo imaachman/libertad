@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:libertad/data/models/book_copy.dart';
+import 'package:libertad/data/models/issue_status.dart';
 import 'package:libertad/features/books/viewmodels/books_list_viewmodel.dart';
 import 'package:libertad/widgets/filter_tile.dart';
 

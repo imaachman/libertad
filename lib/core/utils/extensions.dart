@@ -1,3 +1,5 @@
+import 'package:libertad/data/models/issue_status.dart';
+
 extension DateExtension on DateTime {
   String monthToWord() {
     switch (month) {
@@ -58,4 +60,9 @@ extension DateExtension on DateTime {
       return prettify;
     }
   }
+}
+
+extension StatusExtension on IssueStatus {
+  bool get isIssued => this == IssueStatus.issued;
+  bool get isAvailable => this == IssueStatus.available;
 }

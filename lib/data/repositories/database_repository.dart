@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:isar/isar.dart';
+import 'package:libertad/core/utils/extensions.dart';
 import 'package:libertad/data/mock/mock_authors.dart';
 import 'package:libertad/data/mock/mock_books.dart';
 import 'package:libertad/data/mock/mock_borrowers.dart';
@@ -11,6 +12,7 @@ import 'package:libertad/data/models/book_sort.dart';
 import 'package:libertad/data/models/borrower.dart';
 import 'package:libertad/data/models/borrower_sort.dart';
 import 'package:libertad/data/models/genre.dart';
+import 'package:libertad/data/models/issue_status.dart';
 import 'package:libertad/data/models/issued_copy_sort.dart';
 import 'package:libertad/data/models/search_result.dart';
 import 'package:libertad/data/models/sort_order.dart';
@@ -150,7 +152,7 @@ class DatabaseRepository {
         .optional(authorFilter != null,
             (q) => q.author((q) => q.idEqualTo(authorFilter!.id)))
         .optional(issueStatusFilter != null, (q) {
-          if (issueStatusFilter == IssueStatus.available) {
+          if (issueStatusFilter!.isAvailable) {
             return q.totalCopies((q) => q.statusEqualTo(IssueStatus.available));
           } else {
             return q

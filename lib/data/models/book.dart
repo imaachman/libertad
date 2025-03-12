@@ -1,4 +1,5 @@
 import 'package:isar/isar.dart';
+import 'package:libertad/core/utils/extensions.dart';
 import 'package:libertad/data/models/author.dart';
 import 'package:libertad/data/models/book_copy.dart';
 import 'package:libertad/data/models/genre.dart';
@@ -23,7 +24,7 @@ class Book {
 
   @ignore
   Set<BookCopy> get issuedCopies =>
-      totalCopies.where((copy) => copy.status == IssueStatus.issued).toSet();
+      totalCopies.where((copy) => copy.status.isIssued).toSet();
 
   Book({
     required this.title,

@@ -1,10 +1,10 @@
 import 'package:isar/isar.dart';
+import 'package:libertad/core/utils/extensions.dart';
 import 'package:libertad/data/models/book.dart';
 import 'package:libertad/data/models/borrower.dart';
+import 'package:libertad/data/models/issue_status.dart';
 
 part 'book_copy.g.dart';
-
-enum IssueStatus { issued, available }
 
 @collection
 class BookCopy {
@@ -18,6 +18,12 @@ class BookCopy {
   final IsarLinks<Borrower> previousBorrowers = IsarLinks<Borrower>();
   @enumerated
   IssueStatus status = IssueStatus.available;
+
+  @ignore
+  bool get issued => status.isIssued;
+
+  @ignore
+  bool get available => status.isAvailable;
 
   BookCopy copyWith() => BookCopy();
 }

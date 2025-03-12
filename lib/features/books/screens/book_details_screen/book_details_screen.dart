@@ -195,7 +195,7 @@ class BookDetailsPage extends ConsumerWidget {
                               .textTheme
                               .bodyMedium
                               ?.copyWith(fontWeight: FontWeight.bold),
-                          trailing: copy.status == IssueStatus.issued
+                          trailing: copy.issued
                               ? RichText(
                                   text: TextSpan(
                                     children: [

@@ -1,0 +1,1 @@
+enum IssueStatus { issued, available }
