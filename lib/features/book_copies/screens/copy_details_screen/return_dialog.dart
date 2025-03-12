@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:libertad/core/utils/extensions.dart';
 import 'package:libertad/data/models/book_copy.dart';
 import 'package:libertad/features/book_copies/viewmodels/copy_details_viewmodel.dart';
-
-import 'borrower_field.dart';
-import 'issue_date_field.dart';
-import 'return_date_field.dart';
 
 class ReturnDialog extends ConsumerWidget {
   final BookCopy copy;
@@ -14,9 +11,8 @@ class ReturnDialog extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.watch(copyDetailsViewModelProvider(copy));
     final CopyDetailsViewModel model =
-        ref.watch(copyDetailsViewModelProvider(copy).notifier);
+        ref.read(copyDetailsViewModelProvider(copy).notifier);
 
     return Dialog(
       shape: RoundedRectangleBorder(),
@@ -28,7 +24,7 @@ class ReturnDialog extends ConsumerWidget {
             child: Row(
               children: [
                 Text(
-                  copy.isAvailable ? 'Issue Copy' : 'Edit / Return',
+                  'Return Copy',
                   style: Theme.of(context)
                       .textTheme
                       .headlineMedium
@@ -38,75 +34,116 @@ class ReturnDialog extends ConsumerWidget {
             ),
           ),
           Divider(height: 0),
-          SizedBox(height: 16),
-          Wrap(
-            alignment: WrapAlignment.start,
-            crossAxisAlignment: WrapCrossAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8),
-                child: IssueDateField(copy: copy),
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: 'Copy ${copy.id}',
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).primaryColor,
+                        ),
+                  ),
+                  TextSpan(
+                    text: ', issued on ',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                  TextSpan(
+                    text: copy.issueDate!.prettifySmart,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).primaryColor,
+                        ),
+                  ),
+                  TextSpan(
+                    text: ' by ',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                  TextSpan(
+                    text: copy.currentBorrower.value!.name,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).primaryColor,
+                        ),
+                  ),
+                  TextSpan(
+                    text:
+                        ', ${copy.returnDatePassed ? 'was supposed' : 'is due'} to return on ',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                  TextSpan(
+                    text: copy.returnDate!.prettifySmart,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: copy.returnDatePassed
+                              ? Theme.of(context).colorScheme.error
+                              : Theme.of(context).primaryColor,
+                        ),
+                  ),
+                  TextSpan(
+                    text: '. Would you like to return it today, i.e., on ',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                  TextSpan(
+                    text: DateTime.now().prettify,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).primaryColor,
+                        ),
+                  ),
+                  TextSpan(
+                    text: '?',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                  if (copy.returnDatePassed) ...[
+                    TextSpan(
+                      text: ' A fine of ',
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                    TextSpan(
+                      text: '\$${2 * copy.overdueBy()}',
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context).colorScheme.error,
+                          ),
+                    ),
+                    TextSpan(
+                      text: ' will be levied.',
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                  ]
+                ],
               ),
-              Padding(
-                padding: const EdgeInsets.all(8),
-                child: ReturnDateField(copy: copy),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8),
-                child: BorrowerField(copy: copy),
-              ),
-            ],
+            ),
           ),
-          SizedBox(height: 16),
-          Row(
-            children: [
-              Expanded(
-                child: TextButton(
-                  onPressed: model.issueBook,
-                  style: ButtonStyle(
-                    shape: WidgetStatePropertyAll(RoundedRectangleBorder()),
-                    backgroundColor: WidgetStatePropertyAll(
-                      Theme.of(context).colorScheme.primaryFixedDim,
-                    ),
-                  ),
-                  child: SizedBox(
-                    height: 48,
-                    child: Center(
-                      child: Text(
-                        'Save Edits',
-                        style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                              color: Theme.of(context).colorScheme.onSurface,
-                              fontWeight: FontWeight.bold,
-                            ),
+          TextButton(
+            onPressed: () async {
+              await model.returnBook();
+              if (!context.mounted) return;
+              Navigator.of(context).pop();
+            },
+            style: ButtonStyle(
+              shape: WidgetStatePropertyAll(RoundedRectangleBorder()),
+              backgroundColor: WidgetStatePropertyAll(
+                Theme.of(context).primaryColor,
+              ),
+            ),
+            child: SizedBox(
+              height: 48,
+              child: Center(
+                child: Text(
+                  copy.returnDatePassed
+                      ? 'Return copy with fine'
+                      : 'Return Copy',
+                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                        color: Theme.of(context).colorScheme.onPrimary,
+                        fontWeight: FontWeight.bold,
                       ),
-                    ),
-                  ),
                 ),
               ),
-              Expanded(
-                child: TextButton(
-                  onPressed: model.issueBook,
-                  style: ButtonStyle(
-                    shape: WidgetStatePropertyAll(RoundedRectangleBorder()),
-                    backgroundColor: WidgetStatePropertyAll(
-                      Theme.of(context).primaryColor,
-                    ),
-                  ),
-                  child: SizedBox(
-                    height: 48,
-                    child: Center(
-                      child: Text(
-                        'Return Copy',
-                        style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                              color: Theme.of(context).colorScheme.onPrimary,
-                              fontWeight: FontWeight.bold,
-                            ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
+            ),
           ),
         ],
       ),

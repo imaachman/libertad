@@ -138,6 +138,25 @@ class CopyDetailsViewModel extends _$CopyDetailsViewModel {
     await DatabaseRepository.instance.issueCopy(copy, borrower!);
   }
 
+  Future<void> returnBook() async {
+    // Mark the copy as returned.
+    // Return date is the current date.
+    copy
+      ..returnDate = DateTime.now()
+      ..status = IssueStatus.available;
+
+    // If the book was returned after its return date, mark the borrower as
+    // defaulter and add a fine of $2 for each day the book wasn't returned.
+    if (copy.returnDatePassed) {
+      borrower!
+        ..isDefaulter = true
+        ..fineDue = copy.overdueBy() * 2.0;
+    }
+
+    // Mark the copy as returned in the database.
+    await DatabaseRepository.instance.returnCopy(copy, borrower!);
+  }
+
   // Future<void> showDeletionDialog(BuildContext context) async {
   //   await showAdaptiveDialog(
   //     context: context,

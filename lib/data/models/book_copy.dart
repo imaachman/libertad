@@ -25,5 +25,18 @@ class BookCopy {
   @ignore
   bool get isAvailable => status.isAvailable;
 
+  @ignore
+  bool get returnDatePassed => returnDate?.isBefore(DateTime.now()) ?? false;
+
+  /// Returns the number of days by which the issued copy has surpassed the
+  /// return date.
+  int overdueBy() {
+    if (returnDatePassed) {
+      return DateTime.now().compareTo(returnDate!);
+    } else {
+      return 0;
+    }
+  }
+
   BookCopy copyWith() => BookCopy();
 }

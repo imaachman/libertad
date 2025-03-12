@@ -516,6 +516,16 @@ class DatabaseRepository {
     });
   }
 
+  Future<void> returnCopy(BookCopy copy, Borrower borrower) async {
+    return _isar.writeTxn(() async {
+      copy.currentBorrower.reset();
+      copy.previousBorrowers.add(borrower);
+      await _isar.bookCopys.put(copy);
+      copy.currentBorrower.save();
+      copy.previousBorrowers.save();
+    });
+  }
+
   List<BookCopy> _generateCopies(Book book, int totalCopies) {
     return List.generate(
       totalCopies,
