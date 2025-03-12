@@ -3,8 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:libertad/core/constants/breakpoints.dart';
 import 'package:libertad/data/models/book_copy.dart';
 import 'package:libertad/data/models/borrower.dart';
-import 'package:libertad/features/book_copies/screens/copy_details_screen/borrower_field.dart';
-import 'package:libertad/features/book_copies/screens/copy_details_screen/return_date_field.dart';
 import 'package:libertad/features/book_copies/viewmodels/copy_details_viewmodel.dart';
 import 'package:libertad/features/borrowers/screens/borrowers_screen/borrower_list_tile.dart';
 import 'package:libertad/widgets/book_cover.dart';
@@ -23,6 +21,33 @@ class CopyDetailsPage extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Copy Details'),
+        actions: [
+          if (copy.isIssued)
+            PopupMenuButton(
+              itemBuilder: (context) => [
+                PopupMenuItem(
+                  value: 0,
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.edit,
+                        size: 18,
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
+                      SizedBox(width: 8),
+                      Text(
+                        'Edit',
+                        style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                              color: Theme.of(context).colorScheme.secondary,
+                            ),
+                      ),
+                    ],
+                  ),
+                  onTap: () => model.showEditDialog(context, copy),
+                ),
+              ],
+            )
+        ],
       ),
       body: Center(
         child: Padding(
@@ -61,44 +86,6 @@ class CopyDetailsPage extends ConsumerWidget {
                       ),
                 ),
                 SizedBox(height: 16),
-                Wrap(
-                  alignment: WrapAlignment.start,
-                  crossAxisAlignment: WrapCrossAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: ReturnDateField(copy: copy),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: BorrowerField(copy: copy),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 16),
-                TextButton(
-                  onPressed: model.issueBook,
-                  style: ButtonStyle(
-                    shape: WidgetStatePropertyAll(RoundedRectangleBorder()),
-                    backgroundColor: WidgetStatePropertyAll(
-                      Theme.of(context).primaryColor,
-                    ),
-                  ),
-                  child: Container(
-                    constraints: BoxConstraints(maxWidth: kSmallPhone / 2),
-                    width: MediaQuery.of(context).size.width / 2,
-                    height: 48,
-                    child: Center(
-                      child: Text(
-                        'Issue Book',
-                        style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                              color: Theme.of(context).colorScheme.onPrimary,
-                              fontWeight: FontWeight.bold,
-                            ),
-                      ),
-                    ),
-                  ),
-                ),
                 Container(
                   constraints: BoxConstraints(maxWidth: kSmallPhone + 48),
                   child: Divider(height: 48),
@@ -127,6 +114,24 @@ class CopyDetailsPage extends ConsumerWidget {
               ],
             ),
           ),
+        ),
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () => copy.isAvailable
+            ? model.showIssueDialog(context, copy)
+            : model.showReturnDialog(context, copy),
+        icon: Icon(
+          copy.isAvailable
+              ? Icons.bookmark_added_rounded
+              : Icons.handshake_rounded,
+          size: 20,
+        ),
+        label: Text(
+          copy.isAvailable ? 'Issue Copy' : 'Return Copy',
+          style: Theme.of(context)
+              .textTheme
+              .titleMedium
+              ?.copyWith(color: Theme.of(context).primaryColor),
         ),
       ),
     );

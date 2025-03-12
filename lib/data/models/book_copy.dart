@@ -20,10 +20,10 @@ class BookCopy {
   IssueStatus status = IssueStatus.available;
 
   @ignore
-  bool get issued => status.isIssued;
+  bool get isIssued => status.isIssued;
 
   @ignore
-  bool get available => status.isAvailable;
+  bool get isAvailable => status.isAvailable;
 
   BookCopy copyWith() => BookCopy();
 }

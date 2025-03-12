@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:libertad/data/models/book_copy.dart';
 import 'package:libertad/data/models/borrower.dart';
+import 'package:libertad/data/models/issue_status.dart';
 import 'package:libertad/data/repositories/database_repository.dart';
 import 'package:libertad/features/book_copies/screens/copy_details_screen/borrowers_search_delegate.dart';
+import 'package:libertad/features/book_copies/screens/copy_details_screen/edit_dialog.dart';
+import 'package:libertad/features/book_copies/screens/copy_details_screen/issue_dialog.dart';
+import 'package:libertad/features/book_copies/screens/copy_details_screen/return_dialog.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'copy_details_viewmodel.g.dart';
@@ -34,10 +38,25 @@ class CopyDetailsViewModel extends _$CopyDetailsViewModel {
     // DatabaseRepository.instance
     //     .borrowerStream(borrower.id)
     //     .listen((_) => ref.notifyListeners());
-    // DatabaseRepository.instance.bookCopiesStream
-    //     .listen((_) => ref.notifyListeners());
+    DatabaseRepository.instance.bookCopiesStream
+        .listen((_) => ref.notifyListeners());
     return copy;
   }
+
+  /// Shows dialog to issue book.
+  Future<void> showIssueDialog(BuildContext context, BookCopy copy) =>
+      showDialog(
+          context: context, builder: (context) => IssueDialog(copy: copy));
+
+  /// Shows dialog to return book.
+  Future<void> showReturnDialog(BuildContext context, BookCopy copy) =>
+      showDialog(
+          context: context, builder: (context) => ReturnDialog(copy: copy));
+
+  /// Shows dialog to edit issuance details.
+  Future<void> showEditDialog(BuildContext context, BookCopy copy) =>
+      showDialog(
+          context: context, builder: (context) => EditDialog(copy: copy));
 
   /// Opens date picker and selects the issue date of the copy.
   Future<void> selectIssueDate(BuildContext context) async {

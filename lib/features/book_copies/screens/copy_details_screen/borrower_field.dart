@@ -66,7 +66,7 @@ class BorrowerField extends ConsumerWidget {
         if (borrowerNotSelected) ...[
           SizedBox(height: 4),
           Text(
-            'Please select a borrower',
+            'Please select the borrower',
             style: Theme.of(context)
                 .textTheme
                 .bodySmall
