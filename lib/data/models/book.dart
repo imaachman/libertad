@@ -1,5 +1,4 @@
 import 'package:isar/isar.dart';
-import 'package:libertad/core/utils/extensions.dart';
 import 'package:libertad/data/models/author.dart';
 import 'package:libertad/data/models/book_copy.dart';
 import 'package:libertad/data/models/genre.dart';
@@ -21,10 +20,14 @@ class Book {
   @Index()
   @Backlink(to: 'book')
   final IsarLinks<BookCopy> totalCopies = IsarLinks<BookCopy>();
+  @Index()
+  final DateTime createdAt = DateTime.now();
+  @Index()
+  DateTime updatedAt = DateTime.now();
 
   @ignore
   Set<BookCopy> get issuedCopies =>
-      totalCopies.where((copy) => copy.status.isIssued).toSet();
+      totalCopies.where((copy) => copy.isIssued).toSet();
 
   Book({
     required this.title,

@@ -22,15 +22,25 @@ const AuthorSchema = CollectionSchema(
       name: r'bio',
       type: IsarType.string,
     ),
-    r'name': PropertySchema(
+    r'createdAt': PropertySchema(
       id: 1,
+      name: r'createdAt',
+      type: IsarType.dateTime,
+    ),
+    r'name': PropertySchema(
+      id: 2,
       name: r'name',
       type: IsarType.string,
     ),
     r'profilePicture': PropertySchema(
-      id: 2,
+      id: 3,
       name: r'profilePicture',
       type: IsarType.string,
+    ),
+    r'updatedAt': PropertySchema(
+      id: 4,
+      name: r'updatedAt',
+      type: IsarType.dateTime,
     )
   },
   estimateSize: _authorEstimateSize,
@@ -49,6 +59,32 @@ const AuthorSchema = CollectionSchema(
           name: r'name',
           type: IndexType.hash,
           caseSensitive: true,
+        )
+      ],
+    ),
+    r'createdAt': IndexSchema(
+      id: -3433535483987302584,
+      name: r'createdAt',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'createdAt',
+          type: IndexType.value,
+          caseSensitive: false,
+        )
+      ],
+    ),
+    r'updatedAt': IndexSchema(
+      id: -6238191080293565125,
+      name: r'updatedAt',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'updatedAt',
+          type: IndexType.value,
+          caseSensitive: false,
         )
       ],
     )
@@ -88,8 +124,10 @@ void _authorSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeString(offsets[0], object.bio);
-  writer.writeString(offsets[1], object.name);
-  writer.writeString(offsets[2], object.profilePicture);
+  writer.writeDateTime(offsets[1], object.createdAt);
+  writer.writeString(offsets[2], object.name);
+  writer.writeString(offsets[3], object.profilePicture);
+  writer.writeDateTime(offsets[4], object.updatedAt);
 }
 
 Author _authorDeserialize(
@@ -100,10 +138,11 @@ Author _authorDeserialize(
 ) {
   final object = Author(
     bio: reader.readString(offsets[0]),
-    name: reader.readString(offsets[1]),
-    profilePicture: reader.readStringOrNull(offsets[2]) ?? '',
+    name: reader.readString(offsets[2]),
+    profilePicture: reader.readStringOrNull(offsets[3]) ?? '',
   );
   object.id = id;
+  object.updatedAt = reader.readDateTime(offsets[4]);
   return object;
 }
 
@@ -117,9 +156,13 @@ P _authorDeserializeProp<P>(
     case 0:
       return (reader.readString(offset)) as P;
     case 1:
-      return (reader.readString(offset)) as P;
+      return (reader.readDateTime(offset)) as P;
     case 2:
+      return (reader.readString(offset)) as P;
+    case 3:
       return (reader.readStringOrNull(offset) ?? '') as P;
+    case 4:
+      return (reader.readDateTime(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -142,6 +185,22 @@ extension AuthorQueryWhereSort on QueryBuilder<Author, Author, QWhere> {
   QueryBuilder<Author, Author, QAfterWhere> anyId() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(const IdWhereClause.any());
+    });
+  }
+
+  QueryBuilder<Author, Author, QAfterWhere> anyCreatedAt() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        const IndexWhereClause.any(indexName: r'createdAt'),
+      );
+    });
+  }
+
+  QueryBuilder<Author, Author, QAfterWhere> anyUpdatedAt() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        const IndexWhereClause.any(indexName: r'updatedAt'),
+      );
     });
   }
 }
@@ -252,6 +311,186 @@ extension AuthorQueryWhere on QueryBuilder<Author, Author, QWhereClause> {
               includeUpper: false,
             ));
       }
+    });
+  }
+
+  QueryBuilder<Author, Author, QAfterWhereClause> createdAtEqualTo(
+      DateTime createdAt) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'createdAt',
+        value: [createdAt],
+      ));
+    });
+  }
+
+  QueryBuilder<Author, Author, QAfterWhereClause> createdAtNotEqualTo(
+      DateTime createdAt) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'createdAt',
+              lower: [],
+              upper: [createdAt],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'createdAt',
+              lower: [createdAt],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'createdAt',
+              lower: [createdAt],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'createdAt',
+              lower: [],
+              upper: [createdAt],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<Author, Author, QAfterWhereClause> createdAtGreaterThan(
+    DateTime createdAt, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'createdAt',
+        lower: [createdAt],
+        includeLower: include,
+        upper: [],
+      ));
+    });
+  }
+
+  QueryBuilder<Author, Author, QAfterWhereClause> createdAtLessThan(
+    DateTime createdAt, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'createdAt',
+        lower: [],
+        upper: [createdAt],
+        includeUpper: include,
+      ));
+    });
+  }
+
+  QueryBuilder<Author, Author, QAfterWhereClause> createdAtBetween(
+    DateTime lowerCreatedAt,
+    DateTime upperCreatedAt, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'createdAt',
+        lower: [lowerCreatedAt],
+        includeLower: includeLower,
+        upper: [upperCreatedAt],
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<Author, Author, QAfterWhereClause> updatedAtEqualTo(
+      DateTime updatedAt) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'updatedAt',
+        value: [updatedAt],
+      ));
+    });
+  }
+
+  QueryBuilder<Author, Author, QAfterWhereClause> updatedAtNotEqualTo(
+      DateTime updatedAt) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'updatedAt',
+              lower: [],
+              upper: [updatedAt],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'updatedAt',
+              lower: [updatedAt],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'updatedAt',
+              lower: [updatedAt],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'updatedAt',
+              lower: [],
+              upper: [updatedAt],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<Author, Author, QAfterWhereClause> updatedAtGreaterThan(
+    DateTime updatedAt, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'updatedAt',
+        lower: [updatedAt],
+        includeLower: include,
+        upper: [],
+      ));
+    });
+  }
+
+  QueryBuilder<Author, Author, QAfterWhereClause> updatedAtLessThan(
+    DateTime updatedAt, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'updatedAt',
+        lower: [],
+        upper: [updatedAt],
+        includeUpper: include,
+      ));
+    });
+  }
+
+  QueryBuilder<Author, Author, QAfterWhereClause> updatedAtBetween(
+    DateTime lowerUpdatedAt,
+    DateTime upperUpdatedAt, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'updatedAt',
+        lower: [lowerUpdatedAt],
+        includeLower: includeLower,
+        upper: [upperUpdatedAt],
+        includeUpper: includeUpper,
+      ));
     });
   }
 }
@@ -381,6 +620,59 @@ extension AuthorQueryFilter on QueryBuilder<Author, Author, QFilterCondition> {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'bio',
         value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Author, Author, QAfterFilterCondition> createdAtEqualTo(
+      DateTime value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'createdAt',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Author, Author, QAfterFilterCondition> createdAtGreaterThan(
+    DateTime value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'createdAt',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Author, Author, QAfterFilterCondition> createdAtLessThan(
+    DateTime value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'createdAt',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Author, Author, QAfterFilterCondition> createdAtBetween(
+    DateTime lower,
+    DateTime upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'createdAt',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
       ));
     });
   }
@@ -696,6 +988,59 @@ extension AuthorQueryFilter on QueryBuilder<Author, Author, QFilterCondition> {
       ));
     });
   }
+
+  QueryBuilder<Author, Author, QAfterFilterCondition> updatedAtEqualTo(
+      DateTime value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'updatedAt',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Author, Author, QAfterFilterCondition> updatedAtGreaterThan(
+    DateTime value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'updatedAt',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Author, Author, QAfterFilterCondition> updatedAtLessThan(
+    DateTime value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'updatedAt',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Author, Author, QAfterFilterCondition> updatedAtBetween(
+    DateTime lower,
+    DateTime upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'updatedAt',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
 }
 
 extension AuthorQueryObject on QueryBuilder<Author, Author, QFilterCondition> {}
@@ -771,6 +1116,18 @@ extension AuthorQuerySortBy on QueryBuilder<Author, Author, QSortBy> {
     });
   }
 
+  QueryBuilder<Author, Author, QAfterSortBy> sortByCreatedAt() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'createdAt', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Author, Author, QAfterSortBy> sortByCreatedAtDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'createdAt', Sort.desc);
+    });
+  }
+
   QueryBuilder<Author, Author, QAfterSortBy> sortByName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.asc);
@@ -794,6 +1151,18 @@ extension AuthorQuerySortBy on QueryBuilder<Author, Author, QSortBy> {
       return query.addSortBy(r'profilePicture', Sort.desc);
     });
   }
+
+  QueryBuilder<Author, Author, QAfterSortBy> sortByUpdatedAt() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'updatedAt', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Author, Author, QAfterSortBy> sortByUpdatedAtDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'updatedAt', Sort.desc);
+    });
+  }
 }
 
 extension AuthorQuerySortThenBy on QueryBuilder<Author, Author, QSortThenBy> {
@@ -806,6 +1175,18 @@ extension AuthorQuerySortThenBy on QueryBuilder<Author, Author, QSortThenBy> {
   QueryBuilder<Author, Author, QAfterSortBy> thenByBioDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'bio', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Author, Author, QAfterSortBy> thenByCreatedAt() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'createdAt', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Author, Author, QAfterSortBy> thenByCreatedAtDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'createdAt', Sort.desc);
     });
   }
 
@@ -844,6 +1225,18 @@ extension AuthorQuerySortThenBy on QueryBuilder<Author, Author, QSortThenBy> {
       return query.addSortBy(r'profilePicture', Sort.desc);
     });
   }
+
+  QueryBuilder<Author, Author, QAfterSortBy> thenByUpdatedAt() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'updatedAt', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Author, Author, QAfterSortBy> thenByUpdatedAtDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'updatedAt', Sort.desc);
+    });
+  }
 }
 
 extension AuthorQueryWhereDistinct on QueryBuilder<Author, Author, QDistinct> {
@@ -851,6 +1244,12 @@ extension AuthorQueryWhereDistinct on QueryBuilder<Author, Author, QDistinct> {
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'bio', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<Author, Author, QDistinct> distinctByCreatedAt() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'createdAt');
     });
   }
 
@@ -868,6 +1267,12 @@ extension AuthorQueryWhereDistinct on QueryBuilder<Author, Author, QDistinct> {
           caseSensitive: caseSensitive);
     });
   }
+
+  QueryBuilder<Author, Author, QDistinct> distinctByUpdatedAt() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'updatedAt');
+    });
+  }
 }
 
 extension AuthorQueryProperty on QueryBuilder<Author, Author, QQueryProperty> {
@@ -883,6 +1288,12 @@ extension AuthorQueryProperty on QueryBuilder<Author, Author, QQueryProperty> {
     });
   }
 
+  QueryBuilder<Author, DateTime, QQueryOperations> createdAtProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'createdAt');
+    });
+  }
+
   QueryBuilder<Author, String, QQueryOperations> nameProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'name');
@@ -892,6 +1303,12 @@ extension AuthorQueryProperty on QueryBuilder<Author, Author, QQueryProperty> {
   QueryBuilder<Author, String, QQueryOperations> profilePictureProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'profilePicture');
+    });
+  }
+
+  QueryBuilder<Author, DateTime, QQueryOperations> updatedAtProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'updatedAt');
     });
   }
 }

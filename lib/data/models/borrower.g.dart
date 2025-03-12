@@ -22,35 +22,45 @@ const BorrowerSchema = CollectionSchema(
       name: r'contact',
       type: IsarType.string,
     ),
-    r'fineDue': PropertySchema(
+    r'createdAt': PropertySchema(
       id: 1,
+      name: r'createdAt',
+      type: IsarType.dateTime,
+    ),
+    r'fineDue': PropertySchema(
+      id: 2,
       name: r'fineDue',
       type: IsarType.double,
     ),
     r'isDefaulter': PropertySchema(
-      id: 2,
+      id: 3,
       name: r'isDefaulter',
       type: IsarType.bool,
     ),
     r'membershipDuration': PropertySchema(
-      id: 3,
+      id: 4,
       name: r'membershipDuration',
       type: IsarType.long,
     ),
     r'membershipStartDate': PropertySchema(
-      id: 4,
+      id: 5,
       name: r'membershipStartDate',
       type: IsarType.dateTime,
     ),
     r'name': PropertySchema(
-      id: 5,
+      id: 6,
       name: r'name',
       type: IsarType.string,
     ),
     r'profilePicture': PropertySchema(
-      id: 6,
+      id: 7,
       name: r'profilePicture',
       type: IsarType.string,
+    ),
+    r'updatedAt': PropertySchema(
+      id: 8,
+      name: r'updatedAt',
+      type: IsarType.dateTime,
     )
   },
   estimateSize: _borrowerEstimateSize,
@@ -80,6 +90,32 @@ const BorrowerSchema = CollectionSchema(
       properties: [
         IndexPropertySchema(
           name: r'membershipStartDate',
+          type: IndexType.value,
+          caseSensitive: false,
+        )
+      ],
+    ),
+    r'createdAt': IndexSchema(
+      id: -3433535483987302584,
+      name: r'createdAt',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'createdAt',
+          type: IndexType.value,
+          caseSensitive: false,
+        )
+      ],
+    ),
+    r'updatedAt': IndexSchema(
+      id: -6238191080293565125,
+      name: r'updatedAt',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'updatedAt',
           type: IndexType.value,
           caseSensitive: false,
         )
@@ -128,12 +164,14 @@ void _borrowerSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeString(offsets[0], object.contact);
-  writer.writeDouble(offsets[1], object.fineDue);
-  writer.writeBool(offsets[2], object.isDefaulter);
-  writer.writeLong(offsets[3], object.membershipDuration);
-  writer.writeDateTime(offsets[4], object.membershipStartDate);
-  writer.writeString(offsets[5], object.name);
-  writer.writeString(offsets[6], object.profilePicture);
+  writer.writeDateTime(offsets[1], object.createdAt);
+  writer.writeDouble(offsets[2], object.fineDue);
+  writer.writeBool(offsets[3], object.isDefaulter);
+  writer.writeLong(offsets[4], object.membershipDuration);
+  writer.writeDateTime(offsets[5], object.membershipStartDate);
+  writer.writeString(offsets[6], object.name);
+  writer.writeString(offsets[7], object.profilePicture);
+  writer.writeDateTime(offsets[8], object.updatedAt);
 }
 
 Borrower _borrowerDeserialize(
@@ -144,14 +182,15 @@ Borrower _borrowerDeserialize(
 ) {
   final object = Borrower(
     contact: reader.readString(offsets[0]),
-    membershipDuration: reader.readLong(offsets[3]),
-    membershipStartDate: reader.readDateTime(offsets[4]),
-    name: reader.readString(offsets[5]),
-    profilePicture: reader.readStringOrNull(offsets[6]) ?? '',
+    membershipDuration: reader.readLong(offsets[4]),
+    membershipStartDate: reader.readDateTime(offsets[5]),
+    name: reader.readString(offsets[6]),
+    profilePicture: reader.readStringOrNull(offsets[7]) ?? '',
   );
-  object.fineDue = reader.readDouble(offsets[1]);
+  object.fineDue = reader.readDouble(offsets[2]);
   object.id = id;
-  object.isDefaulter = reader.readBool(offsets[2]);
+  object.isDefaulter = reader.readBool(offsets[3]);
+  object.updatedAt = reader.readDateTime(offsets[8]);
   return object;
 }
 
@@ -165,17 +204,21 @@ P _borrowerDeserializeProp<P>(
     case 0:
       return (reader.readString(offset)) as P;
     case 1:
-      return (reader.readDouble(offset)) as P;
-    case 2:
-      return (reader.readBool(offset)) as P;
-    case 3:
-      return (reader.readLong(offset)) as P;
-    case 4:
       return (reader.readDateTime(offset)) as P;
+    case 2:
+      return (reader.readDouble(offset)) as P;
+    case 3:
+      return (reader.readBool(offset)) as P;
+    case 4:
+      return (reader.readLong(offset)) as P;
     case 5:
-      return (reader.readString(offset)) as P;
+      return (reader.readDateTime(offset)) as P;
     case 6:
+      return (reader.readString(offset)) as P;
+    case 7:
       return (reader.readStringOrNull(offset) ?? '') as P;
+    case 8:
+      return (reader.readDateTime(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -208,6 +251,22 @@ extension BorrowerQueryWhereSort on QueryBuilder<Borrower, Borrower, QWhere> {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
         const IndexWhereClause.any(indexName: r'membershipStartDate'),
+      );
+    });
+  }
+
+  QueryBuilder<Borrower, Borrower, QAfterWhere> anyCreatedAt() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        const IndexWhereClause.any(indexName: r'createdAt'),
+      );
+    });
+  }
+
+  QueryBuilder<Borrower, Borrower, QAfterWhere> anyUpdatedAt() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        const IndexWhereClause.any(indexName: r'updatedAt'),
       );
     });
   }
@@ -415,6 +474,186 @@ extension BorrowerQueryWhere on QueryBuilder<Borrower, Borrower, QWhereClause> {
       ));
     });
   }
+
+  QueryBuilder<Borrower, Borrower, QAfterWhereClause> createdAtEqualTo(
+      DateTime createdAt) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'createdAt',
+        value: [createdAt],
+      ));
+    });
+  }
+
+  QueryBuilder<Borrower, Borrower, QAfterWhereClause> createdAtNotEqualTo(
+      DateTime createdAt) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'createdAt',
+              lower: [],
+              upper: [createdAt],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'createdAt',
+              lower: [createdAt],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'createdAt',
+              lower: [createdAt],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'createdAt',
+              lower: [],
+              upper: [createdAt],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<Borrower, Borrower, QAfterWhereClause> createdAtGreaterThan(
+    DateTime createdAt, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'createdAt',
+        lower: [createdAt],
+        includeLower: include,
+        upper: [],
+      ));
+    });
+  }
+
+  QueryBuilder<Borrower, Borrower, QAfterWhereClause> createdAtLessThan(
+    DateTime createdAt, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'createdAt',
+        lower: [],
+        upper: [createdAt],
+        includeUpper: include,
+      ));
+    });
+  }
+
+  QueryBuilder<Borrower, Borrower, QAfterWhereClause> createdAtBetween(
+    DateTime lowerCreatedAt,
+    DateTime upperCreatedAt, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'createdAt',
+        lower: [lowerCreatedAt],
+        includeLower: includeLower,
+        upper: [upperCreatedAt],
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<Borrower, Borrower, QAfterWhereClause> updatedAtEqualTo(
+      DateTime updatedAt) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'updatedAt',
+        value: [updatedAt],
+      ));
+    });
+  }
+
+  QueryBuilder<Borrower, Borrower, QAfterWhereClause> updatedAtNotEqualTo(
+      DateTime updatedAt) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'updatedAt',
+              lower: [],
+              upper: [updatedAt],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'updatedAt',
+              lower: [updatedAt],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'updatedAt',
+              lower: [updatedAt],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'updatedAt',
+              lower: [],
+              upper: [updatedAt],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<Borrower, Borrower, QAfterWhereClause> updatedAtGreaterThan(
+    DateTime updatedAt, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'updatedAt',
+        lower: [updatedAt],
+        includeLower: include,
+        upper: [],
+      ));
+    });
+  }
+
+  QueryBuilder<Borrower, Borrower, QAfterWhereClause> updatedAtLessThan(
+    DateTime updatedAt, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'updatedAt',
+        lower: [],
+        upper: [updatedAt],
+        includeUpper: include,
+      ));
+    });
+  }
+
+  QueryBuilder<Borrower, Borrower, QAfterWhereClause> updatedAtBetween(
+    DateTime lowerUpdatedAt,
+    DateTime upperUpdatedAt, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'updatedAt',
+        lower: [lowerUpdatedAt],
+        includeLower: includeLower,
+        upper: [upperUpdatedAt],
+        includeUpper: includeUpper,
+      ));
+    });
+  }
 }
 
 extension BorrowerQueryFilter
@@ -545,6 +784,59 @@ extension BorrowerQueryFilter
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'contact',
         value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Borrower, Borrower, QAfterFilterCondition> createdAtEqualTo(
+      DateTime value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'createdAt',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Borrower, Borrower, QAfterFilterCondition> createdAtGreaterThan(
+    DateTime value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'createdAt',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Borrower, Borrower, QAfterFilterCondition> createdAtLessThan(
+    DateTime value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'createdAt',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Borrower, Borrower, QAfterFilterCondition> createdAtBetween(
+    DateTime lower,
+    DateTime upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'createdAt',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
       ));
     });
   }
@@ -1049,6 +1341,59 @@ extension BorrowerQueryFilter
       ));
     });
   }
+
+  QueryBuilder<Borrower, Borrower, QAfterFilterCondition> updatedAtEqualTo(
+      DateTime value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'updatedAt',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Borrower, Borrower, QAfterFilterCondition> updatedAtGreaterThan(
+    DateTime value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'updatedAt',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Borrower, Borrower, QAfterFilterCondition> updatedAtLessThan(
+    DateTime value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'updatedAt',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Borrower, Borrower, QAfterFilterCondition> updatedAtBetween(
+    DateTime lower,
+    DateTime upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'updatedAt',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
 }
 
 extension BorrowerQueryObject
@@ -1198,6 +1543,18 @@ extension BorrowerQuerySortBy on QueryBuilder<Borrower, Borrower, QSortBy> {
     });
   }
 
+  QueryBuilder<Borrower, Borrower, QAfterSortBy> sortByCreatedAt() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'createdAt', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Borrower, Borrower, QAfterSortBy> sortByCreatedAtDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'createdAt', Sort.desc);
+    });
+  }
+
   QueryBuilder<Borrower, Borrower, QAfterSortBy> sortByFineDue() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'fineDue', Sort.asc);
@@ -1271,6 +1628,18 @@ extension BorrowerQuerySortBy on QueryBuilder<Borrower, Borrower, QSortBy> {
       return query.addSortBy(r'profilePicture', Sort.desc);
     });
   }
+
+  QueryBuilder<Borrower, Borrower, QAfterSortBy> sortByUpdatedAt() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'updatedAt', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Borrower, Borrower, QAfterSortBy> sortByUpdatedAtDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'updatedAt', Sort.desc);
+    });
+  }
 }
 
 extension BorrowerQuerySortThenBy
@@ -1284,6 +1653,18 @@ extension BorrowerQuerySortThenBy
   QueryBuilder<Borrower, Borrower, QAfterSortBy> thenByContactDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'contact', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Borrower, Borrower, QAfterSortBy> thenByCreatedAt() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'createdAt', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Borrower, Borrower, QAfterSortBy> thenByCreatedAtDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'createdAt', Sort.desc);
     });
   }
 
@@ -1372,6 +1753,18 @@ extension BorrowerQuerySortThenBy
       return query.addSortBy(r'profilePicture', Sort.desc);
     });
   }
+
+  QueryBuilder<Borrower, Borrower, QAfterSortBy> thenByUpdatedAt() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'updatedAt', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Borrower, Borrower, QAfterSortBy> thenByUpdatedAtDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'updatedAt', Sort.desc);
+    });
+  }
 }
 
 extension BorrowerQueryWhereDistinct
@@ -1380,6 +1773,12 @@ extension BorrowerQueryWhereDistinct
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'contact', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<Borrower, Borrower, QDistinct> distinctByCreatedAt() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'createdAt');
     });
   }
 
@@ -1421,6 +1820,12 @@ extension BorrowerQueryWhereDistinct
           caseSensitive: caseSensitive);
     });
   }
+
+  QueryBuilder<Borrower, Borrower, QDistinct> distinctByUpdatedAt() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'updatedAt');
+    });
+  }
 }
 
 extension BorrowerQueryProperty
@@ -1434,6 +1839,12 @@ extension BorrowerQueryProperty
   QueryBuilder<Borrower, String, QQueryOperations> contactProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'contact');
+    });
+  }
+
+  QueryBuilder<Borrower, DateTime, QQueryOperations> createdAtProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'createdAt');
     });
   }
 
@@ -1471,6 +1882,12 @@ extension BorrowerQueryProperty
   QueryBuilder<Borrower, String, QQueryOperations> profilePictureProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'profilePicture');
+    });
+  }
+
+  QueryBuilder<Borrower, DateTime, QQueryOperations> updatedAtProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'updatedAt');
     });
   }
 }

@@ -12,6 +12,10 @@ class Author {
   String profilePicture;
   @Backlink(to: 'author')
   final IsarLinks<Book> books = IsarLinks<Book>();
+  @Index()
+  final DateTime createdAt = DateTime.now();
+  @Index()
+  DateTime updatedAt = DateTime.now();
 
   Author({
     required this.name,

@@ -202,6 +202,20 @@ class DatabaseRepository {
           }
         });
         return books;
+      // Sort the books by title.
+      case BookSort.dateAdded:
+        if (sortOrder == SortOrder.ascending) {
+          return queryBuilder.sortByCreatedAt().findAll();
+        } else {
+          return queryBuilder.sortByCreatedAtDesc().findAll();
+        }
+      // Sort the books by title.
+      case BookSort.dateModified:
+        if (sortOrder == SortOrder.ascending) {
+          return queryBuilder.sortByUpdatedAt().findAll();
+        } else {
+          return queryBuilder.sortByUpdatedAtDesc().findAll();
+        }
       // Return unsorted books.
       default:
         return queryBuilder.findAll();
@@ -418,6 +432,9 @@ class DatabaseRepository {
         book.totalCopies.addAll(copies);
       }
 
+      // Update book update time right before it's inserted in the database.
+      book.updatedAt = DateTime.now();
+
       // Update the book in the database.
       await _isar.books.put(book);
 
@@ -446,6 +463,8 @@ class DatabaseRepository {
 
   Future<void> updateAuthor(Author author) async {
     await _isar.writeTxn(() async {
+      // Update author update time right before it's inserted in the database.
+      author.updatedAt = DateTime.now();
       _isar.authors.put(author);
     });
   }
@@ -489,6 +508,8 @@ class DatabaseRepository {
   /// Updates an existing borrower in the collection.
   Future<void> updateBorrower(Borrower borrower) async {
     await _isar.writeTxn(() async {
+      // Update borrower update time right before it's inserted in the database.
+      borrower.updatedAt = DateTime.now();
       // Update the borrower in the database.
       await _isar.borrowers.put(borrower);
     });
