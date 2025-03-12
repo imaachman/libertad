@@ -77,15 +77,35 @@ class CopyDetailsPage extends ConsumerWidget {
                   textAlign: TextAlign.center,
                 ),
                 SizedBox(height: 16),
-                Text(
-                  copy.status.name.toUpperCase(),
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        color: Theme.of(context).primaryColor,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 4,
+                if (copy.isIssued) ...[
+                  Text('issued to'),
+                  TextButton(
+                    style: ButtonStyle(
+                      shape: WidgetStatePropertyAll(RoundedRectangleBorder()),
+                    ),
+                    onPressed: () => Navigator.of(context).pushNamed(
+                      '/borrower',
+                      arguments: copy.currentBorrower.value,
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: Text(
+                        copy.currentBorrower.value!.name,
+                        style: Theme.of(context).textTheme.titleLarge,
+                        textAlign: TextAlign.center,
                       ),
-                ),
-                SizedBox(height: 16),
+                    ),
+                  ),
+                ],
+                if (copy.isAvailable)
+                  Text(
+                    'AVAILABLE',
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          color: Theme.of(context).primaryColor,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 4,
+                        ),
+                  ),
                 Container(
                   constraints: BoxConstraints(maxWidth: kSmallPhone + 48),
                   child: Divider(height: 48),
