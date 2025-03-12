@@ -58,7 +58,7 @@ class ReturnDialog extends ConsumerWidget {
                         ),
                   ),
                   TextSpan(
-                    text: ' by ',
+                    text: ' to ',
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
                   TextSpan(
@@ -119,11 +119,7 @@ class ReturnDialog extends ConsumerWidget {
             ),
           ),
           TextButton(
-            onPressed: () async {
-              await model.returnBook();
-              if (!context.mounted) return;
-              Navigator.of(context).pop();
-            },
+            onPressed: () => model.returnBook(context),
             style: ButtonStyle(
               shape: WidgetStatePropertyAll(RoundedRectangleBorder()),
               backgroundColor: WidgetStatePropertyAll(

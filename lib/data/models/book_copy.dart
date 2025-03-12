@@ -32,7 +32,7 @@ class BookCopy {
   /// return date.
   int overdueBy() {
     if (returnDatePassed) {
-      return DateTime.now().compareTo(returnDate!);
+      return DateTime.now().difference(returnDate!).inDays;
     } else {
       return 0;
     }

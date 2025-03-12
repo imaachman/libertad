@@ -28,7 +28,7 @@ class EditDialog extends ConsumerWidget {
             child: Row(
               children: [
                 Text(
-                  copy.isAvailable ? 'Issue Copy' : 'Edit / Return',
+                  'Edit Issuance Details',
                   style: Theme.of(context)
                       .textTheme
                       .headlineMedium
@@ -58,55 +58,26 @@ class EditDialog extends ConsumerWidget {
             ],
           ),
           SizedBox(height: 16),
-          Row(
-            children: [
-              Expanded(
-                child: TextButton(
-                  onPressed: model.issueBook,
-                  style: ButtonStyle(
-                    shape: WidgetStatePropertyAll(RoundedRectangleBorder()),
-                    backgroundColor: WidgetStatePropertyAll(
-                      Theme.of(context).colorScheme.primaryFixedDim,
-                    ),
-                  ),
-                  child: SizedBox(
-                    height: 48,
-                    child: Center(
-                      child: Text(
-                        'Save Edits',
-                        style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                              color: Theme.of(context).colorScheme.onSurface,
-                              fontWeight: FontWeight.bold,
-                            ),
+          TextButton(
+            onPressed: () => model.saveEdits(context),
+            style: ButtonStyle(
+              shape: WidgetStatePropertyAll(RoundedRectangleBorder()),
+              backgroundColor: WidgetStatePropertyAll(
+                Theme.of(context).primaryColor,
+              ),
+            ),
+            child: SizedBox(
+              height: 48,
+              child: Center(
+                child: Text(
+                  'Save Edits',
+                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                        color: Theme.of(context).colorScheme.onPrimary,
+                        fontWeight: FontWeight.bold,
                       ),
-                    ),
-                  ),
                 ),
               ),
-              Expanded(
-                child: TextButton(
-                  onPressed: model.issueBook,
-                  style: ButtonStyle(
-                    shape: WidgetStatePropertyAll(RoundedRectangleBorder()),
-                    backgroundColor: WidgetStatePropertyAll(
-                      Theme.of(context).primaryColor,
-                    ),
-                  ),
-                  child: SizedBox(
-                    height: 48,
-                    child: Center(
-                      child: Text(
-                        'Return Copy',
-                        style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                              color: Theme.of(context).colorScheme.onPrimary,
-                              fontWeight: FontWeight.bold,
-                            ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
+            ),
           ),
         ],
       ),

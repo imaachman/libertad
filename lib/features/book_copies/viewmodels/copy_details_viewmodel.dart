@@ -30,7 +30,7 @@ class CopyDetailsViewModel extends _$CopyDetailsViewModel {
 
   @override
   BookCopy build(BookCopy copy) {
-    issueDate = copy.issueDate;
+    issueDate = copy.issueDate ?? DateTime.now();
     returnDate = copy.returnDate;
     borrower = copy.currentBorrower.value;
     if (returnDate != null) isReturnDateSelected = true;
@@ -81,8 +81,8 @@ class CopyDetailsViewModel extends _$CopyDetailsViewModel {
     final DateTime? selectedDate = await showDatePicker(
       context: context,
       initialDate: returnDate,
-      firstDate: DateTime.now().add(Duration(days: 7)),
-      lastDate: DateTime.now().add(Duration(days: 180)),
+      firstDate: issueDate!.add(Duration(days: 7)),
+      lastDate: issueDate!.add(Duration(days: 180)),
     );
 
     // If a date is selected, update the issue date.
@@ -99,17 +99,20 @@ class CopyDetailsViewModel extends _$CopyDetailsViewModel {
   /// [BorrowerField].
   Future<void> selectBorrower(BuildContext context) async {
     // Show borrower search view to select a borrower.
-    borrower = await showSearch<Borrower?>(
+    final selectedBorrower = await showSearch<Borrower?>(
       context: context,
       delegate: BorrowersSearchDelegate(),
     );
-    if (borrower == null) return;
+    // Don't update [borrower] if no borrower is selected.
+    if (selectedBorrower == null) return;
+    // Update [borrower].
+    borrower = selectedBorrower;
     // Mark borrower as selected.
     isBorrowerSelected = true;
     ref.notifyListeners();
   }
 
-  Future<void> issueBook() async {
+  Future<void> issueBook(BuildContext context) async {
     // Check if the return date is selected.
     if (returnDate == null) {
       // Mark return date as unselected to show invalid state.
@@ -130,19 +133,23 @@ class CopyDetailsViewModel extends _$CopyDetailsViewModel {
     // Issue the copy to the borrower.
     // Issue date is the current date.
     copy
-      ..issueDate = DateTime.now()
+      ..issueDate = issueDate!
       ..returnDate = returnDate!
       ..status = IssueStatus.issued;
 
     // Update database with the issued copy.
     await DatabaseRepository.instance.issueCopy(copy, borrower!);
+
+    if (!context.mounted) return;
+    Navigator.of(context).pop();
   }
 
-  Future<void> returnBook() async {
+  Future<void> returnBook(BuildContext context) async {
     // Mark the copy as returned.
     // Return date is the current date.
     copy
-      ..returnDate = DateTime.now()
+      ..issueDate = null
+      ..returnDate = null
       ..status = IssueStatus.available;
 
     // If the book was returned after its return date, mark the borrower as
@@ -155,65 +162,21 @@ class CopyDetailsViewModel extends _$CopyDetailsViewModel {
 
     // Mark the copy as returned in the database.
     await DatabaseRepository.instance.returnCopy(copy, borrower!);
+
+    if (!context.mounted) return;
+    Navigator.of(context).pop();
   }
 
-  // Future<void> showDeletionDialog(BuildContext context) async {
-  //   await showAdaptiveDialog(
-  //     context: context,
-  //     builder: (context) => AlertDialog(
-  //       title: RichText(
-  //         text: TextSpan(
-  //           style: Theme.of(context).textTheme.bodyLarge,
-  //           children: [
-  //             TextSpan(text: 'Are you sure you want to delete borrower '),
-  //             TextSpan(
-  //               text: borrower.name,
-  //               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-  //                     color: Theme.of(context).colorScheme.error,
-  //                     fontWeight: FontWeight.bold,
-  //                   ),
-  //             ),
-  //             TextSpan(text: '?'),
-  //           ],
-  //         ),
-  //       ),
-  //       actions: [
-  //         TextButton(
-  //           onPressed: () => Navigator.of(context).pop(),
-  //           child: Text('Cancel'),
-  //         ),
-  //         TextButton(
-  //           onPressed: () async {
-  //             await deleteBorrower(borrower);
-  //             if (!context.mounted) return;
-  //             Navigator.of(context)
-  //                 .popUntil((route) => route.settings.name == '/');
-  //           },
-  //           child: Text('Confirm'),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
+  Future<void> saveEdits(BuildContext context) async {
+    // Edit issuance details of the copy.
+    copy
+      ..issueDate = issueDate
+      ..returnDate = returnDate;
 
-  // Future<bool> deleteBorrower(Borrower borrower) async {
-  //   final bool borrowerDeleted =
-  //       await DatabaseRepository.instance.deleteBorrower(borrower);
-  //   if (!borrowerDeleted) return false;
-  //   if (borrower.profilePicture.isNotEmpty) {
-  //     // Delete profile picture file only if the borrower was deleted
-  //     // succesfully.
-  //     await FilesRepository.instance.deleteFile(borrower.profilePicture);
-  //   }
-  //   return borrowerDeleted;
-  // }
+    // Update database with the new details.
+    await DatabaseRepository.instance.issueCopy(copy, borrower!);
 
-  // Future<void> showBorrowerEditor(BuildContext context) async {
-  //   await showModalBottomSheet(
-  //     context: context,
-  //     builder: (context) => BorrowerEditor(borrower: borrower),
-  //     isScrollControlled: true,
-  //     showDragHandle: true,
-  //   );
-  // }
+    if (!context.mounted) return;
+    Navigator.of(context).pop();
+  }
 }

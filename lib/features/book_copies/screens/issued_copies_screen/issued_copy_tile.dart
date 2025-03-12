@@ -80,32 +80,34 @@ class IssuedCopyTile extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(width: 16),
-            Expanded(
-              flex: 2,
-              child: Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(4),
-                  color: copy.returnDate!.isBefore(DateTime.now())
-                      ? Theme.of(context)
-                          .colorScheme
-                          .tertiaryContainer
-                          .withAlpha(180)
-                      : Theme.of(context)
-                          .colorScheme
-                          .secondaryContainer
-                          .withAlpha(180),
-                ),
-                child: Center(
-                  child: Text(
-                    copy.returnDate!.prettifySmart,
-                    style: Theme.of(context).textTheme.labelMedium,
-                    textAlign: TextAlign.center,
+            if (copy.returnDate != null) ...[
+              const SizedBox(width: 16),
+              Expanded(
+                flex: 2,
+                child: Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(4),
+                    color: copy.returnDate!.isBefore(DateTime.now())
+                        ? Theme.of(context)
+                            .colorScheme
+                            .tertiaryContainer
+                            .withAlpha(180)
+                        : Theme.of(context)
+                            .colorScheme
+                            .secondaryContainer
+                            .withAlpha(180),
+                  ),
+                  child: Center(
+                    child: Text(
+                      copy.returnDate!.prettifySmart,
+                      style: Theme.of(context).textTheme.labelMedium,
+                      textAlign: TextAlign.center,
+                    ),
                   ),
                 ),
               ),
-            ),
+            ]
           ],
         ),
       ),

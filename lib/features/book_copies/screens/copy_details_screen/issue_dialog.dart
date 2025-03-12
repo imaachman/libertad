@@ -54,11 +54,7 @@ class IssueDialog extends ConsumerWidget {
           ),
           SizedBox(height: 16),
           TextButton(
-            onPressed: () async {
-              await model.issueBook();
-              if (!context.mounted) return;
-              Navigator.of(context).pop();
-            },
+            onPressed: () => model.issueBook(context),
             style: ButtonStyle(
               shape: WidgetStatePropertyAll(RoundedRectangleBorder()),
               backgroundColor: WidgetStatePropertyAll(
