@@ -24,6 +24,9 @@ class Borrower {
   @Index()
   late DateTime updatedAt;
 
+  DateTime get membershipEndDate => membershipStartDate.copyWith(
+      month: membershipStartDate.month + membershipDuration);
+
   Borrower({
     required this.name,
     required this.contact,

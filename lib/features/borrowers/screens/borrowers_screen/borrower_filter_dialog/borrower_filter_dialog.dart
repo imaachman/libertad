@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:libertad/features/book_copies/viewmodels/issued_copies_list_viewmodel.dart';
+import 'package:libertad/features/borrowers/viewmodels/borrowers_list_viewmodel.dart';
 
-import 'book_filter_tile.dart';
-import 'borrower_filter_tile.dart';
-import 'issue_date_filter_tile.dart';
-import 'overdue_filter_tile.dart';
-import 'return_date_filter_tile.dart';
+import 'active_filter_tile.dart';
+import 'defaulter_filter_tile.dart';
+import 'membership_start_date_filter_tile.dart';
 
-class IssuedCopyFilterDialog extends ConsumerWidget {
-  const IssuedCopyFilterDialog({super.key});
+class BorrowerFilterDialog extends ConsumerWidget {
+  const BorrowerFilterDialog({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final IssuedCopiesListViewModel model =
-        ref.watch(issuedCopiesListViewModelProvider.notifier);
+    final BorrowersListViewModel model =
+        ref.watch(borrowersListViewModelProvider.notifier);
 
     return Dialog(
       shape: RoundedRectangleBorder(),
@@ -42,11 +40,9 @@ class IssuedCopyFilterDialog extends ConsumerWidget {
             ),
           ),
           Divider(height: 0),
-          BookFilterTile(),
-          BorrowerFilterTile(),
-          OverdueFilterTile(),
-          IssueDateFilterTile(),
-          ReturnDateFilterTile(),
+          ActiveFilterTile(),
+          DefaulterFilterTile(),
+          MembershipStartDateFilterTile(),
           Divider(height: 0),
           TextButton(
             onPressed: () => model.applyFilters(context),

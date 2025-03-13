@@ -339,42 +339,62 @@ class DatabaseRepository {
   }
 
   /// Returns all the borrowers in the collection.
-  Future<List<Borrower>> getAllBorrowers(
-      {BorrowerSort? sortBy, SortOrder sortOrder = SortOrder.ascending}) async {
+  Future<List<Borrower>> getAllBorrowers({
+    BorrowerSort? sortBy,
+    SortOrder sortOrder = SortOrder.ascending,
+    bool? activeFilter,
+    bool? defaulterFilter,
+    DateTime? oldestMembershipStartDateFilter,
+    DateTime? newestMembershipStartDateFilter,
+  }) async {
+    // Apply the relevant filters using the [optional] query method.
+    final QueryBuilder<Borrower, Borrower, QAfterFilterCondition> queryBuilder =
+        _isar.borrowers.filter().optional(activeFilter != null, (borrower) {
+      if (activeFilter!) {
+        return borrower.membershipEndDateGreaterThan(DateTime.now());
+      } else {
+        return borrower.membershipEndDateLessThan(DateTime.now());
+      }
+    }).optional(defaulterFilter != null, (borrower) {
+      if (defaulterFilter!) {
+        return borrower.isDefaulterEqualTo(true);
+      } else {
+        return borrower.isDefaulterEqualTo(false);
+      }
+    }).optional(oldestMembershipStartDateFilter != null, (book) {
+      return book
+          .membershipStartDateGreaterThan(oldestMembershipStartDateFilter!);
+    }).optional(newestMembershipStartDateFilter != null, (book) {
+      return book.membershipStartDateLessThan(newestMembershipStartDateFilter!);
+    });
+
     switch (sortBy) {
       case BorrowerSort.name:
         if (sortOrder == SortOrder.ascending) {
-          return await _isar.borrowers.where().sortByName().findAll();
+          return await queryBuilder.sortByName().findAll();
         } else {
-          return await _isar.borrowers.where().sortByNameDesc().findAll();
+          return await queryBuilder.sortByNameDesc().findAll();
         }
       case BorrowerSort.membershipStartDate:
         if (sortOrder == SortOrder.ascending) {
-          return await _isar.borrowers
-              .where()
-              .anyMembershipStartDate()
-              .findAll();
+          return await queryBuilder.sortByMembershipStartDate().findAll();
         } else {
-          return await _isar.borrowers
-              .where()
-              .anyMembershipStartDate()
-              .sortByMembershipStartDateDesc()
-              .findAll();
+          return await queryBuilder.sortByMembershipStartDateDesc().findAll();
         }
       case BorrowerSort.dateAdded:
         if (sortOrder == SortOrder.ascending) {
-          return await _isar.borrowers.where().sortByCreatedAt().findAll();
+          return await queryBuilder.sortByCreatedAt().findAll();
         } else {
-          return await _isar.borrowers.where().sortByCreatedAtDesc().findAll();
+          return await queryBuilder.sortByCreatedAtDesc().findAll();
         }
       case BorrowerSort.dateModified:
         if (sortOrder == SortOrder.ascending) {
-          return await _isar.borrowers.where().sortByUpdatedAt().findAll();
+          return await queryBuilder.sortByUpdatedAt().findAll();
         } else {
-          return await _isar.borrowers.where().sortByUpdatedAtDesc().findAll();
+          return await queryBuilder.sortByUpdatedAtDesc().findAll();
         }
       default:
-        return _isar.borrowers.where().findAll();
+        return queryBuilder.findAll();
     }
   }
 

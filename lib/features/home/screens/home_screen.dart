@@ -35,6 +35,21 @@ class _HomePageState extends ConsumerState<HomePage>
   void initState() {
     super.initState();
     _tabController = TabController(length: _tabs.length, vsync: this);
+    _tabController.addListener(_tabListener);
+  }
+
+  bool _filterButtonEnabled = true;
+
+  void _tabListener() {
+    if (_tabController.index == 1) {
+      setState(() {
+        _filterButtonEnabled = false;
+      });
+    } else {
+      setState(() {
+        _filterButtonEnabled = true;
+      });
+    }
   }
 
   @override
@@ -137,7 +152,9 @@ class _HomePageState extends ConsumerState<HomePage>
                   label: Text('Sort'),
                 ),
                 TextButton.icon(
-                  onPressed: () => model.showFilterDialog(context),
+                  onPressed: _filterButtonEnabled
+                      ? () => model.showFilterDialog(context)
+                      : null,
                   icon: Icon(Icons.filter_alt),
                   label: Text('Filter'),
                 ),
@@ -164,6 +181,7 @@ class _HomePageState extends ConsumerState<HomePage>
 
   @override
   void dispose() {
+    _tabController.removeListener(_tabListener);
     _tabController.dispose();
     super.dispose();
   }

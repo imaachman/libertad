@@ -42,23 +42,28 @@ const BorrowerSchema = CollectionSchema(
       name: r'membershipDuration',
       type: IsarType.long,
     ),
-    r'membershipStartDate': PropertySchema(
+    r'membershipEndDate': PropertySchema(
       id: 5,
+      name: r'membershipEndDate',
+      type: IsarType.dateTime,
+    ),
+    r'membershipStartDate': PropertySchema(
+      id: 6,
       name: r'membershipStartDate',
       type: IsarType.dateTime,
     ),
     r'name': PropertySchema(
-      id: 6,
+      id: 7,
       name: r'name',
       type: IsarType.string,
     ),
     r'profilePicture': PropertySchema(
-      id: 7,
+      id: 8,
       name: r'profilePicture',
       type: IsarType.string,
     ),
     r'updatedAt': PropertySchema(
-      id: 8,
+      id: 9,
       name: r'updatedAt',
       type: IsarType.dateTime,
     )
@@ -168,10 +173,11 @@ void _borrowerSerialize(
   writer.writeDouble(offsets[2], object.fineDue);
   writer.writeBool(offsets[3], object.isDefaulter);
   writer.writeLong(offsets[4], object.membershipDuration);
-  writer.writeDateTime(offsets[5], object.membershipStartDate);
-  writer.writeString(offsets[6], object.name);
-  writer.writeString(offsets[7], object.profilePicture);
-  writer.writeDateTime(offsets[8], object.updatedAt);
+  writer.writeDateTime(offsets[5], object.membershipEndDate);
+  writer.writeDateTime(offsets[6], object.membershipStartDate);
+  writer.writeString(offsets[7], object.name);
+  writer.writeString(offsets[8], object.profilePicture);
+  writer.writeDateTime(offsets[9], object.updatedAt);
 }
 
 Borrower _borrowerDeserialize(
@@ -183,15 +189,15 @@ Borrower _borrowerDeserialize(
   final object = Borrower(
     contact: reader.readString(offsets[0]),
     membershipDuration: reader.readLong(offsets[4]),
-    membershipStartDate: reader.readDateTime(offsets[5]),
-    name: reader.readString(offsets[6]),
-    profilePicture: reader.readStringOrNull(offsets[7]) ?? '',
+    membershipStartDate: reader.readDateTime(offsets[6]),
+    name: reader.readString(offsets[7]),
+    profilePicture: reader.readStringOrNull(offsets[8]) ?? '',
   );
   object.createdAt = reader.readDateTime(offsets[1]);
   object.fineDue = reader.readDouble(offsets[2]);
   object.id = id;
   object.isDefaulter = reader.readBool(offsets[3]);
-  object.updatedAt = reader.readDateTime(offsets[8]);
+  object.updatedAt = reader.readDateTime(offsets[9]);
   return object;
 }
 
@@ -215,10 +221,12 @@ P _borrowerDeserializeProp<P>(
     case 5:
       return (reader.readDateTime(offset)) as P;
     case 6:
-      return (reader.readString(offset)) as P;
+      return (reader.readDateTime(offset)) as P;
     case 7:
-      return (reader.readStringOrNull(offset) ?? '') as P;
+      return (reader.readString(offset)) as P;
     case 8:
+      return (reader.readStringOrNull(offset) ?? '') as P;
+    case 9:
       return (reader.readDateTime(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -1023,6 +1031,62 @@ extension BorrowerQueryFilter
   }
 
   QueryBuilder<Borrower, Borrower, QAfterFilterCondition>
+      membershipEndDateEqualTo(DateTime value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'membershipEndDate',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Borrower, Borrower, QAfterFilterCondition>
+      membershipEndDateGreaterThan(
+    DateTime value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'membershipEndDate',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Borrower, Borrower, QAfterFilterCondition>
+      membershipEndDateLessThan(
+    DateTime value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'membershipEndDate',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Borrower, Borrower, QAfterFilterCondition>
+      membershipEndDateBetween(
+    DateTime lower,
+    DateTime upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'membershipEndDate',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<Borrower, Borrower, QAfterFilterCondition>
       membershipStartDateEqualTo(DateTime value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -1593,6 +1657,18 @@ extension BorrowerQuerySortBy on QueryBuilder<Borrower, Borrower, QSortBy> {
     });
   }
 
+  QueryBuilder<Borrower, Borrower, QAfterSortBy> sortByMembershipEndDate() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'membershipEndDate', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Borrower, Borrower, QAfterSortBy> sortByMembershipEndDateDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'membershipEndDate', Sort.desc);
+    });
+  }
+
   QueryBuilder<Borrower, Borrower, QAfterSortBy> sortByMembershipStartDate() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'membershipStartDate', Sort.asc);
@@ -1718,6 +1794,18 @@ extension BorrowerQuerySortThenBy
     });
   }
 
+  QueryBuilder<Borrower, Borrower, QAfterSortBy> thenByMembershipEndDate() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'membershipEndDate', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Borrower, Borrower, QAfterSortBy> thenByMembershipEndDateDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'membershipEndDate', Sort.desc);
+    });
+  }
+
   QueryBuilder<Borrower, Borrower, QAfterSortBy> thenByMembershipStartDate() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'membershipStartDate', Sort.asc);
@@ -1801,6 +1889,12 @@ extension BorrowerQueryWhereDistinct
     });
   }
 
+  QueryBuilder<Borrower, Borrower, QDistinct> distinctByMembershipEndDate() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'membershipEndDate');
+    });
+  }
+
   QueryBuilder<Borrower, Borrower, QDistinct> distinctByMembershipStartDate() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'membershipStartDate');
@@ -1864,6 +1958,13 @@ extension BorrowerQueryProperty
   QueryBuilder<Borrower, int, QQueryOperations> membershipDurationProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'membershipDuration');
+    });
+  }
+
+  QueryBuilder<Borrower, DateTime, QQueryOperations>
+      membershipEndDateProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'membershipEndDate');
     });
   }
 

@@ -88,6 +88,13 @@ class IssuedCopiesListViewModel extends _$IssuedCopiesListViewModel {
       await DatabaseRepository.instance.getIssuedCopies(
         sortBy: issuedCopySort,
         sortOrder: selectedSortOrder,
+        bookFilter: bookFilter,
+        borrowerFilter: borrowerFilter,
+        overdueFilter: overdueFilter,
+        oldestIssueDateFilter: oldestIssueDateFilter,
+        newestIssueDateFilter: newestIssueDateFilter,
+        oldestReturnDateFilter: oldestReturnDateFilter,
+        newestReturnDateFilter: newestReturnDateFilter,
       ),
     );
     // Keep provider alive to preserve the order.
@@ -211,7 +218,7 @@ class IssuedCopiesListViewModel extends _$IssuedCopiesListViewModel {
     ref.notifyListeners();
   }
 
-  // Filter the issued copies according to the selected filter values.
+  /// Filter the issued copies according to the selected filter values.
   Future<void> applyFilters(BuildContext context) async {
     state = AsyncData(
       await DatabaseRepository.instance.getIssuedCopies(
