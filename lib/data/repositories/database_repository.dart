@@ -252,6 +252,18 @@ class DatabaseRepository {
         } else {
           return _isar.authors.where().sortByNameDesc().findAll();
         }
+      case AuthorSort.dateAdded:
+        if (sortOrder == SortOrder.ascending) {
+          return await _isar.authors.where().sortByCreatedAt().findAll();
+        } else {
+          return await _isar.authors.where().sortByCreatedAtDesc().findAll();
+        }
+      case AuthorSort.dateModified:
+        if (sortOrder == SortOrder.ascending) {
+          return await _isar.authors.where().sortByUpdatedAt().findAll();
+        } else {
+          return await _isar.authors.where().sortByUpdatedAtDesc().findAll();
+        }
       default:
         return _isar.authors.where().findAll();
     }
@@ -329,6 +341,18 @@ class DatabaseRepository {
               .anyMembershipStartDate()
               .sortByMembershipStartDateDesc()
               .findAll();
+        }
+      case BorrowerSort.dateAdded:
+        if (sortOrder == SortOrder.ascending) {
+          return await _isar.borrowers.where().sortByCreatedAt().findAll();
+        } else {
+          return await _isar.borrowers.where().sortByCreatedAtDesc().findAll();
+        }
+      case BorrowerSort.dateModified:
+        if (sortOrder == SortOrder.ascending) {
+          return await _isar.borrowers.where().sortByUpdatedAt().findAll();
+        } else {
+          return await _isar.borrowers.where().sortByUpdatedAtDesc().findAll();
         }
       default:
         return _isar.borrowers.where().findAll();
