@@ -158,6 +158,8 @@ class DatabaseRepository {
     SortOrder sortOrder = SortOrder.ascending,
     Genre? genreFilter,
     Author? authorFilter,
+    DateTime? oldestReleaseDateFilter,
+    DateTime? newestReleaseDateFilter,
     IssueStatus? issueStatusFilter,
     int? minCopiesFilter,
     int? maxCopiesFilter,
@@ -169,6 +171,10 @@ class DatabaseRepository {
         .optional(genreFilter != null, (q) => q.genreEqualTo(genreFilter!))
         .optional(authorFilter != null,
             (q) => q.author((q) => q.idEqualTo(authorFilter!.id)))
+        .optional(oldestReleaseDateFilter != null,
+            (q) => q.releaseDateGreaterThan(oldestReleaseDateFilter!))
+        .optional(newestReleaseDateFilter != null,
+            (q) => q.releaseDateLessThan(newestReleaseDateFilter!))
         .optional(issueStatusFilter != null, (q) {
           if (issueStatusFilter!.isAvailable) {
             return q.totalCopies((q) => q.statusEqualTo(IssueStatus.available));

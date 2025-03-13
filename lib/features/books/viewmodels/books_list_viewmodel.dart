@@ -18,6 +18,8 @@ class BooksListViewModel extends _$BooksListViewModel {
 
   Genre? genreFilter;
   Author? authorFilter;
+  DateTime? oldestReleaseDateFilter;
+  DateTime? newestReleaseDateFilter;
   IssueStatus? issueStatusFilter;
   int? minCopiesFilter;
   int? maxCopiesFilter;
@@ -70,6 +72,8 @@ class BooksListViewModel extends _$BooksListViewModel {
         sortOrder: selectedSortOrder,
         genreFilter: genreFilter,
         authorFilter: authorFilter,
+        oldestReleaseDateFilter: oldestReleaseDateFilter,
+        newestReleaseDateFilter: newestReleaseDateFilter,
         issueStatusFilter: issueStatusFilter,
         minCopiesFilter: minCopiesFilter,
         maxCopiesFilter: maxCopiesFilter,
@@ -96,6 +100,44 @@ class BooksListViewModel extends _$BooksListViewModel {
 
   void clearAuthorFilter() {
     authorFilter = null;
+    ref.notifyListeners();
+  }
+
+  void selectOldestReleaseDateFilter(BuildContext context) async {
+    // Show date picker dialog.
+    final DateTime? selectedDate = await showDatePicker(
+      context: context,
+      initialDate: oldestReleaseDateFilter,
+      firstDate: DateTime(1000),
+      lastDate: DateTime.now(),
+    );
+
+    // If a date is selected, update the filter.
+    if (selectedDate != null) {
+      oldestReleaseDateFilter = selectedDate;
+      ref.notifyListeners();
+    }
+  }
+
+  void selectNewestReleaseDateFilter(BuildContext context) async {
+    // Show date picker dialog.
+    final DateTime? selectedDate = await showDatePicker(
+      context: context,
+      initialDate: newestReleaseDateFilter,
+      firstDate: DateTime(1000),
+      lastDate: DateTime.now(),
+    );
+
+    // If a date is selected, update the filter.
+    if (selectedDate != null) {
+      newestReleaseDateFilter = selectedDate;
+      ref.notifyListeners();
+    }
+  }
+
+  void clearReleaseDateFilter() {
+    oldestReleaseDateFilter = null;
+    newestReleaseDateFilter = null;
     ref.notifyListeners();
   }
 
@@ -135,7 +177,7 @@ class BooksListViewModel extends _$BooksListViewModel {
     }
   }
 
-  String? totalCopiesFilterMaxValidator(String? value) {
+  String? maxCopiesFilterValidator(String? value) {
     if (value == null || value.isEmpty) return null;
     if (minCopiesFilter == null) return null;
     if (int.parse(value) < minCopiesFilter!) {
@@ -163,6 +205,8 @@ class BooksListViewModel extends _$BooksListViewModel {
     genreFilter = null;
     authorFilter = null;
     issueStatusFilter = null;
+    oldestReleaseDateFilter = null;
+    newestReleaseDateFilter = null;
     minCopiesFilter = null;
     maxCopiesFilter = null;
     minController.text = '';
@@ -178,6 +222,8 @@ class BooksListViewModel extends _$BooksListViewModel {
         sortOrder: selectedSortOrder,
         genreFilter: genreFilter,
         authorFilter: authorFilter,
+        oldestReleaseDateFilter: oldestReleaseDateFilter,
+        newestReleaseDateFilter: newestReleaseDateFilter,
         issueStatusFilter: issueStatusFilter,
         minCopiesFilter: minCopiesFilter,
         maxCopiesFilter: maxCopiesFilter,

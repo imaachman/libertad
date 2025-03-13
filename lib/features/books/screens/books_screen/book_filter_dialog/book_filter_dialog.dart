@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:libertad/features/books/screens/books_screen/book_filter_dialog/author_filter_tile.dart';
-import 'package:libertad/features/books/screens/books_screen/book_filter_dialog/genre_filter_tile.dart';
-import 'package:libertad/features/books/screens/books_screen/book_filter_dialog/issue_status_filter_tile.dart';
+import 'package:libertad/features/books/screens/books_screen/book_filter_dialog/release_date_filter_tile.dart';
 import 'package:libertad/features/books/viewmodels/books_list_viewmodel.dart';
 
+import 'author_filter_tile.dart';
+import 'genre_filter_tile.dart';
+import 'issue_status_filter_tile.dart';
 import 'total_copies_filter_tile.dart';
 
 class BookFilterDialog extends ConsumerStatefulWidget {
@@ -59,6 +60,7 @@ class _BookFilterDialogState extends ConsumerState<BookFilterDialog> {
           Divider(height: 0),
           GenreFilterTile(),
           AuthorFilterTile(),
+          ReleaseDateFilterTile(),
           IssueStatusFilterTile(),
           TotalCopiesFilterTile(
             minController: minController,

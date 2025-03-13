@@ -74,7 +74,7 @@ class TotalCopiesFilterTile extends ConsumerWidget {
               textAlign: TextAlign.right,
               keyboardType: TextInputType.number,
               inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-              validator: model.totalCopiesFilterMaxValidator,
+              validator: model.maxCopiesFilterValidator,
               onChanged: model.setMaxCopiesFilter,
             ),
           ),
