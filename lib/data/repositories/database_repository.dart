@@ -168,26 +168,29 @@ class DatabaseRepository {
     final QueryBuilder<Book, Book, QAfterFilterCondition> queryBuilder = _isar
         .books
         .filter()
-        .optional(genreFilter != null, (q) => q.genreEqualTo(genreFilter!))
-        .optional(authorFilter != null,
-            (q) => q.author((q) => q.idEqualTo(authorFilter!.id)))
+        .optional(
+            genreFilter != null, (book) => book.genreEqualTo(genreFilter!))
+        .optional(
+            authorFilter != null,
+            (book) =>
+                book.author((author) => author.idEqualTo(authorFilter!.id)))
         .optional(oldestReleaseDateFilter != null,
-            (q) => q.releaseDateGreaterThan(oldestReleaseDateFilter!))
+            (book) => book.releaseDateGreaterThan(oldestReleaseDateFilter!))
         .optional(newestReleaseDateFilter != null,
-            (q) => q.releaseDateLessThan(newestReleaseDateFilter!))
-        .optional(issueStatusFilter != null, (q) {
+            (book) => book.releaseDateLessThan(newestReleaseDateFilter!))
+        .optional(issueStatusFilter != null, (book) {
           if (issueStatusFilter!.isAvailable) {
-            return q.totalCopies((q) => q.statusEqualTo(IssueStatus.available));
+            return book.totalCopies(
+                (copy) => copy.statusEqualTo(IssueStatus.available));
           } else {
-            return q
-                .not()
-                .totalCopies((q) => q.statusEqualTo(IssueStatus.available));
+            return book.not().totalCopies(
+                (copy) => copy.statusEqualTo(IssueStatus.available));
           }
         })
         .optional(minCopiesFilter != null,
-            (q) => q.totalCopiesLengthGreaterThan(minCopiesFilter!))
+            (book) => book.totalCopiesLengthGreaterThan(minCopiesFilter!))
         .optional(maxCopiesFilter != null,
-            (q) => q.totalCopiesLengthLessThan(maxCopiesFilter!));
+            (book) => book.totalCopiesLengthLessThan(maxCopiesFilter!));
 
     switch (sortBy) {
       // Sort the books by title.
@@ -279,49 +282,59 @@ class DatabaseRepository {
   Future<List<BookCopy>> getIssuedCopies({
     IssuedCopySort? sortBy,
     SortOrder sortOrder = SortOrder.ascending,
+    Book? bookFilter,
+    Borrower? borrowerFilter,
+    bool? overdueFilter,
+    DateTime? oldestIssueDateFilter,
+    DateTime? newestIssueDateFilter,
+    DateTime? oldestReturnDateFilter,
+    DateTime? newestReturnDateFilter,
   }) async {
+    // Apply the relevant filters using the [optional] query method.
+    final QueryBuilder<BookCopy, BookCopy, QAfterFilterCondition> queryBuilder =
+        _isar.bookCopys
+            .filter()
+            .statusEqualTo(IssueStatus.issued)
+            .optional(bookFilter != null,
+                (copy) => copy.book((book) => book.idEqualTo(bookFilter!.id)))
+            .optional(borrowerFilter != null, (copy) {
+              return copy.currentBorrower((borrower) {
+                return borrower.idEqualTo(borrowerFilter!.id);
+              });
+            })
+            .optional(overdueFilter != null, (copy) {
+              if (overdueFilter!) {
+                return copy.returnDateLessThan(DateTime.now());
+              } else {
+                return copy.returnDateGreaterThan(DateTime.now());
+              }
+            })
+            .optional(oldestIssueDateFilter != null,
+                (book) => book.issueDateGreaterThan(oldestIssueDateFilter!))
+            .optional(newestIssueDateFilter != null,
+                (book) => book.issueDateLessThan(newestIssueDateFilter!))
+            .optional(oldestReturnDateFilter != null,
+                (book) => book.returnDateGreaterThan(oldestReturnDateFilter!))
+            .optional(newestReturnDateFilter != null,
+                (book) => book.returnDateLessThan(newestReturnDateFilter!));
+
     switch (sortBy) {
       case IssuedCopySort.issueDate:
         if (sortOrder == SortOrder.ascending) {
-          return _isar.bookCopys
-              .where()
-              .anyIssueDate()
-              .filter()
-              .statusEqualTo(IssueStatus.issued)
-              .findAll();
+          return queryBuilder.sortByIssueDate().findAll();
         } else {
-          return _isar.bookCopys
-              .where()
-              .anyIssueDate()
-              .filter()
-              .statusEqualTo(IssueStatus.issued)
-              .sortByIssueDateDesc()
-              .findAll();
+          return queryBuilder.sortByIssueDateDesc().findAll();
         }
 
       case IssuedCopySort.returnDate:
         if (sortOrder == SortOrder.ascending) {
-          return _isar.bookCopys
-              .where()
-              .anyReturnDate()
-              .filter()
-              .statusEqualTo(IssueStatus.issued)
-              .findAll();
+          return queryBuilder.sortByReturnDate().findAll();
         } else {
-          return _isar.bookCopys
-              .where()
-              .anyReturnDate()
-              .filter()
-              .statusEqualTo(IssueStatus.issued)
-              .sortByReturnDateDesc()
-              .findAll();
+          return queryBuilder.sortByReturnDateDesc().findAll();
         }
 
       default:
-        return _isar.bookCopys
-            .filter()
-            .statusEqualTo(IssueStatus.issued)
-            .findAll();
+        return queryBuilder.findAll();
     }
   }
 

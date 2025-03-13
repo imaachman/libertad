@@ -1,29 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:libertad/features/books/viewmodels/books_list_viewmodel.dart';
+import 'package:libertad/features/book_copies/viewmodels/issued_copies_list_viewmodel.dart';
 import 'package:libertad/widgets/filter_tile.dart';
 
-class AuthorFilterTile extends ConsumerWidget {
-  const AuthorFilterTile({super.key});
+class BookFilterTile extends ConsumerWidget {
+  const BookFilterTile({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.watch(booksListViewModelProvider);
-    final BooksListViewModel model =
-        ref.watch(booksListViewModelProvider.notifier);
+    ref.watch(issuedCopiesListViewModelProvider);
+    final IssuedCopiesListViewModel model =
+        ref.watch(issuedCopiesListViewModelProvider.notifier);
 
     return FilterTile(
-      name: 'Author',
-      expanded: model.authorFilter != null,
+      name: 'Book',
+      expanded: model.bookFilter != null,
       field: PopupMenuButton(
-        tooltip: 'Select author',
-        onSelected: model.selectAuthorFilter,
+        tooltip: 'Select book',
+        onSelected: model.selectBookFilter,
         itemBuilder: (context) {
-          return model.allAuthors.map(
-            (author) {
+          return model.allBooks.map(
+            (book) {
               return PopupMenuItem(
-                value: author,
-                child: Text(author.name),
+                value: book,
+                child: Text(book.title),
               );
             },
           ).toList();
@@ -35,11 +35,11 @@ class AuthorFilterTile extends ConsumerWidget {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.person, size: 20),
+              Icon(Icons.book, size: 20),
               SizedBox(width: 8),
               Expanded(
                 child: Text(
-                  model.authorFilter?.name ?? 'Select author',
+                  model.bookFilter?.title ?? 'Select book',
                   style: Theme.of(context)
                       .textTheme
                       .labelLarge
@@ -52,7 +52,7 @@ class AuthorFilterTile extends ConsumerWidget {
           ),
         ),
       ),
-      clearFilter: model.clearAuthorFilter,
+      clearFilter: model.clearBookFilter,
     );
   }
 }

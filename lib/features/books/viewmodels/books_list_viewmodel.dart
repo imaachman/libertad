@@ -215,7 +215,7 @@ class BooksListViewModel extends _$BooksListViewModel {
   }
 
   /// Filter the books according to the selected filter values.
-  Future<void> applyFilters() async {
+  Future<void> applyFilters(BuildContext context) async {
     state = AsyncData(
       await DatabaseRepository.instance.getAllBooks(
         sortBy: bookSort,
@@ -231,5 +231,8 @@ class BooksListViewModel extends _$BooksListViewModel {
     );
     // Keep provider alive to preserve the filtered list.
     ref.keepAlive();
+
+    if (!context.mounted) return;
+    Navigator.of(context).pop();
   }
 }

@@ -1,36 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:libertad/features/books/screens/books_screen/book_filter_dialog/release_date_filter_tile.dart';
-import 'package:libertad/features/books/viewmodels/books_list_viewmodel.dart';
+import 'package:libertad/features/book_copies/screens/issued_copies_screen/issued_copy_filter_dialog.dart/book_filter_tile.dart';
+import 'package:libertad/features/book_copies/screens/issued_copies_screen/issued_copy_filter_dialog.dart/borrower_filter_tile.dart';
+import 'package:libertad/features/book_copies/screens/issued_copies_screen/issued_copy_filter_dialog.dart/issue_date_filter_tile.dart';
+import 'package:libertad/features/book_copies/screens/issued_copies_screen/issued_copy_filter_dialog.dart/overdue_filter_tile.dart';
+import 'package:libertad/features/book_copies/screens/issued_copies_screen/issued_copy_filter_dialog.dart/return_date_filter_tile.dart';
+import 'package:libertad/features/book_copies/viewmodels/issued_copies_list_viewmodel.dart';
 
-import 'author_filter_tile.dart';
-import 'genre_filter_tile.dart';
-import 'issue_status_filter_tile.dart';
-import 'total_copies_filter_tile.dart';
-
-class BookFilterDialog extends ConsumerStatefulWidget {
-  const BookFilterDialog({super.key});
-
-  @override
-  ConsumerState<ConsumerStatefulWidget> createState() =>
-      _BookFilterDialogState();
-}
-
-class _BookFilterDialogState extends ConsumerState<BookFilterDialog> {
-  late final TextEditingController minController;
-  late final TextEditingController maxController;
+class IssuedCopyFilterDialog extends ConsumerWidget {
+  const IssuedCopyFilterDialog({super.key});
 
   @override
-  void initState() {
-    super.initState();
-    minController = TextEditingController();
-    maxController = TextEditingController();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final BooksListViewModel model =
-        ref.watch(booksListViewModelProvider.notifier);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final IssuedCopiesListViewModel model =
+        ref.watch(issuedCopiesListViewModelProvider.notifier);
 
     return Dialog(
       shape: RoundedRectangleBorder(),
@@ -51,21 +34,18 @@ class _BookFilterDialogState extends ConsumerState<BookFilterDialog> {
                       ?.copyWith(fontWeight: FontWeight.bold),
                 ),
                 TextButton(
-                  onPressed: () => model.clearAll(minController, maxController),
+                  onPressed: model.clearAll,
                   child: Text('clear all'),
                 ),
               ],
             ),
           ),
           Divider(height: 0),
-          GenreFilterTile(),
-          AuthorFilterTile(),
-          ReleaseDateFilterTile(),
-          IssueStatusFilterTile(),
-          TotalCopiesFilterTile(
-            minController: minController,
-            maxController: maxController,
-          ),
+          BookFilterTile(),
+          BorrowerFilterTile(),
+          OverdueFilterTile(),
+          IssueDateFilterTile(),
+          ReturnDateFilterTile(),
           Divider(height: 0),
           TextButton(
             onPressed: () => model.applyFilters(context),
@@ -91,12 +71,5 @@ class _BookFilterDialogState extends ConsumerState<BookFilterDialog> {
         ],
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    minController.dispose();
-    maxController.dispose();
-    super.dispose();
   }
 }
