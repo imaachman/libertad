@@ -64,6 +64,7 @@ class BorrowerEditorViewModel extends _$BorrowerEditorViewModel {
     final Borrower newBorrower = Borrower(
       name: name,
       contact: contact,
+      profilePicture: profilePicture,
       membershipStartDate: membershipStartDate,
       membershipDuration: membershipDuration,
     );
@@ -138,7 +139,7 @@ class BorrowerEditorViewModel extends _$BorrowerEditorViewModel {
 
   /// Updates [contact].
   void setContact(String value) {
-    name = value;
+    contact = value;
     ref.notifyListeners();
   }
 
@@ -175,7 +176,7 @@ class BorrowerEditorViewModel extends _$BorrowerEditorViewModel {
     final DateTime? selectedDate = await showDatePicker(
       context: context,
       initialDate: membershipStartDate,
-      firstDate: DateTime(2010),
+      firstDate: DateTime(2000),
       lastDate: DateTime.now(),
     );
 

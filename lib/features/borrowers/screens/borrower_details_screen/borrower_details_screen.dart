@@ -130,12 +130,7 @@ class BorrowerDetailsPage extends ConsumerWidget {
                               style: Theme.of(context).textTheme.labelLarge,
                             ),
                             TextSpan(
-                              text: borrower.membershipStartDate
-                                  .copyWith(
-                                      month:
-                                          borrower.membershipStartDate.month +
-                                              borrower.membershipDuration)
-                                  .prettifyDate,
+                              text: borrower.membershipEndDate.prettifyDate,
                               style: Theme.of(context)
                                   .textTheme
                                   .labelLarge
@@ -153,55 +148,59 @@ class BorrowerDetailsPage extends ConsumerWidget {
                     ],
                   ),
                   Divider(height: 48),
-                  Column(
-                    children: [
-                      Text(
-                        'Issued Books',
-                        style: Theme.of(context)
-                            .textTheme
-                            .headlineLarge
-                            ?.copyWith(fontWeight: FontWeight.bold),
-                      ),
-                      SizedBox(height: 8),
-                      ...List.generate(
-                        borrower.currentlyIssuedBooks.length,
-                        (index) {
-                          final BookCopy copy =
-                              borrower.currentlyIssuedBooks.toList()[index];
-                          return IssuedCopyTile(
-                            copy: copy,
-                            index: index,
-                            minimal: true,
-                          );
-                        },
-                      ),
-                    ],
-                  ),
-                  Divider(height: 48),
-                  Column(
-                    children: [
-                      Text(
-                        'Previously Issued',
-                        style: Theme.of(context)
-                            .textTheme
-                            .headlineLarge
-                            ?.copyWith(fontWeight: FontWeight.bold),
-                      ),
-                      ...List.generate(
-                        borrower.previouslyIssuedBooks.length,
-                        (index) {
-                          final BookCopy copy =
-                              borrower.previouslyIssuedBooks.toList()[index];
-                          return IssuedCopyTile(
-                            copy: copy,
-                            index: index,
-                            minimal: true,
-                          );
-                        },
-                      ),
-                    ],
-                  ),
-                  Divider(height: 48),
+                  if (borrower.currentlyIssuedBooks.isNotEmpty) ...[
+                    Column(
+                      children: [
+                        Text(
+                          'Issued Books',
+                          style: Theme.of(context)
+                              .textTheme
+                              .headlineLarge
+                              ?.copyWith(fontWeight: FontWeight.bold),
+                        ),
+                        SizedBox(height: 8),
+                        ...List.generate(
+                          borrower.currentlyIssuedBooks.length,
+                          (index) {
+                            final BookCopy copy =
+                                borrower.currentlyIssuedBooks.toList()[index];
+                            return IssuedCopyTile(
+                              copy: copy,
+                              index: index,
+                              minimal: true,
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                    Divider(height: 48),
+                  ],
+                  if (borrower.previouslyIssuedBooks.isNotEmpty) ...[
+                    Column(
+                      children: [
+                        Text(
+                          'Previously Issued',
+                          style: Theme.of(context)
+                              .textTheme
+                              .headlineLarge
+                              ?.copyWith(fontWeight: FontWeight.bold),
+                        ),
+                        ...List.generate(
+                          borrower.previouslyIssuedBooks.length,
+                          (index) {
+                            final BookCopy copy =
+                                borrower.previouslyIssuedBooks.toList()[index];
+                            return IssuedCopyTile(
+                              copy: copy,
+                              index: index,
+                              minimal: true,
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                    Divider(height: 48),
+                  ],
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -260,6 +259,7 @@ class BorrowerDetailsPage extends ConsumerWidget {
 
   /// Formats the contact number to interanational format: (+1 XXX-XXX-XXXX).
   String prettifyContact(String contact) {
+    print('contact: $contact');
     return '+1 ${contact.substring(0, 3)}-${contact.substring(3, 6)}-${contact.substring(6)}';
   }
 }

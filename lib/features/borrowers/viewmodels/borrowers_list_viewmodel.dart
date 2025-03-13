@@ -87,7 +87,7 @@ class BorrowersListViewModel extends _$BorrowersListViewModel {
     final DateTime? selectedDate = await showDatePicker(
       context: context,
       initialDate: oldestMembershipStartDateFilter,
-      firstDate: DateTime(2010),
+      firstDate: DateTime(2000),
       lastDate: DateTime.now(),
     );
 
@@ -103,7 +103,7 @@ class BorrowersListViewModel extends _$BorrowersListViewModel {
     final DateTime? selectedDate = await showDatePicker(
       context: context,
       initialDate: newestMembershipStartDateFilter,
-      firstDate: DateTime(2010),
+      firstDate: DateTime(2000),
       lastDate: DateTime.now(),
     );
 

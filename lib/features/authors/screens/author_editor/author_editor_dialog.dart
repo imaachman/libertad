@@ -5,6 +5,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:libertad/data/models/author.dart';
 import 'package:libertad/features/authors/viewmodels/author_editor_viewmodel.dart';
 
+import 'bio_field.dart';
+import 'name_field.dart';
+
 class AuthorEditorDialog extends ConsumerStatefulWidget {
   final Author? author;
   final String query;
@@ -134,70 +137,6 @@ class _AuthorEditorDialogState extends ConsumerState<AuthorEditorDialog> {
           ),
         ),
       ),
-    );
-  }
-}
-
-class NameField extends StatelessWidget {
-  final String initialValue;
-  final void Function(String value)? onChanged;
-
-  const NameField({super.key, required this.initialValue, this.onChanged});
-
-  @override
-  Widget build(BuildContext context) {
-    return TextFormField(
-      initialValue: initialValue,
-      decoration: InputDecoration(
-        border: UnderlineInputBorder(),
-        hintText: 'Enter name',
-      ),
-      validator: (value) {
-        if (value == null || value.isEmpty) return 'Name cannot be empty';
-        return null;
-      },
-      onChanged: onChanged,
-    );
-  }
-}
-
-class BioField extends StatelessWidget {
-  final String initialValue;
-  final void Function(String value)? onChanged;
-
-  const BioField({super.key, required this.initialValue, this.onChanged});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Bio',
-          style: Theme.of(context)
-              .textTheme
-              .headlineSmall
-              ?.copyWith(fontWeight: FontWeight.bold),
-        ),
-        SizedBox(height: 8),
-        TextFormField(
-          initialValue: initialValue,
-          decoration: InputDecoration(
-            border: OutlineInputBorder(),
-            hintText: 'Enter author\'s bio',
-            filled: true,
-            fillColor: Colors.white,
-          ),
-          maxLines: 6,
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return 'Please enter author\'s bio';
-            }
-            return null;
-          },
-          onChanged: onChanged,
-        ),
-      ],
     );
   }
 }

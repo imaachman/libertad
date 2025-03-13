@@ -7,7 +7,7 @@ part of 'issued_copies_list_viewmodel.dart';
 // **************************************************************************
 
 String _$issuedCopiesListViewModelHash() =>
-    r'4b6472c0a68fa85da6e5736cfe9eef0f0e060ee5';
+    r'c4736fc3370842eaa2f95eea103f1cc8b55709b6';
 
 /// See also [IssuedCopiesListViewModel].
 @ProviderFor(IssuedCopiesListViewModel)

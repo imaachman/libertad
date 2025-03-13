@@ -136,7 +136,7 @@ class IssuedCopiesListViewModel extends _$IssuedCopiesListViewModel {
     final DateTime? selectedDate = await showDatePicker(
       context: context,
       initialDate: oldestIssueDateFilter,
-      firstDate: DateTime(2010),
+      firstDate: DateTime(2000),
       lastDate: DateTime.now(),
     );
 
@@ -152,7 +152,7 @@ class IssuedCopiesListViewModel extends _$IssuedCopiesListViewModel {
     final DateTime? selectedDate = await showDatePicker(
       context: context,
       initialDate: newestIssueDateFilter,
-      firstDate: DateTime(2010),
+      firstDate: DateTime(2000),
       lastDate: DateTime.now(),
     );
 
@@ -174,7 +174,7 @@ class IssuedCopiesListViewModel extends _$IssuedCopiesListViewModel {
     final DateTime? selectedDate = await showDatePicker(
       context: context,
       initialDate: oldestReturnDateFilter,
-      firstDate: DateTime(2010),
+      firstDate: DateTime(2000),
       lastDate: DateTime.now().add(Duration(days: 180)),
     );
 
@@ -190,7 +190,7 @@ class IssuedCopiesListViewModel extends _$IssuedCopiesListViewModel {
     final DateTime? selectedDate = await showDatePicker(
       context: context,
       initialDate: newestReturnDateFilter,
-      firstDate: DateTime(2010),
+      firstDate: DateTime(2000),
       lastDate: DateTime.now().add(Duration(days: 180)),
     );
 

@@ -7,6 +7,7 @@ import 'package:libertad/features/book_copies/screens/issued_copies_screen/issue
 import 'package:libertad/features/books/screens/book_editor/book_editor.dart';
 import 'package:libertad/features/books/screens/books_screen/book_filter_dialog/book_filter_dialog.dart';
 import 'package:libertad/features/books/screens/books_screen/book_sort_dialog.dart';
+import 'package:libertad/features/borrowers/screens/borrower_editor/borrower_editor.dart';
 import 'package:libertad/features/borrowers/screens/borrowers_screen/borrower_filter_dialog/borrower_filter_dialog.dart';
 import 'package:libertad/features/borrowers/screens/borrowers_screen/borrower_sort_dialog.dart';
 import 'package:libertad/features/search/screens/database_search_delegate.dart';
@@ -103,10 +104,19 @@ class HomeViewModel extends _$HomeViewModel {
         },
       );
 
-  void showBookEditor({required BuildContext context}) {
+  void showEditor({required BuildContext context}) {
     showModalBottomSheet(
       context: context,
-      builder: (context) => BookEditor(),
+      builder: (context) {
+        switch (_tabController.index) {
+          case 0:
+            return BookEditor();
+          case 3:
+            return BorrowerEditor();
+          default:
+            return BookEditor();
+        }
+      },
       isScrollControlled: true,
       showDragHandle: true,
     );

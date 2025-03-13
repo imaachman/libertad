@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:libertad/core/constants/breakpoints.dart';
+import 'package:libertad/core/utils/extensions.dart';
 import 'package:libertad/data/models/book_copy.dart';
 import 'package:libertad/data/models/borrower.dart';
 import 'package:libertad/features/book_copies/viewmodels/copy_details_viewmodel.dart';
@@ -78,7 +79,10 @@ class CopyDetailsPage extends ConsumerWidget {
                 ),
                 SizedBox(height: 16),
                 if (copy.isIssued) ...[
-                  Text('issued to'),
+                  Text(
+                    'issued to',
+                    style: Theme.of(context).textTheme.titleSmall,
+                  ),
                   TextButton(
                     style: ButtonStyle(
                       shape: WidgetStatePropertyAll(RoundedRectangleBorder()),
@@ -96,6 +100,35 @@ class CopyDetailsPage extends ConsumerWidget {
                       ),
                     ),
                   ),
+                  RichText(
+                    text: TextSpan(
+                      children: [
+                        TextSpan(
+                          text: 'from ',
+                          style: Theme.of(context).textTheme.titleSmall,
+                        ),
+                        TextSpan(
+                          text: copy.issueDate!.prettifyDateSmart,
+                          style:
+                              Theme.of(context).textTheme.titleMedium?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    color: Theme.of(context).primaryColor,
+                                  ),
+                        ),
+                        TextSpan(
+                            text: ' to ',
+                            style: Theme.of(context).textTheme.titleSmall),
+                        TextSpan(
+                          text: copy.returnDate!.prettifyDateSmart,
+                          style:
+                              Theme.of(context).textTheme.titleMedium?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    color: Theme.of(context).primaryColor,
+                                  ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
                 if (copy.isAvailable)
                   Text(
@@ -106,31 +139,33 @@ class CopyDetailsPage extends ConsumerWidget {
                           letterSpacing: 4,
                         ),
                   ),
-                Container(
-                  constraints: BoxConstraints(maxWidth: kSmallPhone + 48),
-                  child: Divider(height: 48),
-                ),
-                Column(
-                  children: [
-                    Text(
-                      'Past Borrowers',
-                      style: Theme.of(context)
-                          .textTheme
-                          .headlineLarge
-                          ?.copyWith(fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(height: 8),
-                    ...List.generate(
-                      copy.previousBorrowers.length,
-                      (index) {
-                        final Borrower borrower =
-                            copy.previousBorrowers.toList()[index];
-                        return BorrowerListTile(
-                            borrower: borrower, index: index);
-                      },
-                    ),
-                  ],
-                )
+                if (copy.previousBorrowers.isNotEmpty) ...[
+                  Container(
+                    constraints: BoxConstraints(maxWidth: kSmallPhone + 48),
+                    child: Divider(height: 48),
+                  ),
+                  Column(
+                    children: [
+                      Text(
+                        'Past Borrowers',
+                        style: Theme.of(context)
+                            .textTheme
+                            .headlineLarge
+                            ?.copyWith(fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(height: 8),
+                      ...List.generate(
+                        copy.previousBorrowers.length,
+                        (index) {
+                          final Borrower borrower =
+                              copy.previousBorrowers.toList()[index];
+                          return BorrowerListTile(
+                              borrower: borrower, index: index);
+                        },
+                      ),
+                    ],
+                  )
+                ]
               ],
             ),
           ),

@@ -39,17 +39,22 @@ class _HomePageState extends ConsumerState<HomePage>
   }
 
   bool _filterButtonEnabled = true;
+  bool _fabEnabled = true;
 
   void _tabListener() {
-    if (_tabController.index == 1) {
-      setState(() {
+    final int index = _tabController.index;
+    setState(() {
+      if (index == 1) {
         _filterButtonEnabled = false;
-      });
-    } else {
-      setState(() {
+      } else {
         _filterButtonEnabled = true;
-      });
-    }
+      }
+      if (index == 0 || index == 3) {
+        _fabEnabled = true;
+      } else {
+        _fabEnabled = false;
+      }
+    });
   }
 
   @override
@@ -171,11 +176,13 @@ class _HomePageState extends ConsumerState<HomePage>
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => model.showBookEditor(context: context),
-        tooltip: 'Add new book',
-        child: const Icon(Icons.add),
-      ),
+      floatingActionButton: _fabEnabled
+          ? FloatingActionButton(
+              onPressed: () => model.showEditor(context: context),
+              tooltip: 'Add new book',
+              child: const Icon(Icons.add),
+            )
+          : null,
     );
   }
 

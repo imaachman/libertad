@@ -7,7 +7,7 @@ part of 'borrowers_list_viewmodel.dart';
 // **************************************************************************
 
 String _$borrowersListViewModelHash() =>
-    r'5c7c3a171f66a62f9c7b96c8309403af8e2013c1';
+    r'd12b1d6c44508b4fb4991c60b8e758c3934d50bf';
 
 /// See also [BorrowersListViewModel].
 @ProviderFor(BorrowersListViewModel)

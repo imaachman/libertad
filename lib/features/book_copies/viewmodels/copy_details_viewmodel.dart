@@ -64,7 +64,7 @@ class CopyDetailsViewModel extends _$CopyDetailsViewModel {
     final DateTime? selectedDate = await showDatePicker(
       context: context,
       initialDate: issueDate,
-      firstDate: DateTime(2010),
+      firstDate: DateTime(2000),
       lastDate: DateTime.now(),
     );
 
