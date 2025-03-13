@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:libertad/core/constants/breakpoints.dart';
+import 'package:libertad/core/utils/extensions.dart';
 import 'package:libertad/data/models/author.dart';
 import 'package:libertad/data/models/book.dart';
 import 'package:libertad/widgets/book_list_tile.dart';
@@ -123,7 +124,55 @@ class AuthorDetailsPage extends ConsumerWidget {
                       },
                     ),
                   ],
-                )
+                ),
+                Divider(height: 48),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    RichText(
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text: 'Created: ',
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                          TextSpan(
+                            text: author.createdAt.prettifyDateAndTime,
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium
+                                ?.copyWith(
+                                  color:
+                                      Theme.of(context).colorScheme.secondary,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    RichText(
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text: 'Updated: ',
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                          TextSpan(
+                            text: author.updatedAt.prettifyDateAndTime,
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium
+                                ?.copyWith(
+                                  color:
+                                      Theme.of(context).colorScheme.secondary,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
               ],
             ),
           ),

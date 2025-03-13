@@ -13,9 +13,9 @@ class Author {
   @Backlink(to: 'author')
   final IsarLinks<Book> books = IsarLinks<Book>();
   @Index()
-  final DateTime createdAt = DateTime.now();
+  late final DateTime createdAt;
   @Index()
-  DateTime updatedAt = DateTime.now();
+  late DateTime updatedAt;
 
   Author({
     required this.name,

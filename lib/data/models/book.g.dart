@@ -176,6 +176,7 @@ Book _bookDeserialize(
     summary: reader.readString(offsets[4]),
     title: reader.readString(offsets[5]),
   );
+  object.createdAt = reader.readDateTime(offsets[1]);
   object.id = id;
   object.updatedAt = reader.readDateTime(offsets[6]);
   return object;

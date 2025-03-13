@@ -187,6 +187,7 @@ Borrower _borrowerDeserialize(
     name: reader.readString(offsets[6]),
     profilePicture: reader.readStringOrNull(offsets[7]) ?? '',
   );
+  object.createdAt = reader.readDateTime(offsets[1]);
   object.fineDue = reader.readDouble(offsets[2]);
   object.id = id;
   object.isDefaulter = reader.readBool(offsets[3]);

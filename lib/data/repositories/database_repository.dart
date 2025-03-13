@@ -119,6 +119,15 @@ class DatabaseRepository {
         // Link the copies set to the book.
         book.totalCopies.addAll(copies);
 
+        // Update creation and updation time right before adding the book and
+        // author to the database.
+        book
+          ..createdAt = DateTime.now()
+          ..updatedAt = DateTime.now();
+        author
+          ..createdAt = DateTime.now()
+          ..updatedAt = DateTime.now();
+
         // Add the book and author to the database.
         await _isar.books.put(book);
         await _isar.authors.put(author);
@@ -129,8 +138,17 @@ class DatabaseRepository {
         await book.totalCopies.save();
         await author.books.save();
       }
-      // Add all the borrowers to the database.
-      await _isar.borrowers.putAll(mockBorrowers);
+
+      for (int index = 0; index < mockBorrowers.length; index++) {
+        final Borrower borrower = mockBorrowers[index].copyWith();
+        // Update creation and updation time right before adding the borrowers
+        // to the database.
+        borrower
+          ..createdAt = DateTime.now()
+          ..updatedAt = DateTime.now();
+        // Add the borrower to the database.
+        await _isar.borrowers.put(borrower);
+      }
     });
   }
 
@@ -336,7 +354,14 @@ class DatabaseRepository {
           await _isar.authors.where().idEqualTo(author.id).findFirst();
       final bool authorNotPresent = existingAuthor == null;
       // If the author is not present, add it to the database.
-      if (authorNotPresent) await _isar.authors.put(author);
+      if (authorNotPresent) {
+        // Update creation and updation time right before adding the author to
+        // the database.
+        author
+          ..createdAt = DateTime.now()
+          ..updatedAt = DateTime.now();
+        await _isar.authors.put(author);
+      }
       // Link the author to the book.
       book.author.value = author;
 
@@ -347,6 +372,12 @@ class DatabaseRepository {
       await _isar.bookCopys.putAll(copies);
       // Link the copies set to the book.
       book.totalCopies.addAll(copies);
+
+      // Update creation and updation time right before adding the book to the
+      // database.
+      book
+        ..createdAt = DateTime.now()
+        ..updatedAt = DateTime.now();
 
       // Add the book to the database.
       await _isar.books.put(book);
@@ -500,6 +531,11 @@ class DatabaseRepository {
   /// Adds a new borrower to the collection.
   Future<void> addBorrower(Borrower borrower) async {
     await _isar.writeTxn(() async {
+      // Update creation and updation time right before adding the borrower to
+      // the database.
+      borrower
+        ..createdAt = DateTime.now()
+        ..updatedAt = DateTime.now();
       // Add the borrower to the database.
       await _isar.borrowers.put(borrower);
     });

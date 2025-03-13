@@ -48,7 +48,7 @@ class BorrowerListTile extends StatelessWidget {
                 .labelSmall
                 ?.copyWith(fontStyle: FontStyle.italic)),
         TextSpan(
-          text: borrower.membershipStartDate.prettify,
+          text: borrower.membershipStartDate.prettifyDate,
           style: Theme.of(context).textTheme.labelSmall?.copyWith(
                 fontWeight: FontWeight.bold,
                 decoration: TextDecoration.underline,

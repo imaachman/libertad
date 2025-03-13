@@ -40,7 +40,7 @@ class ReleaseDateField extends ConsumerWidget {
                 SizedBox(width: 8),
                 Expanded(
                   child: Text(
-                    model.releaseDate.prettify,
+                    model.releaseDate.prettifyDate,
                     style: Theme.of(context)
                         .textTheme
                         .bodyLarge

@@ -21,9 +21,9 @@ class Book {
   @Backlink(to: 'book')
   final IsarLinks<BookCopy> totalCopies = IsarLinks<BookCopy>();
   @Index()
-  final DateTime createdAt = DateTime.now();
+  late final DateTime createdAt;
   @Index()
-  DateTime updatedAt = DateTime.now();
+  late DateTime updatedAt;
 
   @ignore
   Set<BookCopy> get issuedCopies =>

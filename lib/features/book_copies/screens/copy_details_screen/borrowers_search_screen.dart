@@ -34,8 +34,8 @@ class BorrowersSearchPage extends ConsumerWidget {
             ),
             title: Text(borrower.name),
             titleTextStyle: Theme.of(context).textTheme.bodyLarge,
-            subtitle:
-                Text('member since ${borrower.membershipStartDate.prettify}'),
+            subtitle: Text(
+                'member since ${borrower.membershipStartDate.prettifyDate}'),
             subtitleTextStyle: Theme.of(context).textTheme.labelSmall,
           );
         },

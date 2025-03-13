@@ -40,7 +40,7 @@ class MembershipStartDateField extends ConsumerWidget {
                 SizedBox(width: 8),
                 Expanded(
                   child: Text(
-                    model.membershipStartDate.prettify,
+                    model.membershipStartDate.prettifyDate,
                     style: Theme.of(context)
                         .textTheme
                         .bodyLarge

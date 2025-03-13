@@ -39,7 +39,7 @@ class IssueDateField extends ConsumerWidget {
                 Icon(Icons.date_range, size: 24),
                 SizedBox(width: 8),
                 Text(
-                  model.issueDate?.prettify ?? 'Select Issue Date',
+                  model.issueDate?.prettifyDate ?? 'Select Issue Date',
                   style: Theme.of(context)
                       .textTheme
                       .labelLarge

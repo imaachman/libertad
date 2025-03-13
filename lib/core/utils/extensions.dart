@@ -1,6 +1,6 @@
 import 'package:libertad/data/models/issue_status.dart';
 
-extension DateExtension on DateTime {
+extension DateTimeExtension on DateTime {
   String monthToWord() {
     switch (month) {
       case 1:
@@ -49,15 +49,18 @@ extension DateExtension on DateTime {
     }
   }
 
-  String get prettify => '${monthToWord()} ${appendOrdinals()}, $year';
+  String get prettifyDate => '${monthToWord()} ${appendOrdinals()}, $year';
 
-  String get prettifyShort => '${monthToWord()} ${appendOrdinals()}';
+  String get prettifyDateShort => '${monthToWord()} ${appendOrdinals()}';
 
-  String get prettifySmart {
+  String get prettifyDateAndTime =>
+      '$hour:$minute, ${monthToWord()} ${appendOrdinals()}, $year';
+
+  String get prettifyDateSmart {
     if (year == DateTime.now().year) {
-      return prettifyShort;
+      return prettifyDateShort;
     } else {
-      return prettify;
+      return prettifyDate;
     }
   }
 }

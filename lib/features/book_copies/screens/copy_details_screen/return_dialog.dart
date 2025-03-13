@@ -51,7 +51,7 @@ class ReturnDialog extends ConsumerWidget {
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
                   TextSpan(
-                    text: copy.issueDate!.prettifySmart,
+                    text: copy.issueDate!.prettifyDateSmart,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           fontWeight: FontWeight.bold,
                           color: Theme.of(context).primaryColor,
@@ -74,7 +74,7 @@ class ReturnDialog extends ConsumerWidget {
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
                   TextSpan(
-                    text: copy.returnDate!.prettifySmart,
+                    text: copy.returnDate!.prettifyDateSmart,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           fontWeight: FontWeight.bold,
                           color: copy.returnDatePassed
@@ -87,7 +87,7 @@ class ReturnDialog extends ConsumerWidget {
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
                   TextSpan(
-                    text: DateTime.now().prettify,
+                    text: DateTime.now().prettifyDate,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           fontWeight: FontWeight.bold,
                           color: Theme.of(context).primaryColor,

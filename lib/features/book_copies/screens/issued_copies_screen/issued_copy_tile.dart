@@ -100,7 +100,7 @@ class IssuedCopyTile extends StatelessWidget {
                   ),
                   child: Center(
                     child: Text(
-                      copy.returnDate!.prettifySmart,
+                      copy.returnDate!.prettifyDateSmart,
                       style: Theme.of(context).textTheme.labelMedium,
                       textAlign: TextAlign.center,
                     ),

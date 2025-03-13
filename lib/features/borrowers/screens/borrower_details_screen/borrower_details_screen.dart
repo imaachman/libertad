@@ -113,7 +113,7 @@ class BorrowerDetailsPage extends ConsumerWidget {
                                 text: 'Member from ',
                                 style: Theme.of(context).textTheme.labelLarge),
                             TextSpan(
-                              text: borrower.membershipStartDate.prettify,
+                              text: borrower.membershipStartDate.prettifyDate,
                               style: Theme.of(context)
                                   .textTheme
                                   .labelLarge
@@ -135,7 +135,7 @@ class BorrowerDetailsPage extends ConsumerWidget {
                                       month:
                                           borrower.membershipStartDate.month +
                                               borrower.membershipDuration)
-                                  .prettify,
+                                  .prettifyDate,
                               style: Theme.of(context)
                                   .textTheme
                                   .labelLarge
@@ -199,6 +199,54 @@ class BorrowerDetailsPage extends ConsumerWidget {
                           );
                         },
                       ),
+                    ],
+                  ),
+                  Divider(height: 48),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      RichText(
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text: 'Created: ',
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
+                            TextSpan(
+                              text: borrower.createdAt.prettifyDateAndTime,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium
+                                  ?.copyWith(
+                                    color:
+                                        Theme.of(context).colorScheme.secondary,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      RichText(
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text: 'Updated: ',
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
+                            TextSpan(
+                              text: borrower.updatedAt.prettifyDateAndTime,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium
+                                  ?.copyWith(
+                                    color:
+                                        Theme.of(context).colorScheme.secondary,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                            ),
+                          ],
+                        ),
+                      )
                     ],
                   ),
                 ],

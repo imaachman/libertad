@@ -20,9 +20,9 @@ class Borrower {
   @Backlink(to: 'previousBorrowers')
   final IsarLinks<BookCopy> previouslyIssuedBooks = IsarLinks<BookCopy>();
   @Index()
-  final DateTime createdAt = DateTime.now();
+  late final DateTime createdAt;
   @Index()
-  DateTime updatedAt = DateTime.now();
+  late DateTime updatedAt;
 
   Borrower({
     required this.name,

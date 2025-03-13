@@ -141,6 +141,7 @@ Author _authorDeserialize(
     name: reader.readString(offsets[2]),
     profilePicture: reader.readStringOrNull(offsets[3]) ?? '',
   );
+  object.createdAt = reader.readDateTime(offsets[1]);
   object.id = id;
   object.updatedAt = reader.readDateTime(offsets[4]);
   return object;

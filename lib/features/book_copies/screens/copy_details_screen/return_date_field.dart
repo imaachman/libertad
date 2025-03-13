@@ -46,7 +46,7 @@ class ReturnDateField extends ConsumerWidget {
                 Icon(Icons.date_range, size: 24),
                 SizedBox(width: 8),
                 Text(
-                  model.returnDate?.prettify ?? 'Select Return Date',
+                  model.returnDate?.prettifyDate ?? 'Select Return Date',
                   style: Theme.of(context)
                       .textTheme
                       .labelLarge

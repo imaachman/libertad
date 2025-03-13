@@ -73,170 +73,220 @@ class BookDetailsPage extends ConsumerWidget {
         child: Padding(
           padding: const EdgeInsets.all(8),
           child: SingleChildScrollView(
-            child: Column(
-              children: [
-                Container(
-                  constraints: BoxConstraints(maxWidth: kSmallPhone / 2),
-                  width: MediaQuery.of(context).size.width / 2,
-                  child: BookCover(
-                    book: book,
-                    titleStyle: Theme.of(context).textTheme.titleLarge,
-                    authorStyle: Theme.of(context)
-                        .textTheme
-                        .labelLarge
-                        ?.copyWith(fontWeight: FontWeight.bold),
-                  ),
-                ),
-                SizedBox(height: 16),
-                Text(
-                  book.title,
-                  style: Theme.of(context)
-                      .textTheme
-                      .headlineLarge
-                      ?.copyWith(fontWeight: FontWeight.bold),
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(height: 4),
-                Text(
-                  book.author.value!.name,
-                  style: Theme.of(context).textTheme.titleLarge,
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(height: 16),
-                Container(
-                  width: MediaQuery.of(context).size.width / 1.2,
-                  constraints: BoxConstraints(maxWidth: kSmallPhone),
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  child: Text(book.summary),
-                ),
-                SizedBox(height: 16),
-                Wrap(
-                  runAlignment: WrapAlignment.spaceBetween,
-                  children: [
-                    RichText(
-                      text: TextSpan(
-                        children: [
-                          TextSpan(
-                              text: 'First published on ',
-                              style: Theme.of(context).textTheme.labelLarge),
-                          TextSpan(
-                            text: book.releaseDate.prettify,
-                            style: Theme.of(context)
-                                .textTheme
-                                .labelLarge
-                                ?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  decoration: TextDecoration.underline,
-                                  decorationColor:
-                                      Theme.of(context).primaryColor,
-                                  color: Theme.of(context).primaryColor,
-                                ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(width: 32),
-                    RichText(
-                      text: TextSpan(
-                        children: [
-                          TextSpan(
-                              text: 'Genre: ',
-                              style: Theme.of(context).textTheme.labelLarge),
-                          TextSpan(
-                            text: book.genre.name,
-                            style: Theme.of(context)
-                                .textTheme
-                                .labelLarge
-                                ?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  decoration: TextDecoration.underline,
-                                  decorationColor:
-                                      Theme.of(context).primaryColor,
-                                  color: Theme.of(context).primaryColor,
-                                ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                Container(
-                  constraints: BoxConstraints(maxWidth: kSmallPhone + 48),
-                  child: Divider(height: 48),
-                ),
-                Column(
-                  children: [
-                    Text(
-                      'Copies',
-                      style: Theme.of(context)
+            child: Container(
+              constraints: BoxConstraints(maxWidth: kSmallPhone + 48),
+              child: Column(
+                children: [
+                  Container(
+                    constraints: BoxConstraints(maxWidth: kSmallPhone / 2),
+                    width: MediaQuery.of(context).size.width / 2,
+                    child: BookCover(
+                      book: book,
+                      titleStyle: Theme.of(context).textTheme.titleLarge,
+                      authorStyle: Theme.of(context)
                           .textTheme
-                          .headlineLarge
+                          .labelLarge
                           ?.copyWith(fontWeight: FontWeight.bold),
                     ),
-                    SizedBox(height: 8),
-                    ...List.generate(
-                      book.totalCopies.length,
-                      (index) {
-                        final BookCopy copy = book.totalCopies.toList()[index];
-                        return ListTile(
-                          onTap: () => Navigator.of(context)
-                              .pushNamed(Routes.bookCopy, arguments: copy),
-                          leading: Text(
-                            '${index + 1}.',
-                            style: Theme.of(context)
-                                .textTheme
-                                .labelMedium
-                                ?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                          ),
-                          title: Text('Copy ${copy.id}'),
-                          titleTextStyle: Theme.of(context)
-                              .textTheme
-                              .bodyMedium
-                              ?.copyWith(fontWeight: FontWeight.bold),
-                          trailing: copy.isIssued
-                              ? RichText(
-                                  text: TextSpan(
-                                    children: [
-                                      TextSpan(
-                                        text: 'borrowed by ',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .labelMedium,
-                                      ),
-                                      TextSpan(
-                                        text: copy.currentBorrower.value?.name,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .labelMedium
-                                            ?.copyWith(
-                                              color: Theme.of(context)
-                                                  .primaryColor,
-                                              fontWeight: FontWeight.bold,
-                                              decoration:
-                                                  TextDecoration.underline,
-                                            ),
-                                      ),
-                                    ],
+                  ),
+                  SizedBox(height: 16),
+                  Text(
+                    book.title,
+                    style: Theme.of(context)
+                        .textTheme
+                        .headlineLarge
+                        ?.copyWith(fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 4),
+                  Text(
+                    book.author.value!.name,
+                    style: Theme.of(context).textTheme.titleLarge,
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 16),
+                  Container(
+                    width: MediaQuery.of(context).size.width / 1.2,
+                    constraints: BoxConstraints(maxWidth: kSmallPhone),
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: Text(book.summary),
+                  ),
+                  SizedBox(height: 16),
+                  Wrap(
+                    runAlignment: WrapAlignment.spaceBetween,
+                    children: [
+                      RichText(
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                                text: 'First published on ',
+                                style: Theme.of(context).textTheme.labelLarge),
+                            TextSpan(
+                              text: book.releaseDate.prettifyDate,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .labelLarge
+                                  ?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    decoration: TextDecoration.underline,
+                                    decorationColor:
+                                        Theme.of(context).primaryColor,
+                                    color: Theme.of(context).primaryColor,
                                   ),
-                                )
-                              : Text(
-                                  'Available',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .labelMedium
-                                      ?.copyWith(
-                                        color: Theme.of(context).primaryColor,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                ),
-                        );
-                      },
-                    ),
-                  ],
-                )
-              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(width: 32),
+                      RichText(
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                                text: 'Genre: ',
+                                style: Theme.of(context).textTheme.labelLarge),
+                            TextSpan(
+                              text: book.genre.name,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .labelLarge
+                                  ?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    decoration: TextDecoration.underline,
+                                    decorationColor:
+                                        Theme.of(context).primaryColor,
+                                    color: Theme.of(context).primaryColor,
+                                  ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  Divider(height: 48),
+                  Column(
+                    children: [
+                      Text(
+                        'Copies',
+                        style: Theme.of(context)
+                            .textTheme
+                            .headlineLarge
+                            ?.copyWith(fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(height: 8),
+                      ...List.generate(
+                        book.totalCopies.length,
+                        (index) {
+                          final BookCopy copy =
+                              book.totalCopies.toList()[index];
+                          return ListTile(
+                            onTap: () => Navigator.of(context)
+                                .pushNamed(Routes.bookCopy, arguments: copy),
+                            leading: Text(
+                              '${index + 1}.',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .labelMedium
+                                  ?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                            ),
+                            title: Text('Copy ${copy.id}'),
+                            titleTextStyle: Theme.of(context)
+                                .textTheme
+                                .bodyMedium
+                                ?.copyWith(fontWeight: FontWeight.bold),
+                            trailing: copy.isIssued
+                                ? RichText(
+                                    text: TextSpan(
+                                      children: [
+                                        TextSpan(
+                                          text: 'borrowed by ',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .labelMedium,
+                                        ),
+                                        TextSpan(
+                                          text:
+                                              copy.currentBorrower.value?.name,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .labelMedium
+                                              ?.copyWith(
+                                                color: Theme.of(context)
+                                                    .primaryColor,
+                                                fontWeight: FontWeight.bold,
+                                                decoration:
+                                                    TextDecoration.underline,
+                                              ),
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                : Text(
+                                    'Available',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .labelMedium
+                                        ?.copyWith(
+                                          color: Theme.of(context).primaryColor,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                  ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                  Divider(height: 48),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      RichText(
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text: 'Created: ',
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
+                            TextSpan(
+                              text: book.createdAt.prettifyDateAndTime,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium
+                                  ?.copyWith(
+                                    color:
+                                        Theme.of(context).colorScheme.secondary,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      RichText(
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text: 'Updated: ',
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
+                            TextSpan(
+                              text: book.updatedAt.prettifyDateAndTime,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium
+                                  ?.copyWith(
+                                    color:
+                                        Theme.of(context).colorScheme.secondary,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),
