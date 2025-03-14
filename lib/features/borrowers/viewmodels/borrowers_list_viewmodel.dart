@@ -26,7 +26,7 @@ class BorrowersListViewModel extends _$BorrowersListViewModel {
     // as well.
     DatabaseRepository.instance.borrowersStream.listen((_) async {
       // Retrieve all borrowers from the database.
-      borrowers = await DatabaseRepository.instance.getAllBorrowers(
+      borrowers = await DatabaseRepository.instance.getBorrowers(
         sortBy: borrowerSort,
         sortOrder: selectedSortOrder,
         activeFilter: activeFilter,
@@ -53,7 +53,7 @@ class BorrowersListViewModel extends _$BorrowersListViewModel {
     // Retrieve the borrowers again in the selected sort type and update the
     // state.
     state = AsyncData(
-      await DatabaseRepository.instance.getAllBorrowers(
+      await DatabaseRepository.instance.getBorrowers(
         sortBy: borrowerSort,
         sortOrder: selectedSortOrder,
         activeFilter: activeFilter,
@@ -135,7 +135,7 @@ class BorrowersListViewModel extends _$BorrowersListViewModel {
   /// Filter the borrowers according to the selected filter values.
   Future<void> applyFilters(BuildContext context) async {
     state = AsyncData(
-      await DatabaseRepository.instance.getAllBorrowers(
+      await DatabaseRepository.instance.getBorrowers(
         sortBy: borrowerSort,
         sortOrder: selectedSortOrder,
         activeFilter: activeFilter,

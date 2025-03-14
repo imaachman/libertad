@@ -20,7 +20,7 @@ class AuthorsListViewModel extends _$AuthorsListViewModel {
     // as well.
     DatabaseRepository.instance.authorsStream.listen((_) async {
       // Retrieve all authors from the database.
-      authors = await DatabaseRepository.instance.getAllAuthors(
+      authors = await DatabaseRepository.instance.getAuthors(
         sortBy: authorSort,
         sortOrder: selectedSortOrder,
       );
@@ -43,7 +43,7 @@ class AuthorsListViewModel extends _$AuthorsListViewModel {
     // Retrieve the authors again in the selected sort type and update the
     // state.
     state = AsyncData(
-      await DatabaseRepository.instance.getAllAuthors(
+      await DatabaseRepository.instance.getAuthors(
         sortBy: authorSort,
         sortOrder: selectedSortOrder,
       ),

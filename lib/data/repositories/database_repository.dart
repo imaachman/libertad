@@ -162,8 +162,10 @@ class DatabaseRepository {
     });
   }
 
-  /// Returns all the books in the collection.
-  Future<List<Book>> getAllBooks({
+  /// Returns all the books from the collection, sorted by [sortBy],
+  /// arranged according to [sortOrder], and filtered by combining the various
+  /// filter parameters.
+  Future<List<Book>> getBooks({
     BookSort? sortBy,
     SortOrder sortOrder = SortOrder.ascending,
     Genre? genreFilter,
@@ -259,8 +261,9 @@ class DatabaseRepository {
     }
   }
 
-  /// Returns all the authors in the collection.
-  Future<List<Author>> getAllAuthors({
+  /// Returns all the authors from the collection, sorted by [sortBy] and
+  /// arranged according to [sortOrder].
+  Future<List<Author>> getAuthors({
     AuthorSort? sortBy,
     SortOrder sortOrder = SortOrder.ascending,
   }) async {
@@ -288,7 +291,9 @@ class DatabaseRepository {
     }
   }
 
-  /// Returns the issued book copies from the collection.
+  /// Returns all the issued copies from the [bookCopys] collection, sorted by
+  /// [sortBy], arranged according to [sortOrder], and filtered by combining the
+  /// various filter parameters.
   Future<List<BookCopy>> getIssuedCopies({
     IssuedCopySort? sortBy,
     SortOrder sortOrder = SortOrder.ascending,
@@ -348,8 +353,10 @@ class DatabaseRepository {
     }
   }
 
-  /// Returns all the borrowers in the collection.
-  Future<List<Borrower>> getAllBorrowers({
+  /// Returns all the borrowers from the collection, sorted by [sortBy],
+  /// arranged according to [sortOrder], and filtered by combining the various
+  /// filter parameters.
+  Future<List<Borrower>> getBorrowers({
     BorrowerSort? sortBy,
     SortOrder sortOrder = SortOrder.ascending,
     bool? activeFilter,

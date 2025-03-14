@@ -7,7 +7,7 @@ part of 'authors_list_viewmodel.dart';
 // **************************************************************************
 
 String _$authorsListViewModelHash() =>
-    r'6202475636cfbec6410769e85da88df975349119';
+    r'7b1bddee9712be4973d5cc31c54c47f4dfea180c';
 
 /// See also [AuthorsListViewModel].
 @ProviderFor(AuthorsListViewModel)

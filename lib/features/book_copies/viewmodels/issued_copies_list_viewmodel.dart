@@ -60,7 +60,7 @@ class IssuedCopiesListViewModel extends _$IssuedCopiesListViewModel {
     // as well.
     DatabaseRepository.instance.booksStream.listen((_) async {
       // Retrieve all authors from the database.
-      allBooks = await DatabaseRepository.instance.getAllBooks(
+      allBooks = await DatabaseRepository.instance.getBooks(
         sortBy: BookSort.title,
         sortOrder: SortOrder.ascending,
       );
@@ -72,7 +72,7 @@ class IssuedCopiesListViewModel extends _$IssuedCopiesListViewModel {
     // as well.
     DatabaseRepository.instance.borrowersStream.listen((_) async {
       // Retrieve all authors from the database.
-      allBorrowers = await DatabaseRepository.instance.getAllBorrowers(
+      allBorrowers = await DatabaseRepository.instance.getBorrowers(
         sortBy: BorrowerSort.name,
         sortOrder: SortOrder.ascending,
       );

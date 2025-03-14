@@ -36,7 +36,7 @@ class BooksListViewModel extends _$BooksListViewModel {
     // as well.
     DatabaseRepository.instance.booksStream.listen((_) async {
       // Retrieve all books from the database.
-      books = await DatabaseRepository.instance.getAllBooks(
+      books = await DatabaseRepository.instance.getBooks(
         sortBy: bookSort,
         sortOrder: selectedSortOrder,
         genreFilter: genreFilter,
@@ -57,7 +57,7 @@ class BooksListViewModel extends _$BooksListViewModel {
     // as well.
     DatabaseRepository.instance.authorsStream.listen((_) async {
       // Retrieve all authors from the database.
-      allAuthors = await DatabaseRepository.instance.getAllAuthors(
+      allAuthors = await DatabaseRepository.instance.getAuthors(
         sortBy: AuthorSort.name,
         sortOrder: SortOrder.ascending,
       );
@@ -77,7 +77,7 @@ class BooksListViewModel extends _$BooksListViewModel {
     bookSort = value;
     // Retrieve the books again in the selected sort type and update the state.
     state = AsyncData(
-      await DatabaseRepository.instance.getAllBooks(
+      await DatabaseRepository.instance.getBooks(
         sortBy: bookSort,
         sortOrder: selectedSortOrder,
         genreFilter: genreFilter,
@@ -227,7 +227,7 @@ class BooksListViewModel extends _$BooksListViewModel {
   /// Filter the books according to the selected filter values.
   Future<void> applyFilters(BuildContext context) async {
     state = AsyncData(
-      await DatabaseRepository.instance.getAllBooks(
+      await DatabaseRepository.instance.getBooks(
         sortBy: bookSort,
         sortOrder: selectedSortOrder,
         genreFilter: genreFilter,
