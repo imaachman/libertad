@@ -42,6 +42,13 @@ class IssuedCopiesListViewModel extends _$IssuedCopiesListViewModel {
       issuedCopies = await DatabaseRepository.instance.getIssuedCopies(
         sortBy: issuedCopySort,
         sortOrder: selectedSortOrder,
+        bookFilter: bookFilter,
+        borrowerFilter: borrowerFilter,
+        overdueFilter: overdueFilter,
+        oldestIssueDateFilter: oldestIssueDateFilter,
+        newestIssueDateFilter: newestIssueDateFilter,
+        oldestReturnDateFilter: oldestReturnDateFilter,
+        newestReturnDateFilter: newestReturnDateFilter,
       );
       // Update state and notify listeners to rebuild the UI.
       state = AsyncData(issuedCopies);

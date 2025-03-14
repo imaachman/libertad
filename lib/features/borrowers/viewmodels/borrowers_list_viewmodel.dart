@@ -29,6 +29,10 @@ class BorrowersListViewModel extends _$BorrowersListViewModel {
       borrowers = await DatabaseRepository.instance.getAllBorrowers(
         sortBy: borrowerSort,
         sortOrder: selectedSortOrder,
+        activeFilter: activeFilter,
+        defaulterFilter: defaulterFilter,
+        oldestMembershipStartDateFilter: oldestMembershipStartDateFilter,
+        newestMembershipStartDateFilter: newestMembershipStartDateFilter,
       );
       // Update state and notify listeners to rebuild the UI.
       state = AsyncData(borrowers);

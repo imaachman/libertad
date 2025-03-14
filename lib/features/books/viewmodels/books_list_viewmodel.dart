@@ -36,7 +36,17 @@ class BooksListViewModel extends _$BooksListViewModel {
     // as well.
     DatabaseRepository.instance.booksStream.listen((_) async {
       // Retrieve all books from the database.
-      books = await DatabaseRepository.instance.getAllBooks(sortBy: bookSort);
+      books = await DatabaseRepository.instance.getAllBooks(
+        sortBy: bookSort,
+        sortOrder: selectedSortOrder,
+        genreFilter: genreFilter,
+        authorFilter: authorFilter,
+        oldestReleaseDateFilter: oldestReleaseDateFilter,
+        newestReleaseDateFilter: newestReleaseDateFilter,
+        issueStatusFilter: issueStatusFilter,
+        minCopiesFilter: minCopiesFilter,
+        maxCopiesFilter: maxCopiesFilter,
+      );
       // Update state and notify listeners to rebuild the UI.
       state = AsyncData(books);
     });
