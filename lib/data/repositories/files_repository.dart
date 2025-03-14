@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
+import 'package:libertad/data/models/image_folder.dart';
 import 'package:path_provider/path_provider.dart';
 
 /// Repository class to interact with files in the device.
@@ -24,18 +25,19 @@ class FilesRepository {
     return File(result.files.single.path!);
   }
 
-  Future<File> copyImageFile(String originalImagePath) async {
+  Future<File> copyImageFile(
+      String originalImagePath, ImageFolder folder) async {
     // Get the path to the app's documents directory.
     final Directory applicationDocumentsDirectory =
         await getApplicationDocumentsDirectory();
-    // Create book covers directory if it doesn't already exist.
-    final Directory bookCoversDirectory = await Directory(
-            '${applicationDocumentsDirectory.path}/Libertad/Book Covers')
+    // Create app's image directory if it doesn't already exist.
+    final Directory appImageDirectory = await Directory(
+            '${applicationDocumentsDirectory.path}/Libertad/${folder.prettify}')
         .create(recursive: true);
     // Path to the new image file.
     final String newImagePath =
-        '${bookCoversDirectory.path}/${originalImagePath.split('\\').last}';
-    // Copy the selected cover image to the app's documents directory.
+        '${appImageDirectory.path}/${originalImagePath.split('\\').last}';
+    // Copy the selected image to the app's documents directory.
     final File copiedFile = await File(originalImagePath).copy(newImagePath);
     return copiedFile;
   }
@@ -43,12 +45,24 @@ class FilesRepository {
   /// Delete the file from the app's documents directory.
   Future<void> deleteFile(String path) => File(path).delete();
 
+  Future<void> deleteImageFolder(ImageFolder folder) async {
+    // Get the path to the app's documents directory.
+    final Directory applicationDocumentsDirectory =
+        await getApplicationDocumentsDirectory();
+    // Create app's image directory if it doesn't already exist.
+    final Directory appImageDirectory = await Directory(
+            '${applicationDocumentsDirectory.path}/Libertad/${folder.prettify}')
+        .create(recursive: true);
+    File(appImageDirectory.path).delete(recursive: true);
+  }
+
   /// Replace the old file with the new file.
-  Future<String> replaceFile(String oldPath, String newPath) async {
+  Future<String> replaceFile(
+      String oldPath, String newPath, ImageFolder folder) async {
     // Delete the old file.
     await deleteFile(oldPath);
     // Create a copy of the new file.
-    final File copiedFile = await copyImageFile(newPath);
+    final File copiedFile = await copyImageFile(newPath, folder);
     return copiedFile.path;
   }
 

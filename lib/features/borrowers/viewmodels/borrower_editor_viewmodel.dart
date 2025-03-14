@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:libertad/data/models/borrower.dart';
+import 'package:libertad/data/models/image_folder.dart';
 import 'package:libertad/data/repositories/database_repository.dart';
 import 'package:libertad/data/repositories/files_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -54,8 +55,8 @@ class BorrowerEditorViewModel extends _$BorrowerEditorViewModel {
     // If a profile picture has been selected, copy it to the app's documents
     // directory and update [profilePicture] with the new path.
     if (temporaryProfilePicture.isNotEmpty) {
-      final File copiedFile =
-          await FilesRepository.instance.copyImageFile(temporaryProfilePicture);
+      final File copiedFile = await FilesRepository.instance.copyImageFile(
+          temporaryProfilePicture, ImageFolder.borrowerProfilePictures);
       // Update the profile picture path to the new file path.
       profilePicture = copiedFile.path;
     }
@@ -87,8 +88,8 @@ class BorrowerEditorViewModel extends _$BorrowerEditorViewModel {
     // If the profile picture has been added.
     if (temporaryProfilePicture.isNotEmpty && profilePicture.isEmpty) {
       // Copy the selected profile picture to the app's documents directory.
-      final File copiedFile =
-          await FilesRepository.instance.copyImageFile(temporaryProfilePicture);
+      final File copiedFile = await FilesRepository.instance.copyImageFile(
+          temporaryProfilePicture, ImageFolder.borrowerProfilePictures);
       // Update the profile picture path to the new file path.
       profilePicture = copiedFile.path;
     }
@@ -103,8 +104,11 @@ class BorrowerEditorViewModel extends _$BorrowerEditorViewModel {
     else if (temporaryProfilePicture.isNotEmpty &&
         temporaryProfilePicture != profilePicture) {
       // Replace the old profile picture with the new one.
-      profilePicture = await FilesRepository.instance
-          .replaceFile(profilePicture, temporaryProfilePicture);
+      profilePicture = await FilesRepository.instance.replaceFile(
+        profilePicture,
+        temporaryProfilePicture,
+        ImageFolder.borrowerProfilePictures,
+      );
     }
 
     // Update the existing [Borrower] object with the values of form fields.

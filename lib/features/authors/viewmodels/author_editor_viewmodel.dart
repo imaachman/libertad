@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:libertad/data/models/author.dart';
+import 'package:libertad/data/models/image_folder.dart';
 import 'package:libertad/data/repositories/files_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -43,8 +44,8 @@ class AuthorEditorViewModel extends _$AuthorEditorViewModel {
     // If the profile picture has been added.
     if (temporaryProfilePicture.isNotEmpty && profilePicture.isEmpty) {
       // Copy the selected profile picture to the app's documents directory.
-      final File copiedFile =
-          await FilesRepository.instance.copyImageFile(temporaryProfilePicture);
+      final File copiedFile = await FilesRepository.instance.copyImageFile(
+          temporaryProfilePicture, ImageFolder.authorProfilePictures);
       // Update the profile picture path to the new file path.
       profilePicture = copiedFile.path;
     }
@@ -59,8 +60,11 @@ class AuthorEditorViewModel extends _$AuthorEditorViewModel {
     else if (temporaryProfilePicture.isNotEmpty &&
         temporaryProfilePicture != profilePicture) {
       // Replace the old profile picture with the new one.
-      profilePicture = await FilesRepository.instance
-          .replaceFile(profilePicture, temporaryProfilePicture);
+      profilePicture = await FilesRepository.instance.replaceFile(
+        profilePicture,
+        temporaryProfilePicture,
+        ImageFolder.authorProfilePictures,
+      );
     }
     // If author is provided, it means we are updating it.
     if (author != null) {
@@ -73,7 +77,10 @@ class AuthorEditorViewModel extends _$AuthorEditorViewModel {
     // Context mount check to prevent memory leaks.
     if (!context.mounted) return;
     // Return the created or updated author to the previous route.
-    Navigator.pop<Author>(context, author ?? Author(name: name, bio: bio));
+    Navigator.pop<Author>(
+      context,
+      author ?? Author(name: name, bio: bio, profilePicture: profilePicture),
+    );
   }
 
   /// Updates [name].

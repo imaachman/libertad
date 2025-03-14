@@ -12,10 +12,12 @@ import 'package:libertad/data/models/book_sort.dart';
 import 'package:libertad/data/models/borrower.dart';
 import 'package:libertad/data/models/borrower_sort.dart';
 import 'package:libertad/data/models/genre.dart';
+import 'package:libertad/data/models/image_folder.dart';
 import 'package:libertad/data/models/issue_status.dart';
 import 'package:libertad/data/models/issued_copy_sort.dart';
 import 'package:libertad/data/models/search_result.dart';
 import 'package:libertad/data/models/sort_order.dart';
+import 'package:libertad/data/repositories/files_repository.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../models/author.dart';
@@ -100,7 +102,15 @@ class DatabaseRepository {
   /// purposes only)
   Future<void> resetDatabase() async {
     await _isar.writeTxn(() async {
+      // Clear database.
       await _isar.clear();
+      // Delete all the images stored in the app's image directories.
+      await FilesRepository.instance.deleteImageFolder(ImageFolder.bookCovers);
+      await FilesRepository.instance
+          .deleteImageFolder(ImageFolder.authorProfilePictures);
+      await FilesRepository.instance
+          .deleteImageFolder(ImageFolder.borrowerProfilePictures);
+      // Populate books and authors data.
       for (int index = 0; index < mockBooks.length; index++) {
         // Need to create a new copy of the [Book] and [Author] object every
         // time because otherwise we'll reassigning already initialized links
@@ -138,7 +148,7 @@ class DatabaseRepository {
         await book.totalCopies.save();
         await author.books.save();
       }
-
+      // Populate borrowers data.
       for (int index = 0; index < mockBorrowers.length; index++) {
         final Borrower borrower = mockBorrowers[index].copyWith();
         // Update creation and updation time right before adding the borrowers

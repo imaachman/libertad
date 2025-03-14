@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:libertad/data/models/author.dart';
 import 'package:libertad/data/models/book.dart';
 import 'package:libertad/data/models/genre.dart';
+import 'package:libertad/data/models/image_folder.dart';
 import 'package:libertad/data/repositories/database_repository.dart';
 import 'package:libertad/data/repositories/files_repository.dart';
 import 'package:libertad/features/books/screens/book_editor/authors_search_delegate.dart';
@@ -90,8 +91,8 @@ class BookEditorViewModel extends _$BookEditorViewModel {
     // If a cover image has been selected, copy it to the app's documents
     // directory and update [coverImage] with the new path.
     if (temporaryCoverImage.isNotEmpty) {
-      final File copiedFile =
-          await FilesRepository.instance.copyImageFile(temporaryCoverImage);
+      final File copiedFile = await FilesRepository.instance
+          .copyImageFile(temporaryCoverImage, ImageFolder.bookCovers);
       // Update the cover image path to the new file path.
       coverImage = copiedFile.path;
     }
@@ -122,8 +123,8 @@ class BookEditorViewModel extends _$BookEditorViewModel {
     // If the cover image has been added.
     if (temporaryCoverImage.isNotEmpty && coverImage.isEmpty) {
       // Copy the selected cover image to the app's documents directory.
-      final File copiedFile =
-          await FilesRepository.instance.copyImageFile(temporaryCoverImage);
+      final File copiedFile = await FilesRepository.instance
+          .copyImageFile(temporaryCoverImage, ImageFolder.bookCovers);
       // Update the cover image path to the new file path.
       coverImage = copiedFile.path;
     }
@@ -138,8 +139,11 @@ class BookEditorViewModel extends _$BookEditorViewModel {
     else if (temporaryCoverImage.isNotEmpty &&
         temporaryCoverImage != coverImage) {
       // Replace the old cover image with the new one.
-      coverImage = await FilesRepository.instance
-          .replaceFile(coverImage, temporaryCoverImage);
+      coverImage = await FilesRepository.instance.replaceFile(
+        coverImage,
+        temporaryCoverImage,
+        ImageFolder.bookCovers,
+      );
     }
 
     // Update the existing [Book] object with the values of form fields.

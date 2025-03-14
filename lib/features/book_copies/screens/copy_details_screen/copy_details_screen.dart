@@ -6,6 +6,7 @@ import 'package:libertad/data/models/book_copy.dart';
 import 'package:libertad/data/models/borrower.dart';
 import 'package:libertad/features/book_copies/viewmodels/copy_details_viewmodel.dart';
 import 'package:libertad/features/borrowers/screens/borrowers_screen/borrower_list_tile.dart';
+import 'package:libertad/navigation/routes.dart';
 import 'package:libertad/widgets/book_cover.dart';
 
 class CopyDetailsPage extends ConsumerWidget {
@@ -88,7 +89,7 @@ class CopyDetailsPage extends ConsumerWidget {
                       shape: WidgetStatePropertyAll(RoundedRectangleBorder()),
                     ),
                     onPressed: () => Navigator.of(context).pushNamed(
-                      '/borrower',
+                      Routes.borrower,
                       arguments: copy.currentBorrower.value,
                     ),
                     child: Padding(

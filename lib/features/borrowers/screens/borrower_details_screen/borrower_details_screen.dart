@@ -259,7 +259,6 @@ class BorrowerDetailsPage extends ConsumerWidget {
 
   /// Formats the contact number to interanational format: (+1 XXX-XXX-XXXX).
   String prettifyContact(String contact) {
-    print('contact: $contact');
     return '+1 ${contact.substring(0, 3)}-${contact.substring(3, 6)}-${contact.substring(6)}';
   }
 }
