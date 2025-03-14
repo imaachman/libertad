@@ -3,6 +3,7 @@ import 'package:libertad/data/models/author.dart';
 import 'package:libertad/data/repositories/database_repository.dart';
 import 'package:libertad/data/repositories/files_repository.dart';
 import 'package:libertad/features/authors/screens/author_editor/author_editor_dialog.dart';
+import 'package:libertad/navigation/routes.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'author_details_viewmodel.g.dart';
@@ -51,7 +52,7 @@ class AuthorDetailsViewModel extends _$AuthorDetailsViewModel {
               await deleteAuthor(author);
               if (!context.mounted) return;
               Navigator.of(context)
-                  .popUntil((route) => route.settings.name == '/');
+                  .popUntil((route) => route.settings.name == Routes.home);
             },
             child: Text('Confirm'),
           ),

@@ -7,7 +7,7 @@ part of 'author_details_viewmodel.dart';
 // **************************************************************************
 
 String _$authorDetailsViewModelHash() =>
-    r'2595807dcc94251d5df284b0d0ffe7248b32e4f4';
+    r'3551ac88682dc7da4ce202ab74b599c071cad143';
 
 /// Copied from Dart SDK
 class _SystemHash {

@@ -39,7 +39,7 @@ class BookCover extends StatelessWidget {
                   ),
                   SizedBox(height: 8),
                   Text(
-                    book.author.value!.name,
+                    book.author.value?.name ?? 'author',
                     style: authorStyle ??
                         Theme.of(context).textTheme.labelSmall?.copyWith(
                               fontSize: 8,
