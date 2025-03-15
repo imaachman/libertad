@@ -36,6 +36,12 @@ class _DatabaseSearchPageState extends ConsumerState<DatabaseSearchPage>
   }
 
   @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final AsyncValue<SearchResult> result =
         ref.watch(databaseSearchViewModelProvider(widget.query));
@@ -140,11 +146,5 @@ class _DatabaseSearchPageState extends ConsumerState<DatabaseSearchPage>
         child: CircularProgressIndicator(),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
   }
 }

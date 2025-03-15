@@ -38,6 +38,13 @@ class _HomePageState extends ConsumerState<HomePage>
     _tabController.addListener(_tabListener);
   }
 
+  @override
+  void dispose() {
+    _tabController.removeListener(_tabListener);
+    _tabController.dispose();
+    super.dispose();
+  }
+
   bool _filterButtonEnabled = true;
   bool _fabEnabled = true;
 
@@ -184,12 +191,5 @@ class _HomePageState extends ConsumerState<HomePage>
             )
           : null,
     );
-  }
-
-  @override
-  void dispose() {
-    _tabController.removeListener(_tabListener);
-    _tabController.dispose();
-    super.dispose();
   }
 }

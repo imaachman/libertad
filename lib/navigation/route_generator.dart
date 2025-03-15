@@ -9,10 +9,13 @@ import 'package:libertad/features/books/screens/book_details_screen/book_details
 import 'package:libertad/features/borrowers/screens/borrower_details_screen/borrower_details_screen.dart';
 import 'package:libertad/features/home/screens/home_screen.dart';
 import 'package:libertad/navigation/routes.dart';
+import 'package:libertad/widgets/splash_screen.dart';
 
 class RouteGenerator {
   static Route? generate(RouteSettings settings) {
     switch (settings.name) {
+      case Routes.splash:
+        return MaterialPageRoute(builder: (context) => const SplashScreen());
       case Routes.home:
         return MaterialPageRoute(builder: (context) => const HomePage());
       case Routes.book:

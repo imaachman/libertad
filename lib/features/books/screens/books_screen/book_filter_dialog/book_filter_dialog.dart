@@ -28,6 +28,13 @@ class _BookFilterDialogState extends ConsumerState<BookFilterDialog> {
   }
 
   @override
+  void dispose() {
+    minController.dispose();
+    maxController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final BooksListViewModel model =
         ref.watch(booksListViewModelProvider.notifier);
@@ -91,12 +98,5 @@ class _BookFilterDialogState extends ConsumerState<BookFilterDialog> {
         ],
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    minController.dispose();
-    maxController.dispose();
-    super.dispose();
   }
 }

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:libertad/data/repositories/database_repository.dart';
 
-import 'features/home/screens/home_screen.dart';
 import 'navigation/route_generator.dart';
 
 Future<void> main() async {
@@ -22,7 +21,6 @@ class Libertad extends StatelessWidget {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Libertad',
-      home: HomePage(),
       onGenerateRoute: RouteGenerator.generate,
     );
   }
