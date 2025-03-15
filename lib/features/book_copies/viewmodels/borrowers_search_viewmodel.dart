@@ -8,5 +8,5 @@ part 'borrowers_search_viewmodel.g.dart';
 class BorrowersSearchViewModel extends _$BorrowersSearchViewModel {
   @override
   Future<List<Borrower>> build(String query) =>
-      DatabaseRepository.instance.searchBorrowers(query);
+      DatabaseRepository.instance.searchBorrowers(query, active: true);
 }

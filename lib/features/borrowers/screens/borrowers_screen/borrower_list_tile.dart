@@ -40,25 +40,51 @@ class BorrowerListTile extends StatelessWidget {
           .bodyLarge
           ?.copyWith(fontWeight: FontWeight.bold),
       subtitle: RichText(
-          text: TextSpan(children: [
-        TextSpan(
-            text: 'member since ',
-            style: Theme.of(context)
-                .textTheme
-                .labelSmall
-                ?.copyWith(fontStyle: FontStyle.italic)),
-        TextSpan(
-          text: borrower.membershipStartDate.prettifyDate,
-          style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                fontWeight: FontWeight.bold,
-                decoration: TextDecoration.underline,
-                fontStyle: FontStyle.italic,
-                decorationColor: Theme.of(context).primaryColor,
-                color: Theme.of(context).primaryColor,
-              ),
+        text: TextSpan(
+          children: [
+            TextSpan(
+                text: 'joined ',
+                style: Theme.of(context)
+                    .textTheme
+                    .labelSmall
+                    ?.copyWith(fontStyle: FontStyle.italic)),
+            TextSpan(
+              text: borrower.membershipStartDate.prettifyDate,
+              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    decoration: TextDecoration.underline,
+                    fontStyle: FontStyle.italic,
+                    decorationColor: Theme.of(context).primaryColor,
+                    color: Theme.of(context).primaryColor,
+                  ),
+            ),
+          ],
         ),
-      ])),
-      subtitleTextStyle: Theme.of(context).textTheme.labelSmall,
+      ),
+      trailing: borrower.isActive
+          ? null
+          : Container(
+              padding: const EdgeInsets.all(8),
+              width: 60,
+              height: 30,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(4),
+                color: Theme.of(context)
+                    .colorScheme
+                    .tertiaryContainer
+                    .withAlpha(180),
+              ),
+              child: Center(
+                child: Text(
+                  'INACTIVE',
+                  style: Theme.of(context)
+                      .textTheme
+                      .labelSmall
+                      ?.copyWith(fontSize: 9),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
     );
   }
 }

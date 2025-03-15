@@ -27,6 +27,9 @@ class Borrower {
   DateTime get membershipEndDate => membershipStartDate.copyWith(
       month: membershipStartDate.month + membershipDuration);
 
+  @ignore
+  bool get isActive => membershipEndDate.isAfter(DateTime.now());
+
   Borrower({
     required this.name,
     required this.contact,

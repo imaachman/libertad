@@ -7,7 +7,7 @@ part of 'borrowers_search_viewmodel.dart';
 // **************************************************************************
 
 String _$borrowersSearchViewModelHash() =>
-    r'bf70ce9aab3d87423f5fa6019173fae3755cf478';
+    r'6c6c863099575296c4d71c41068f1783401b6f00';
 
 /// Copied from Dart SDK
 class _SystemHash {

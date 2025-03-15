@@ -27,16 +27,41 @@ class BorrowersSearchPage extends ConsumerWidget {
           final Borrower borrower = data[index];
           return ListTile(
             onTap: () => close(context, borrower),
-            leading: ProfilePicture(
-              imageFilePath: borrower.profilePicture,
-              borderWidth: 2,
-              iconSize: 30,
+            leading: SizedBox.square(
+              dimension: 40,
+              child: ProfilePicture(
+                imageFilePath: borrower.profilePicture,
+                iconSize: 30,
+                borderWidth: 2,
+              ),
             ),
             title: Text(borrower.name),
-            titleTextStyle: Theme.of(context).textTheme.bodyLarge,
-            subtitle: Text(
-                'member since ${borrower.membershipStartDate.prettifyDate}'),
-            subtitleTextStyle: Theme.of(context).textTheme.labelSmall,
+            titleTextStyle: Theme.of(context)
+                .textTheme
+                .bodyLarge
+                ?.copyWith(fontWeight: FontWeight.bold),
+            subtitle: RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                      text: 'joined ',
+                      style: Theme.of(context)
+                          .textTheme
+                          .labelSmall
+                          ?.copyWith(fontStyle: FontStyle.italic)),
+                  TextSpan(
+                    text: borrower.membershipStartDate.prettifyDate,
+                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          decoration: TextDecoration.underline,
+                          fontStyle: FontStyle.italic,
+                          decorationColor: Theme.of(context).primaryColor,
+                          color: Theme.of(context).primaryColor,
+                        ),
+                  ),
+                ],
+              ),
+            ),
           );
         },
       ),

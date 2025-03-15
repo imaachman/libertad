@@ -638,11 +638,17 @@ class DatabaseRepository {
     });
   }
 
-  Future<List<Borrower>> searchBorrowers(String name) async {
-    return _isar.borrowers
-        .filter()
-        .nameContains(name, caseSensitive: false)
-        .findAll();
+  Future<List<Borrower>> searchBorrowers(String name,
+      {bool active = false}) async {
+    final QueryBuilder<Borrower, Borrower, QAfterFilterCondition> queryBuilder =
+        _isar.borrowers.filter().nameContains(name, caseSensitive: false);
+    if (active == true) {
+      return queryBuilder
+          .membershipEndDateGreaterThan(DateTime.now())
+          .findAll();
+    } else {
+      return queryBuilder.findAll();
+    }
   }
 
   Future<void> issueCopy(BookCopy copy, Borrower borrower) async {

@@ -23,6 +23,29 @@ class BorrowerDetailsPage extends ConsumerWidget {
       appBar: AppBar(
         title: const Text('Borrower Details'),
         actions: [
+          if (!borrower.isActive)
+            Container(
+              padding: const EdgeInsets.all(8),
+              width: 60,
+              height: 30,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(4),
+                color: Theme.of(context)
+                    .colorScheme
+                    .tertiaryContainer
+                    .withAlpha(180),
+              ),
+              child: Center(
+                child: Text(
+                  'INACTIVE',
+                  style: Theme.of(context)
+                      .textTheme
+                      .labelSmall
+                      ?.copyWith(fontSize: 9),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
           PopupMenuButton(
             itemBuilder: (context) => [
               PopupMenuItem(
