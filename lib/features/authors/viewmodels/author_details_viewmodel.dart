@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:libertad/data/models/author.dart';
 import 'package:libertad/data/repositories/database_repository.dart';
 import 'package:libertad/data/repositories/files_repository.dart';
+import 'package:libertad/features/authors/screens/author_details_screen/author_deletion_dialog.dart';
 import 'package:libertad/features/authors/screens/author_editor/author_editor_dialog.dart';
 import 'package:libertad/navigation/routes.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -23,51 +24,26 @@ class AuthorDetailsViewModel extends _$AuthorDetailsViewModel {
   Future<void> showDeletionDialog(BuildContext context) async {
     await showAdaptiveDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: RichText(
-          text: TextSpan(
-            style: Theme.of(context).textTheme.bodyLarge,
-            children: [
-              TextSpan(text: 'Are you sure you want to delete author '),
-              TextSpan(
-                text: author.name,
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: Theme.of(context).colorScheme.error,
-                      fontWeight: FontWeight.bold,
-                    ),
-              ),
-              TextSpan(
-                  text:
-                      '? This will also delete all the books written by them.'),
-            ],
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () async {
-              await deleteAuthor(author);
-              if (!context.mounted) return;
-              Navigator.of(context)
-                  .popUntil((route) => route.settings.name == Routes.home);
-            },
-            child: Text('Confirm'),
-          ),
-        ],
+      builder: (context) => AuthorDeletionDialog(
+        author: author,
+        onDelete: () => deleteAuthor(context),
       ),
     );
   }
 
-  Future<bool> deleteAuthor(Author author) async {
+  Future<bool> deleteAuthor(BuildContext context) async {
     final bool authorDeleted =
         await DatabaseRepository.instance.deleteAuthor(author);
     if (!authorDeleted) return false;
+
     if (author.profilePicture.isNotEmpty) {
       // Delete profile picture file only if the author was deleted succesfully.
       await FilesRepository.instance.deleteFile(author.profilePicture);
+    }
+
+    if (context.mounted) {
+      Navigator.of(context)
+          .popUntil((route) => route.settings.name == Routes.home);
     }
     return authorDeleted;
   }
