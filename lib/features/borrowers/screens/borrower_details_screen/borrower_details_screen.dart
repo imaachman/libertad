@@ -23,29 +23,26 @@ class BorrowerDetailsPage extends ConsumerWidget {
       appBar: AppBar(
         title: const Text('Borrower Details'),
         actions: [
-          if (!borrower.isActive)
+          if (!borrower.isActive) ...[
             Container(
-              padding: const EdgeInsets.all(8),
-              width: 60,
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               height: 30,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(4),
-                color: Theme.of(context)
-                    .colorScheme
-                    .tertiaryContainer
-                    .withAlpha(180),
-              ),
+                  borderRadius: BorderRadius.circular(4),
+                  color: Theme.of(context).colorScheme.primaryContainer),
               child: Center(
                 child: Text(
                   'INACTIVE',
-                  style: Theme.of(context)
-                      .textTheme
-                      .labelSmall
-                      ?.copyWith(fontSize: 9),
+                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                        fontWeight: FontWeight.w900,
+                        color: Theme.of(context).primaryColor,
+                      ),
                   textAlign: TextAlign.center,
                 ),
               ),
             ),
+            SizedBox(width: 8),
+          ],
           PopupMenuButton(
             itemBuilder: (context) => [
               PopupMenuItem(
@@ -125,51 +122,90 @@ class BorrowerDetailsPage extends ConsumerWidget {
                         ),
                   ),
                   SizedBox(height: 16),
-                  Wrap(
-                    runAlignment: WrapAlignment.spaceBetween,
-                    children: [
-                      RichText(
-                        textAlign: TextAlign.center,
-                        text: TextSpan(
-                          children: [
-                            TextSpan(
-                                text: 'Member from ',
-                                style: Theme.of(context).textTheme.labelLarge),
-                            TextSpan(
-                              text: borrower.membershipStartDate.prettifyDate,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .labelLarge
-                                  ?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    decoration: TextDecoration.underline,
-                                    decorationColor:
-                                        Theme.of(context).primaryColor,
-                                    color: Theme.of(context).primaryColor,
-                                  ),
-                            ),
-                            TextSpan(
-                              text: ' to ',
-                              style: Theme.of(context).textTheme.labelLarge,
-                            ),
-                            TextSpan(
-                              text: borrower.membershipEndDate.prettifyDate,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .labelLarge
-                                  ?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    decoration: TextDecoration.underline,
-                                    decorationColor:
-                                        Theme.of(context).primaryColor,
-                                    color: Theme.of(context).primaryColor,
-                                  ),
-                            ),
-                          ],
+                  RichText(
+                    textAlign: TextAlign.center,
+                    text: TextSpan(
+                      style: Theme.of(context).textTheme.labelLarge,
+                      children: [
+                        TextSpan(text: 'Member from '),
+                        TextSpan(
+                          text: borrower.membershipStartDate.prettifyDate,
+                          style: Theme.of(context)
+                              .textTheme
+                              .labelLarge
+                              ?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                decoration: TextDecoration.underline,
+                                decorationColor: Theme.of(context).primaryColor,
+                                color: Theme.of(context).primaryColor,
+                              ),
                         ),
-                      ),
-                    ],
+                        TextSpan(text: ' to '),
+                        TextSpan(
+                          text: borrower.membershipEndDate.prettifyDate,
+                          style: Theme.of(context)
+                              .textTheme
+                              .labelLarge
+                              ?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                decoration: TextDecoration.underline,
+                                decorationColor: Theme.of(context).primaryColor,
+                                color: Theme.of(context).primaryColor,
+                              ),
+                        ),
+                      ],
+                    ),
                   ),
+                  if (borrower.isDefaulter) ...[
+                    SizedBox(height: 16),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 4),
+                          height: 30,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(4),
+                              color:
+                                  Theme.of(context).colorScheme.errorContainer),
+                          child: Center(
+                            child: Text(
+                              'DEFAULTER',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .labelSmall
+                                  ?.copyWith(
+                                    fontWeight: FontWeight.w900,
+                                    color: Theme.of(context).colorScheme.error,
+                                  ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 16),
+                        RichText(
+                          text: TextSpan(
+                            style: Theme.of(context).textTheme.labelLarge,
+                            children: [
+                              TextSpan(text: 'Fine Due: '),
+                              TextSpan(
+                                text: '\$${borrower.fineDue.toInt()}',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .labelLarge
+                                    ?.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      color:
+                                          Theme.of(context).colorScheme.error,
+                                    ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                   Divider(height: 48),
                   if (borrower.currentlyIssuedBooks.isNotEmpty) ...[
                     Column(
@@ -277,6 +313,22 @@ class BorrowerDetailsPage extends ConsumerWidget {
           ),
         ),
       ),
+      floatingActionButton: borrower.isDefaulter
+          ? FloatingActionButton.extended(
+              onPressed: () => model.showFineDialog(context, borrower),
+              icon: Icon(
+                Icons.monetization_on_rounded,
+                size: 20,
+              ),
+              label: Text(
+                'Accept Fine',
+                style: Theme.of(context)
+                    .textTheme
+                    .titleMedium
+                    ?.copyWith(color: Theme.of(context).primaryColor),
+              ),
+            )
+          : null,
     );
   }
 

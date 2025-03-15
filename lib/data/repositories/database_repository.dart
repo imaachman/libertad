@@ -662,10 +662,19 @@ class DatabaseRepository {
   Future<void> returnCopy(BookCopy copy, Borrower borrower) async {
     return _isar.writeTxn(() async {
       copy.currentBorrower.reset();
+      // If returned copy was overdue, we update borrower with defaulter status
+      // and fine.
+      await _isar.borrowers.put(borrower);
       copy.previousBorrowers.add(borrower);
       await _isar.bookCopys.put(copy);
       copy.currentBorrower.save();
       copy.previousBorrowers.save();
+    });
+  }
+
+  Future<void> acceptFine(Borrower borrower) async {
+    return _isar.writeTxn(() async {
+      await _isar.borrowers.put(borrower);
     });
   }
 

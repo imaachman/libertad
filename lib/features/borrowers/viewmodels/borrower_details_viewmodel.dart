@@ -3,6 +3,7 @@ import 'package:libertad/data/models/borrower.dart';
 import 'package:libertad/data/repositories/database_repository.dart';
 import 'package:libertad/data/repositories/files_repository.dart';
 import 'package:libertad/features/borrowers/screens/borrower_details_screen/borrower_deletion_dialog.dart';
+import 'package:libertad/features/borrowers/screens/borrower_details_screen/fine_dialog.dart';
 import 'package:libertad/features/borrowers/screens/borrower_editor/borrower_editor.dart';
 import 'package:libertad/navigation/routes.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -55,5 +56,24 @@ class BorrowerDetailsViewModel extends _$BorrowerDetailsViewModel {
       isScrollControlled: true,
       showDragHandle: true,
     );
+  }
+
+  /// Shows dialog to pay the fine.
+  Future<void> showFineDialog(BuildContext context, Borrower borrower) =>
+      showDialog(
+          context: context,
+          builder: (context) => FineDialog(borrower: borrower));
+
+  Future<void> acceptFine(BuildContext context) async {
+    // Update borrower's defaulter status and reset fine amount.
+    borrower
+      ..isDefaulter = false
+      ..fineDue = 0;
+
+    // Update borrower's defaulter and fine status in the database.
+    await DatabaseRepository.instance.acceptFine(borrower);
+
+    if (!context.mounted) return;
+    Navigator.of(context).pop();
   }
 }

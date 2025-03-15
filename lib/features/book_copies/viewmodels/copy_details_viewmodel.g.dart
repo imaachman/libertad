@@ -7,7 +7,7 @@ part of 'copy_details_viewmodel.dart';
 // **************************************************************************
 
 String _$copyDetailsViewModelHash() =>
-    r'8fb3fade211f78dc313bba85547dc357d4f4edc7';
+    r'2dc5e9fecf4fd3f3b65b6feb3c90e354dca602db';
 
 /// Copied from Dart SDK
 class _SystemHash {
