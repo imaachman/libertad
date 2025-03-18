@@ -15,27 +15,44 @@ class RouteGenerator {
   static Route? generate(RouteSettings settings) {
     switch (settings.name) {
       case Routes.splash:
-        return MaterialPageRoute(builder: (context) => const SplashScreen());
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (context) => const SplashScreen(),
+        );
       case Routes.home:
-        return MaterialPageRoute(builder: (context) => const HomePage());
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (context) => const HomePage(),
+        );
       case Routes.book:
         return MaterialPageRoute(
-            builder: (context) =>
-                BookDetailsPage(book: settings.arguments as Book));
+          settings: settings,
+          builder: (context) =>
+              BookDetailsPage(book: settings.arguments as Book),
+        );
       case Routes.author:
         return MaterialPageRoute(
-            builder: (context) =>
-                AuthorDetailsPage(author: settings.arguments as Author));
+          settings: settings,
+          builder: (context) =>
+              AuthorDetailsPage(author: settings.arguments as Author),
+        );
       case Routes.borrower:
         return MaterialPageRoute(
-            builder: (context) =>
-                BorrowerDetailsPage(borrower: settings.arguments as Borrower));
+          settings: settings,
+          builder: (context) =>
+              BorrowerDetailsPage(borrower: settings.arguments as Borrower),
+        );
       case Routes.bookCopy:
         return MaterialPageRoute(
-            builder: (context) =>
-                CopyDetailsPage(copy: settings.arguments as BookCopy));
+          settings: settings,
+          builder: (context) =>
+              CopyDetailsPage(copy: settings.arguments as BookCopy),
+        );
       default:
-        return MaterialPageRoute(builder: (context) => const HomePage());
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (context) => const HomePage(),
+        );
     }
   }
 }
