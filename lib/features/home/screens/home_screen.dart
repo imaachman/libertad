@@ -25,7 +25,7 @@ class _HomePageState extends ConsumerState<HomePage>
   final List<Widget> _tabViews = const [
     BooksPage(),
     AuthorsPage(),
-    IssuedBooksPage(),
+    IssuedCopiesPage(),
     BorrowersPage(),
   ];
 

@@ -53,8 +53,27 @@ class BooksListViewModel extends _$BooksListViewModel {
 
     // Listen for changes in book copies collection to actively update the
     // number of issued copies in the book list tile.
-    DatabaseRepository.instance.bookCopiesStream
-        .listen((_) => ref.notifyListeners());
+    //
+    // Cases include:
+    // 1. Book issued
+    // 2. Book returned
+    // 3. Borrower deleted, in turn un-issuing the borrowed copies
+    DatabaseRepository.instance.bookCopiesStream.listen((_) async {
+      // Retrieve all books from the database.
+      books = await DatabaseRepository.instance.getBooks(
+        sortBy: bookSort,
+        sortOrder: selectedSortOrder,
+        genreFilter: genreFilter,
+        authorFilter: authorFilter,
+        oldestReleaseDateFilter: oldestReleaseDateFilter,
+        newestReleaseDateFilter: newestReleaseDateFilter,
+        issueStatusFilter: issueStatusFilter,
+        minCopiesFilter: minCopiesFilter,
+        maxCopiesFilter: maxCopiesFilter,
+      );
+      // Update state and notify listeners to rebuild the UI.
+      state = AsyncData(books);
+    });
 
     // Listen for changes in authors collection and update the state with the
     // latest data. The stream fires a snapshot immediately, so we don't need

@@ -5,8 +5,8 @@ import 'package:libertad/data/models/book_copy.dart';
 import 'package:libertad/features/book_copies/screens/issued_copies_screen/issued_copy_tile.dart';
 import 'package:libertad/features/book_copies/viewmodels/issued_copies_list_viewmodel.dart';
 
-class IssuedBooksPage extends ConsumerWidget {
-  const IssuedBooksPage({super.key});
+class IssuedCopiesPage extends ConsumerWidget {
+  const IssuedCopiesPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

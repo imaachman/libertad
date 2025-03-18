@@ -646,6 +646,15 @@ class DatabaseRepository {
   /// Deletes the borrower.
   Future<bool> deleteBorrower(Borrower borrower) async {
     return await _isar.writeTxn<bool>(() async {
+      // Change the issue status for all the books issued by the borrower.
+      for (final BookCopy copy in borrower.currentlyIssuedBooks) {
+        copy.status = IssueStatus.available;
+        await _isar.bookCopys.put(copy);
+      }
+      // Un-issue all the books issued to the borrower.
+      // We reset the links to do so.
+      await borrower.currentlyIssuedBooks.reset();
+      await borrower.previouslyIssuedBooks.reset();
       return await _isar.borrowers.delete(borrower.id);
     });
   }
