@@ -556,7 +556,6 @@ class DatabaseRepository {
     });
   }
 
-  // TODO: Delete all copies before deleting the book.
   Future<bool> deleteBook(Book book) async {
     // Get book's author.
     final Author author = book.author.value!;
@@ -566,6 +565,17 @@ class DatabaseRepository {
     return await _isar.writeTxn<bool>(() async {
       // Delete author is this is their only book in the library.
       if (authorsOnlyBook) await _isar.authors.delete(author.id);
+
+      // Un-issue issued copies since all copies are about to get deleted.
+      // We do that by resetting the current and previous borrowers links.
+      for (final BookCopy copy in book.issuedCopies) {
+        await copy.currentBorrower.reset();
+        await copy.previousBorrowers.reset();
+      }
+
+      // Delete all copies before deleting the book.
+      await _isar.bookCopys
+          .deleteAll(book.totalCopies.map((copy) => copy.id).toList());
 
       // Delete the book from the database.
       return await _isar.books.delete(book.id);
@@ -661,6 +671,7 @@ class DatabaseRepository {
 
   Future<void> returnCopy(BookCopy copy, Borrower borrower) async {
     return _isar.writeTxn(() async {
+      // Return copy by resetting the borrower link.
       copy.currentBorrower.reset();
       // If returned copy was overdue, we update borrower with defaulter status
       // and fine.
