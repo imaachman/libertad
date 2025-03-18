@@ -84,25 +84,42 @@ class BookListTile extends StatelessWidget {
                   children: [
                     Container(
                       padding: const EdgeInsets.all(4),
+                      height: 40,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(4),
-                        color: Theme.of(context).colorScheme.secondaryContainer,
+                        color: Theme.of(context).colorScheme.inversePrimary,
                       ),
-                      child: Text(
-                        'Issued: ${book.issuedCopies.length}',
-                        style: Theme.of(context).textTheme.labelSmall,
+                      child: Center(
+                        child: Text(
+                          'ISSUED: ${book.issuedCopies.length}',
+                          style:
+                              Theme.of(context).textTheme.labelSmall?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 9,
+                                  ),
+                        ),
                       ),
                     ),
                     SizedBox(height: 8),
                     Container(
                       padding: const EdgeInsets.all(4),
+                      height: 40,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(4),
-                        color: Theme.of(context).colorScheme.tertiaryContainer,
+                        color: Theme.of(context).colorScheme.inverseSurface,
                       ),
-                      child: Text(
-                        'Total: ${book.totalCopies.length}',
-                        style: Theme.of(context).textTheme.labelSmall,
+                      child: Center(
+                        child: Text(
+                          'TOTAL: ${book.totalCopies.length}',
+                          style:
+                              Theme.of(context).textTheme.labelSmall?.copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onInverseSurface,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 9,
+                                  ),
+                        ),
                       ),
                     ),
                   ],
