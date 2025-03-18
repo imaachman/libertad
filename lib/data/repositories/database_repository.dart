@@ -539,7 +539,9 @@ class DatabaseRepository {
         );
         // Add the copies to the database.
         await _isar.bookCopys.putAll(copies);
-        // Link the copies set to the book.
+        // Remove old copies from the book.
+        book.totalCopies.removeWhere((copy) => true);
+        // Link the new copies set to the book.
         book.totalCopies.addAll(copies);
       }
 

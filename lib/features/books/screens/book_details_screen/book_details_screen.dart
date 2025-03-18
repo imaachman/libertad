@@ -5,8 +5,9 @@ import 'package:libertad/core/utils/extensions.dart';
 import 'package:libertad/data/models/book.dart';
 import 'package:libertad/data/models/book_copy.dart';
 import 'package:libertad/features/books/viewmodels/book_details_viewmodel.dart';
-import 'package:libertad/navigation/routes.dart';
 import 'package:libertad/widgets/book_cover.dart';
+
+import 'copy_list_tile.dart';
 
 class BookDetailsPage extends ConsumerWidget {
   final Book book;
@@ -178,61 +179,7 @@ class BookDetailsPage extends ConsumerWidget {
                         (index) {
                           final BookCopy copy =
                               book.totalCopies.toList()[index];
-                          return ListTile(
-                            onTap: () => Navigator.of(context)
-                                .pushNamed(Routes.bookCopy, arguments: copy),
-                            leading: Text(
-                              '${index + 1}.',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .labelMedium
-                                  ?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                            ),
-                            title: Text('Copy ${copy.id}'),
-                            titleTextStyle: Theme.of(context)
-                                .textTheme
-                                .bodyMedium
-                                ?.copyWith(fontWeight: FontWeight.bold),
-                            trailing: copy.isIssued
-                                ? RichText(
-                                    text: TextSpan(
-                                      children: [
-                                        TextSpan(
-                                          text: 'borrowed by ',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .labelMedium,
-                                        ),
-                                        TextSpan(
-                                          text:
-                                              copy.currentBorrower.value?.name,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .labelMedium
-                                              ?.copyWith(
-                                                color: Theme.of(context)
-                                                    .primaryColor,
-                                                fontWeight: FontWeight.bold,
-                                                decoration:
-                                                    TextDecoration.underline,
-                                              ),
-                                        ),
-                                      ],
-                                    ),
-                                  )
-                                : Text(
-                                    'Available',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .labelMedium
-                                        ?.copyWith(
-                                          color: Theme.of(context).primaryColor,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                  ),
-                          );
+                          return CopyListTile(copy: copy, index: index);
                         },
                       ),
                     ],
