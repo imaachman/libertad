@@ -51,6 +51,11 @@ class BooksListViewModel extends _$BooksListViewModel {
       state = AsyncData(books);
     });
 
+    // Listen for changes in book copies collection to actively update the
+    // number of issued copies in the book list tile.
+    DatabaseRepository.instance.bookCopiesStream
+        .listen((_) => ref.notifyListeners());
+
     // Listen for changes in authors collection and update the state with the
     // latest data. The stream fires a snapshot immediately, so we don't need
     // to initialize data seperately. This listener handles the initialization
