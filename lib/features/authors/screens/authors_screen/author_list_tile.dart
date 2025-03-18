@@ -38,24 +38,27 @@ class AuthorListTile extends StatelessWidget {
           .bodyLarge
           ?.copyWith(fontWeight: FontWeight.bold),
       subtitle: RichText(
-          text: TextSpan(children: [
-        TextSpan(
-            text: 'author of ',
-            style: Theme.of(context)
-                .textTheme
-                .labelSmall
-                ?.copyWith(fontStyle: FontStyle.italic)),
-        TextSpan(
-          text: author.books.first.title,
-          style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                fontWeight: FontWeight.bold,
-                decoration: TextDecoration.underline,
-                fontStyle: FontStyle.italic,
-                decorationColor: Theme.of(context).primaryColor,
-                color: Theme.of(context).primaryColor,
-              ),
+        text: TextSpan(
+          children: [
+            TextSpan(
+                text: 'author of ',
+                style: Theme.of(context)
+                    .textTheme
+                    .labelSmall
+                    ?.copyWith(fontStyle: FontStyle.italic)),
+            TextSpan(
+              text: author.books.first.title,
+              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    decoration: TextDecoration.underline,
+                    fontStyle: FontStyle.italic,
+                    decorationColor: Theme.of(context).primaryColor,
+                    color: Theme.of(context).primaryColor,
+                  ),
+            ),
+          ],
         ),
-      ])),
+      ),
     );
   }
 }

@@ -481,7 +481,6 @@ class DatabaseRepository {
   /// 2. If the new total copies are less than the old total copies, delete the
   ///   all the copies and replace them with the new copies. We don't want to
   ///   update the existing copies because they might have been borrowed.
-  ///   TODO: Un-issue the borrowed copies before deletion.
   Future<void> updateBook(
       Book book, Author newAuthor, int newTotalCopies) async {
     // Get the old author.
