@@ -10,6 +10,7 @@ import 'package:libertad/features/books/screens/books_screen/book_sort_dialog.da
 import 'package:libertad/features/borrowers/screens/borrower_editor/borrower_editor.dart';
 import 'package:libertad/features/borrowers/screens/borrowers_screen/borrower_filter_dialog/borrower_filter_dialog.dart';
 import 'package:libertad/features/borrowers/screens/borrowers_screen/borrower_sort_dialog.dart';
+import 'package:libertad/features/home/screens/documents_directory_dialog.dart';
 import 'package:libertad/features/search/screens/database_search_delegate.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -29,32 +30,9 @@ class HomeViewModel extends _$HomeViewModel {
         await FilesRepository.instance.exposeAppDirectoryFiles();
     if (!context.mounted) return;
     showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text(
-              'Files',
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-            content: SizedBox(
-              width: MediaQuery.of(context).size.width / 1.5,
-              height: MediaQuery.of(context).size.height / 2,
-              child: ListView.separated(
-                itemCount: files.length,
-                itemBuilder: (context, index) => Text(
-                  files[index],
-                  style: Theme.of(context).textTheme.labelLarge,
-                ),
-                separatorBuilder: (context, index) => Divider(),
-              ),
-            ),
-            actions: [
-              TextButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: Text('Close'))
-            ],
-          );
-        });
+      context: context,
+      builder: (context) => DocumentsDirectoryDialog(files: files),
+    );
   }
 
   Future<void> clearDatabase() async =>
