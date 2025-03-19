@@ -4,6 +4,7 @@ import 'package:libertad/data/models/book_copy.dart';
 import 'package:libertad/data/models/book_sort.dart';
 import 'package:libertad/data/models/borrower.dart';
 import 'package:libertad/data/models/borrower_sort.dart';
+import 'package:libertad/data/models/issued_copy_filters.dart';
 import 'package:libertad/data/models/issued_copy_sort.dart';
 import 'package:libertad/data/models/sort_order.dart';
 import 'package:libertad/data/repositories/database_repository.dart';
@@ -42,13 +43,15 @@ class IssuedCopiesListViewModel extends _$IssuedCopiesListViewModel {
       issuedCopies = await DatabaseRepository.instance.getIssuedCopies(
         sortBy: issuedCopySort,
         sortOrder: selectedSortOrder,
-        bookFilter: bookFilter,
-        borrowerFilter: borrowerFilter,
-        overdueFilter: overdueFilter,
-        oldestIssueDateFilter: oldestIssueDateFilter,
-        newestIssueDateFilter: newestIssueDateFilter,
-        oldestReturnDateFilter: oldestReturnDateFilter,
-        newestReturnDateFilter: newestReturnDateFilter,
+        filters: IssuedCopyFilters(
+          bookFilter: bookFilter,
+          borrowerFilter: borrowerFilter,
+          overdueFilter: overdueFilter,
+          oldestIssueDateFilter: oldestIssueDateFilter,
+          newestIssueDateFilter: newestIssueDateFilter,
+          oldestReturnDateFilter: oldestReturnDateFilter,
+          newestReturnDateFilter: newestReturnDateFilter,
+        ),
       );
       // Update state and notify listeners to rebuild the UI.
       state = AsyncData(issuedCopies);
@@ -95,13 +98,15 @@ class IssuedCopiesListViewModel extends _$IssuedCopiesListViewModel {
       await DatabaseRepository.instance.getIssuedCopies(
         sortBy: issuedCopySort,
         sortOrder: selectedSortOrder,
-        bookFilter: bookFilter,
-        borrowerFilter: borrowerFilter,
-        overdueFilter: overdueFilter,
-        oldestIssueDateFilter: oldestIssueDateFilter,
-        newestIssueDateFilter: newestIssueDateFilter,
-        oldestReturnDateFilter: oldestReturnDateFilter,
-        newestReturnDateFilter: newestReturnDateFilter,
+        filters: IssuedCopyFilters(
+          bookFilter: bookFilter,
+          borrowerFilter: borrowerFilter,
+          overdueFilter: overdueFilter,
+          oldestIssueDateFilter: oldestIssueDateFilter,
+          newestIssueDateFilter: newestIssueDateFilter,
+          oldestReturnDateFilter: oldestReturnDateFilter,
+          newestReturnDateFilter: newestReturnDateFilter,
+        ),
       ),
     );
     // Keep provider alive to preserve the order.
@@ -231,13 +236,15 @@ class IssuedCopiesListViewModel extends _$IssuedCopiesListViewModel {
       await DatabaseRepository.instance.getIssuedCopies(
         sortBy: issuedCopySort,
         sortOrder: selectedSortOrder,
-        bookFilter: bookFilter,
-        borrowerFilter: borrowerFilter,
-        overdueFilter: overdueFilter,
-        oldestIssueDateFilter: oldestIssueDateFilter,
-        newestIssueDateFilter: newestIssueDateFilter,
-        oldestReturnDateFilter: oldestReturnDateFilter,
-        newestReturnDateFilter: newestReturnDateFilter,
+        filters: IssuedCopyFilters(
+          bookFilter: bookFilter,
+          borrowerFilter: borrowerFilter,
+          overdueFilter: overdueFilter,
+          oldestIssueDateFilter: oldestIssueDateFilter,
+          newestIssueDateFilter: newestIssueDateFilter,
+          oldestReturnDateFilter: oldestReturnDateFilter,
+          newestReturnDateFilter: newestReturnDateFilter,
+        ),
       ),
     );
     // Keep provider alive to preserve the filtered list.

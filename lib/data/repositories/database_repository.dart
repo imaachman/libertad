@@ -8,12 +8,14 @@ import 'package:libertad/data/mock/mock_books.dart';
 import 'package:libertad/data/mock/mock_borrowers.dart';
 import 'package:libertad/data/models/author_sort.dart';
 import 'package:libertad/data/models/book_copy.dart';
+import 'package:libertad/data/models/book_filters.dart';
 import 'package:libertad/data/models/book_sort.dart';
 import 'package:libertad/data/models/borrower.dart';
+import 'package:libertad/data/models/borrower_filters.dart';
 import 'package:libertad/data/models/borrower_sort.dart';
-import 'package:libertad/data/models/genre.dart';
 import 'package:libertad/data/models/image_folder.dart';
 import 'package:libertad/data/models/issue_status.dart';
+import 'package:libertad/data/models/issued_copy_filters.dart';
 import 'package:libertad/data/models/issued_copy_sort.dart';
 import 'package:libertad/data/models/search_result.dart';
 import 'package:libertad/data/models/sort_order.dart';
@@ -28,20 +30,21 @@ class DatabaseRepository {
   /// Private constructor to create a singleton.
   DatabaseRepository._internal();
 
-  /// We use this instance to utilize database repository.
+  /// We use this instance to provide access to the database repository
+  /// across the app.
   static final DatabaseRepository instance = DatabaseRepository._internal();
 
   /// Isar instance used for database operations.
   late final Isar _isar;
 
   /// Initialize database.
-  /// This method needs to be called before we can interact with the database.
+  /// This method should be called before we can interact with the database.
   /// Typically called in the [main] method before running the app.
   Future<void> initialize() async {
     // Get application documents directory.
     final Directory applicationDocumentsDirectory =
         await getApplicationDocumentsDirectory();
-    // Create sub-directory to be used for app's database and file storage.
+    // Create sub-directory to use as app's database and file storage.
     final Directory appDirectory =
         await Directory('${applicationDocumentsDirectory.path}/Libertad')
             .create();
@@ -51,6 +54,8 @@ class DatabaseRepository {
       directory: appDirectory.path,
     );
   }
+
+  // BEGIN: WATCHERS
 
   /// A stream of books data. Allows us to watch for changes in the books
   /// collection and update UI.
@@ -91,174 +96,30 @@ class DatabaseRepository {
   Stream<void> borrowerStream(Id id) =>
       _isar.borrowers.watchObject(id, fireImmediately: true);
 
-  /// Clear entire database. (for development purposes only)
-  Future<void> clearDatabase() async {
-    await _isar.writeTxn(() async {
-      await _isar.clear();
-    });
-  }
+  // END: WATCHERS
 
-  /// Reset database to its original state with mock data. (for development
-  /// purposes only)
-  Future<void> resetDatabase() async {
-    await _isar.writeTxn(() async {
-      // Clear database.
-      await _isar.clear();
-      // Delete all the images stored in the app's image directories.
-      await FilesRepository.instance.deleteImageFolder(ImageFolder.bookCovers);
-      await FilesRepository.instance
-          .deleteImageFolder(ImageFolder.authorProfilePictures);
-      await FilesRepository.instance
-          .deleteImageFolder(ImageFolder.borrowerProfilePictures);
-      // Populate books and authors data.
-      for (int index = 0; index < mockBooks.length; index++) {
-        // Need to create a new copy of the [Book] and [Author] object every
-        // time because otherwise we'll reassigning already initialized links
-        // to different objects. And it is illegal to move a link to another
-        // object.
-        final Book book = mockBooks[index].copyWith();
-        final Author author = mockAuthors[index].copyWith();
-        book.author.value = author;
-
-        // Create random number of [BookCopy] objects up to 15.
-        // Each copy will have a link to the book.
-        final List<BookCopy> copies =
-            _generateCopies(book, Random().nextInt(15) + 1);
-        // Add the copies to the database.
-        await _isar.bookCopys.putAll(copies);
-        // Link the copies set to the book.
-        book.totalCopies.addAll(copies);
-
-        // Update creation and updation time right before adding the book and
-        // author to the database.
-        book
-          ..createdAt = DateTime.now()
-          ..updatedAt = DateTime.now();
-        author
-          ..createdAt = DateTime.now()
-          ..updatedAt = DateTime.now();
-
-        // Add the book and author to the database.
-        await _isar.books.put(book);
-        await _isar.authors.put(author);
-
-        // Save the book, book copies, and author links.
-        // Always the last step, required to update the links in the database.
-        await book.author.save();
-        await book.totalCopies.save();
-        await author.books.save();
-      }
-      // Populate borrowers data.
-      for (int index = 0; index < mockBorrowers.length; index++) {
-        final Borrower borrower = mockBorrowers[index].copyWith();
-        // Update creation and updation time right before adding the borrowers
-        // to the database.
-        borrower
-          ..createdAt = DateTime.now()
-          ..updatedAt = DateTime.now();
-        // Add the borrower to the database.
-        await _isar.borrowers.put(borrower);
-      }
-    });
-  }
+  // BEGIN: DATA FETCHERS
 
   /// Returns all the books from the collection, sorted by [sortBy],
   /// arranged according to [sortOrder], and filtered by combining the various
-  /// filter parameters.
+  /// [filters].
   Future<List<Book>> getBooks({
     BookSort? sortBy,
     SortOrder sortOrder = SortOrder.ascending,
-    Genre? genreFilter,
-    Author? authorFilter,
-    DateTime? oldestReleaseDateFilter,
-    DateTime? newestReleaseDateFilter,
-    IssueStatus? issueStatusFilter,
-    int? minCopiesFilter,
-    int? maxCopiesFilter,
+    BookFilters filters = const BookFilters(),
   }) async {
-    // Apply the relevant filters using the [optional] query method.
-    final QueryBuilder<Book, Book, QAfterFilterCondition> queryBuilder = _isar
-        .books
-        .filter()
-        .optional(
-            genreFilter != null, (book) => book.genreEqualTo(genreFilter!))
-        .optional(
-            authorFilter != null,
-            (book) =>
-                book.author((author) => author.idEqualTo(authorFilter!.id)))
-        .optional(oldestReleaseDateFilter != null,
-            (book) => book.releaseDateGreaterThan(oldestReleaseDateFilter!))
-        .optional(newestReleaseDateFilter != null,
-            (book) => book.releaseDateLessThan(newestReleaseDateFilter!))
-        .optional(issueStatusFilter != null, (book) {
-          if (issueStatusFilter!.isAvailable) {
-            return book.totalCopies(
-                (copy) => copy.statusEqualTo(IssueStatus.available));
-          } else {
-            return book.not().totalCopies(
-                (copy) => copy.statusEqualTo(IssueStatus.available));
-          }
-        })
-        .optional(minCopiesFilter != null,
-            (book) => book.totalCopiesLengthGreaterThan(minCopiesFilter!))
-        .optional(maxCopiesFilter != null,
-            (book) => book.totalCopiesLengthLessThan(maxCopiesFilter!));
-
-    switch (sortBy) {
-      // Sort the books by title.
-      case BookSort.title:
-        if (sortOrder == SortOrder.ascending) {
-          return queryBuilder.sortByTitle().findAll();
-        } else {
-          return queryBuilder.sortByTitleDesc().findAll();
-        }
-      // Sort the books by release date.
-      case BookSort.releaseDate:
-        if (sortOrder == SortOrder.ascending) {
-          return queryBuilder.sortByReleaseDate().findAll();
-        } else {
-          return queryBuilder.sortByReleaseDateDesc().findAll();
-        }
-      // Sort the books by number of total copies.
-      case BookSort.totalCopies:
-        final List<Book> books = await queryBuilder.findAll();
-        books.sort((a, b) {
-          if (sortOrder == SortOrder.ascending) {
-            return a.totalCopies.length.compareTo(b.totalCopies.length);
-          } else {
-            return b.totalCopies.length.compareTo(a.totalCopies.length);
-          }
-        });
-        return books;
-      // Sort the books by number of issued copies.
-      case BookSort.issuedCopies:
-        final List<Book> books = await queryBuilder.findAll();
-        books.sort((a, b) {
-          if (sortOrder == SortOrder.ascending) {
-            return a.issuedCopies.length.compareTo(b.issuedCopies.length);
-          } else {
-            return b.issuedCopies.length.compareTo(a.issuedCopies.length);
-          }
-        });
-        return books;
-      // Sort the books by title.
-      case BookSort.dateAdded:
-        if (sortOrder == SortOrder.ascending) {
-          return queryBuilder.sortByCreatedAt().findAll();
-        } else {
-          return queryBuilder.sortByCreatedAtDesc().findAll();
-        }
-      // Sort the books by title.
-      case BookSort.dateModified:
-        if (sortOrder == SortOrder.ascending) {
-          return queryBuilder.sortByUpdatedAt().findAll();
-        } else {
-          return queryBuilder.sortByUpdatedAtDesc().findAll();
-        }
-      // Return unsorted books.
-      default:
-        return queryBuilder.findAll();
-    }
+    // Sort the books by index if [sortBy] parameter is indexible.
+    final QueryBuilder<Book, Book, QAfterWhere>? indexSortedBooks =
+        getIndexSortedBooks(sortBy, sortOrder);
+    // Filter the books by applying all the filter parameters defined in
+    // [filters].
+    final QueryBuilder<Book, Book, QAfterFilterCondition> filteredBooks =
+        getFilteredBooks(indexSortedBooks: indexSortedBooks, filters: filters);
+    // Sort the books with Isar's sorting methods if [sortBy] parameter is
+    // non-indexible.
+    final List<Book> books =
+        await getSortedBooks(filteredBooks, sortBy, sortOrder);
+    return books;
   }
 
   /// Returns all the authors from the collection, sorted by [sortBy] and
@@ -267,25 +128,31 @@ class DatabaseRepository {
     AuthorSort? sortBy,
     SortOrder sortOrder = SortOrder.ascending,
   }) async {
+    // Retrieve all authors from the collection and sort by either index or via
+    // Isar's sorting methods depending on whether the parameter is indexible or
+    // not.
     switch (sortBy) {
+      // Sort by author's name. (using database methods)
       case AuthorSort.name:
         if (sortOrder == SortOrder.ascending) {
           return _isar.authors.where().sortByName().findAll();
         } else {
           return _isar.authors.where().sortByNameDesc().findAll();
         }
+      // Sort by author's creation date. (using `where` clause)
       case AuthorSort.dateAdded:
-        if (sortOrder == SortOrder.ascending) {
-          return await _isar.authors.where().sortByCreatedAt().findAll();
-        } else {
-          return await _isar.authors.where().sortByCreatedAtDesc().findAll();
-        }
+        return _isar.authors
+            .where(
+                sort: sortOrder == SortOrder.ascending ? Sort.asc : Sort.desc)
+            .anyCreatedAt()
+            .findAll();
+      // Sort by author's updation date. (using `where` clause)
       case AuthorSort.dateModified:
-        if (sortOrder == SortOrder.ascending) {
-          return await _isar.authors.where().sortByUpdatedAt().findAll();
-        } else {
-          return await _isar.authors.where().sortByUpdatedAtDesc().findAll();
-        }
+        return _isar.authors
+            .where(
+                sort: sortOrder == SortOrder.ascending ? Sort.asc : Sort.desc)
+            .anyUpdatedAt()
+            .findAll();
       default:
         return _isar.authors.where().findAll();
     }
@@ -297,60 +164,19 @@ class DatabaseRepository {
   Future<List<BookCopy>> getIssuedCopies({
     IssuedCopySort? sortBy,
     SortOrder sortOrder = SortOrder.ascending,
-    Book? bookFilter,
-    Borrower? borrowerFilter,
-    bool? overdueFilter,
-    DateTime? oldestIssueDateFilter,
-    DateTime? newestIssueDateFilter,
-    DateTime? oldestReturnDateFilter,
-    DateTime? newestReturnDateFilter,
+    IssuedCopyFilters filters = const IssuedCopyFilters(),
   }) async {
-    // Apply the relevant filters using the [optional] query method.
-    final QueryBuilder<BookCopy, BookCopy, QAfterFilterCondition> queryBuilder =
-        _isar.bookCopys
-            .filter()
-            .statusEqualTo(IssueStatus.issued)
-            .optional(bookFilter != null,
-                (copy) => copy.book((book) => book.idEqualTo(bookFilter!.id)))
-            .optional(borrowerFilter != null, (copy) {
-              return copy.currentBorrower((borrower) {
-                return borrower.idEqualTo(borrowerFilter!.id);
-              });
-            })
-            .optional(overdueFilter != null, (copy) {
-              if (overdueFilter!) {
-                return copy.returnDateLessThan(DateTime.now());
-              } else {
-                return copy.returnDateGreaterThan(DateTime.now());
-              }
-            })
-            .optional(oldestIssueDateFilter != null,
-                (book) => book.issueDateGreaterThan(oldestIssueDateFilter!))
-            .optional(newestIssueDateFilter != null,
-                (book) => book.issueDateLessThan(newestIssueDateFilter!))
-            .optional(oldestReturnDateFilter != null,
-                (book) => book.returnDateGreaterThan(oldestReturnDateFilter!))
-            .optional(newestReturnDateFilter != null,
-                (book) => book.returnDateLessThan(newestReturnDateFilter!));
-
-    switch (sortBy) {
-      case IssuedCopySort.issueDate:
-        if (sortOrder == SortOrder.ascending) {
-          return queryBuilder.sortByIssueDate().findAll();
-        } else {
-          return queryBuilder.sortByIssueDateDesc().findAll();
-        }
-
-      case IssuedCopySort.returnDate:
-        if (sortOrder == SortOrder.ascending) {
-          return queryBuilder.sortByReturnDate().findAll();
-        } else {
-          return queryBuilder.sortByReturnDateDesc().findAll();
-        }
-
-      default:
-        return queryBuilder.findAll();
-    }
+    // Sort the issued copies by index.
+    final QueryBuilder<BookCopy, BookCopy, QAfterWhere>?
+        indexSortedIssuedCopies = getIndexSortedIssuedCopies(sortBy, sortOrder);
+    // Filter the issued copies by applying all the filter parameters defined in
+    // [filters].
+    final QueryBuilder<BookCopy, BookCopy, QAfterFilterCondition>
+        filteredIssuedCopies = getFilteredIssuedCopies(
+      indexSortedIssuedCopies: indexSortedIssuedCopies,
+      filters: filters,
+    );
+    return filteredIssuedCopies.findAll();
   }
 
   /// Returns all the borrowers from the collection, sorted by [sortBy],
@@ -359,61 +185,26 @@ class DatabaseRepository {
   Future<List<Borrower>> getBorrowers({
     BorrowerSort? sortBy,
     SortOrder sortOrder = SortOrder.ascending,
-    bool? activeFilter,
-    bool? defaulterFilter,
-    DateTime? oldestMembershipStartDateFilter,
-    DateTime? newestMembershipStartDateFilter,
+    BorrowerFilters filters = const BorrowerFilters(),
   }) async {
-    // Apply the relevant filters using the [optional] query method.
-    final QueryBuilder<Borrower, Borrower, QAfterFilterCondition> queryBuilder =
-        _isar.borrowers.filter().optional(activeFilter != null, (borrower) {
-      if (activeFilter!) {
-        return borrower.membershipEndDateGreaterThan(DateTime.now());
-      } else {
-        return borrower.membershipEndDateLessThan(DateTime.now());
-      }
-    }).optional(defaulterFilter != null, (borrower) {
-      if (defaulterFilter!) {
-        return borrower.isDefaulterEqualTo(true);
-      } else {
-        return borrower.isDefaulterEqualTo(false);
-      }
-    }).optional(oldestMembershipStartDateFilter != null, (book) {
-      return book
-          .membershipStartDateGreaterThan(oldestMembershipStartDateFilter!);
-    }).optional(newestMembershipStartDateFilter != null, (book) {
-      return book.membershipStartDateLessThan(newestMembershipStartDateFilter!);
-    });
-
-    switch (sortBy) {
-      case BorrowerSort.name:
-        if (sortOrder == SortOrder.ascending) {
-          return await queryBuilder.sortByName().findAll();
-        } else {
-          return await queryBuilder.sortByNameDesc().findAll();
-        }
-      case BorrowerSort.membershipStartDate:
-        if (sortOrder == SortOrder.ascending) {
-          return await queryBuilder.sortByMembershipStartDate().findAll();
-        } else {
-          return await queryBuilder.sortByMembershipStartDateDesc().findAll();
-        }
-      case BorrowerSort.dateAdded:
-        if (sortOrder == SortOrder.ascending) {
-          return await queryBuilder.sortByCreatedAt().findAll();
-        } else {
-          return await queryBuilder.sortByCreatedAtDesc().findAll();
-        }
-      case BorrowerSort.dateModified:
-        if (sortOrder == SortOrder.ascending) {
-          return await queryBuilder.sortByUpdatedAt().findAll();
-        } else {
-          return await queryBuilder.sortByUpdatedAtDesc().findAll();
-        }
-      default:
-        return queryBuilder.findAll();
-    }
+    // Sort the borrowers by index if [sortBy] parameter is indexible.
+    final QueryBuilder<Borrower, Borrower, QAfterWhere>? indexSortedBorrowers =
+        getIndexSortedBorrowers(sortBy, sortOrder);
+    // Filter the borrowers by applying all the filter parameters defined in
+    // [filters].
+    final QueryBuilder<Borrower, Borrower, QAfterFilterCondition>
+        filteredBorrowers = getFilteredBorrowers(
+            indexSortedBorrowers: indexSortedBorrowers, filters: filters);
+    // Sort the borrowers with Isar's sorting methods if [sortBy] parameter is
+    // non-indexible.
+    final List<Borrower> borrowers =
+        await getSortedBorrowers(filteredBorrowers, sortBy, sortOrder);
+    return borrowers;
   }
+
+  // END: DATA FETCHERS
+
+  // BEGIN: CREATION
 
   /// Adds a new book to the collection.
   ///
@@ -421,13 +212,9 @@ class DatabaseRepository {
   /// we need to create them before adding them to the [Book] object.
   ///
   /// If the author is not present in the database, it will be added.
-  /// And [totalCopies] number of [BookCopy] objects will be created, added to
+  /// And [totalCopies] number of [BookCopy] objects will be created, linked to
   /// the [Book] object, and saved to the database.
-  Future<void> addBook(
-    Book book,
-    Author author,
-    int totalCopies,
-  ) async {
+  Future<void> addBook(Book book, Author author, int totalCopies) async {
     await _isar.writeTxn(() async {
       // Check if the author is already present in the database.
       final Author? existingAuthor =
@@ -469,6 +256,23 @@ class DatabaseRepository {
     });
   }
 
+  /// Adds a new borrower to the collection.
+  Future<void> addBorrower(Borrower borrower) async {
+    await _isar.writeTxn(() async {
+      // Update creation and updation time right before adding the borrower to
+      // the database.
+      borrower
+        ..createdAt = DateTime.now()
+        ..updatedAt = DateTime.now();
+      // Add the borrower to the database.
+      await _isar.borrowers.put(borrower);
+    });
+  }
+
+  // END: CREATION
+
+  // BEGIN: UPDATION
+
   /// Updates an existing book in the collection.
   ///
   /// In case the author is changed:
@@ -478,8 +282,8 @@ class DatabaseRepository {
   /// In case the total copies are changed:
   /// 1. If the new total copies are more than the old total copies, create the
   ///   new copies and add them to the database.
-  /// 2. If the new total copies are less than the old total copies, delete the
-  ///   all the copies and replace them with the new copies. We don't want to
+  /// 2. If the new total copies are less than the old total copies, delete all
+  ///   the copies and replace them with the new copies. We don't want to
   ///   update the existing copies because they might have been borrowed.
   Future<void> updateBook(
       Book book, Author newAuthor, int newTotalCopies) async {
@@ -487,7 +291,7 @@ class DatabaseRepository {
     final Author oldAuthor = book.author.value!;
     // If author updated.
     final bool authorUpdated = oldAuthor != newAuthor;
-    // This is old author's only book in the library.
+    // If this is old author's only book in the library.
     final bool oldAuthorsOnlyBook = oldAuthor.books.length == 1;
 
     // If number of total copies has been changed.
@@ -557,6 +361,32 @@ class DatabaseRepository {
     });
   }
 
+  /// Updates an existing author in the collection.
+  Future<void> updateAuthor(Author author) async {
+    await _isar.writeTxn(() async {
+      // Update author update time right before it's inserted in the database.
+      author.updatedAt = DateTime.now();
+      _isar.authors.put(author);
+    });
+  }
+
+  /// Updates an existing borrower in the collection.
+  Future<void> updateBorrower(Borrower borrower) async {
+    await _isar.writeTxn(() async {
+      // Update borrower update time right before it's inserted in the database.
+      borrower.updatedAt = DateTime.now();
+      // Update the borrower in the database.
+      await _isar.borrowers.put(borrower);
+    });
+  }
+
+  // END: UPDATION
+
+  // BEGIN: DELETION
+
+  /// Deletes the book from the collection.
+  /// All of book's copies are un-issued and deleted.
+  /// If this is author's only book, the author is deleted as well.
   Future<bool> deleteBook(Book book) async {
     // Get book's author.
     final Author author = book.author.value!;
@@ -583,14 +413,6 @@ class DatabaseRepository {
     });
   }
 
-  Future<void> updateAuthor(Author author) async {
-    await _isar.writeTxn(() async {
-      // Update author update time right before it's inserted in the database.
-      author.updatedAt = DateTime.now();
-      _isar.authors.put(author);
-    });
-  }
-
   /// Deletes the author and their books (along with all the copies of book).
   Future<bool> deleteAuthor(Author author) async {
     return await _isar.writeTxn<bool>(() async {
@@ -612,37 +434,8 @@ class DatabaseRepository {
     });
   }
 
-  Future<List<Author>> searchAuthors(String name) async {
-    return _isar.authors
-        .filter()
-        .nameContains(name, caseSensitive: false)
-        .findAll();
-  }
-
-  /// Adds a new borrower to the collection.
-  Future<void> addBorrower(Borrower borrower) async {
-    await _isar.writeTxn(() async {
-      // Update creation and updation time right before adding the borrower to
-      // the database.
-      borrower
-        ..createdAt = DateTime.now()
-        ..updatedAt = DateTime.now();
-      // Add the borrower to the database.
-      await _isar.borrowers.put(borrower);
-    });
-  }
-
-  /// Updates an existing borrower in the collection.
-  Future<void> updateBorrower(Borrower borrower) async {
-    await _isar.writeTxn(() async {
-      // Update borrower update time right before it's inserted in the database.
-      borrower.updatedAt = DateTime.now();
-      // Update the borrower in the database.
-      await _isar.borrowers.put(borrower);
-    });
-  }
-
-  /// Deletes the borrower.
+  /// Deletes the borrower from the collection.
+  /// All the books issued by the borrower are made available.
   Future<bool> deleteBorrower(Borrower borrower) async {
     return await _isar.writeTxn<bool>(() async {
       // Change the issue status for all the books issued by the borrower.
@@ -658,11 +451,423 @@ class DatabaseRepository {
     });
   }
 
+  // END: DELETION
+
+  // BEGIN: LIBRARY TRANSACTIONS
+
+  /// Issues the copy to the borrower.
+  Future<void> issueCopy(BookCopy copy, Borrower borrower) async {
+    return _isar.writeTxn(() async {
+      // Link the borrower to the copy.
+      copy.currentBorrower.value = borrower;
+      // Update the copy in the database.
+      await _isar.bookCopys.put(copy);
+      // Save the link.
+      copy.currentBorrower.save();
+    });
+  }
+
+  /// Marks the issued copy as returned.
+  Future<void> returnCopy(BookCopy copy, Borrower borrower) async {
+    return _isar.writeTxn(() async {
+      // Return copy by resetting the borrower link.
+      copy.currentBorrower.reset();
+      // If returned copy was overdue, we update borrower with defaulter status
+      // and fine.
+      // [borrower] object already have them updated, we just need to
+      // update it in the database.
+      await _isar.borrowers.put(borrower);
+      // Add the borrower to the copy's previous borrowers set.
+      copy.previousBorrowers.add(borrower);
+      // Update the copy in the database.
+      await _isar.bookCopys.put(copy);
+      // Save current and previous borrowers links.
+      copy.currentBorrower.save();
+      copy.previousBorrowers.save();
+    });
+  }
+
+  /// Accept fine and mark the borrower as non-defaulter.
+  Future<void> acceptFine(Borrower borrower) async {
+    return _isar.writeTxn(() async {
+      // [borrower] object already has the updated defaulter status and fine set
+      // to 0. So we just need to update it in the database.
+      await _isar.borrowers.put(borrower);
+    });
+  }
+
+  // END: LIBRARY TRANSACTIONS
+
+  // BEGIN: INDEX SORTING
+
+  /// Indexible fields marked by [Index()] are pre-sorted in the index table.
+  /// So, we can retrieve the sorted books list using `where` clauses. No need
+  /// to manually sort with Isar's sorting methods.
+  QueryBuilder<Book, Book, QAfterWhere>? getIndexSortedBooks(
+      BookSort? sortBy, SortOrder sortOrder) {
+    // Sort books according to indexible [sortBy] parameter and order them by
+    // [sortOrder].
+    switch (sortBy) {
+      // Sort by book's release date.
+      case BookSort.releaseDate:
+        return _isar.books
+            .where(
+                sort: sortOrder == SortOrder.ascending ? Sort.asc : Sort.desc)
+            .anyReleaseDate();
+      // Sort by book's creation date.
+      case BookSort.dateAdded:
+        return _isar.books
+            .where(
+                sort: sortOrder == SortOrder.ascending ? Sort.asc : Sort.desc)
+            .anyCreatedAt();
+      // Sort by book's updation date.
+      case BookSort.dateModified:
+        return _isar.books
+            .where(
+                sort: sortOrder == SortOrder.ascending ? Sort.asc : Sort.desc)
+            .anyUpdatedAt();
+      // For rest of the parameters, do not sort. They will be manually sorted
+      // later in the query, after filtering the books.
+      case BookSort.title:
+      case BookSort.totalCopies:
+      case BookSort.issuedCopies:
+      default:
+        return null;
+    }
+  }
+
+  /// Indexible fields marked by [Index()] are pre-sorted in the index table.
+  /// So, we can retrieve the sorted issued copies list using `where` clauses.
+  /// No need to manually sort with Isar's sorting methods.
+  QueryBuilder<BookCopy, BookCopy, QAfterWhere>? getIndexSortedIssuedCopies(
+      IssuedCopySort? sortBy, SortOrder sortOrder) {
+    // Sort issued copies according to indexible [sortBy] parameter and order
+    // them by [sortOrder].
+    switch (sortBy) {
+      // Sort by copy's issue date.
+      case IssuedCopySort.issueDate:
+        return _isar.bookCopys
+            .where(
+                sort: sortOrder == SortOrder.ascending ? Sort.asc : Sort.desc)
+            .anyIssueDate();
+      // Sort by copy's return date.
+      case IssuedCopySort.returnDate:
+        return _isar.bookCopys
+            .where(
+                sort: sortOrder == SortOrder.ascending ? Sort.asc : Sort.desc)
+            .anyReturnDate();
+      default:
+        return null;
+    }
+  }
+
+  /// Indexible fields marked by [Index()] are pre-sorted in the index table.
+  /// So, we can retrieve the sorted borrowers list using `where` clauses.
+  /// No need to manually sort with Isar's sorting methods.
+  QueryBuilder<Borrower, Borrower, QAfterWhere>? getIndexSortedBorrowers(
+      BorrowerSort? sortBy, SortOrder sortOrder) {
+    // Sort borrowers according to indexible [sortBy] parameter and order them
+    // by [sortOrder].
+    switch (sortBy) {
+      // Sort by borrower's membership start date.
+      case BorrowerSort.membershipStartDate:
+        return _isar.borrowers
+            .where(
+                sort: sortOrder == SortOrder.ascending ? Sort.asc : Sort.desc)
+            .anyMembershipStartDate();
+      // Sort by borrower's creation date.
+      case BorrowerSort.dateAdded:
+        return _isar.borrowers
+            .where(
+                sort: sortOrder == SortOrder.ascending ? Sort.asc : Sort.desc)
+            .anyCreatedAt();
+      // Sort by borrower's updation date.
+      case BorrowerSort.dateModified:
+        return _isar.borrowers
+            .where(
+                sort: sortOrder == SortOrder.ascending ? Sort.asc : Sort.desc)
+            .anyUpdatedAt();
+      // Do not sort for [name] because it will manually be sorted later in the
+      // query, after filtering the borrowers.
+      case BorrowerSort.name:
+      default:
+        return null;
+    }
+  }
+
+  // END: INDEX SORTING
+
+  // BEGIN: MANUAL SORTING
+
+  /// Sorts the books manually using Isar's sorting methods. This is the last
+  /// step in the query after `where` clause sorting and filtering.
+  Future<List<Book>> getSortedBooks(
+    QueryBuilder<Book, Book, QAfterFilterCondition> filteredBooks,
+    BookSort? sortBy,
+    SortOrder sortOrder,
+  ) async {
+    // Sort books according to [sortBy] parameter and order them by [sortOrder]
+    // using Isar's sorting methods.
+    switch (sortBy) {
+      // Sort the books by title.
+      case BookSort.title:
+        if (sortOrder == SortOrder.ascending) {
+          return filteredBooks.sortByTitle().findAll();
+        } else {
+          return filteredBooks.sortByTitleDesc().findAll();
+        }
+      // Sort the books by number of total copies.
+      case BookSort.totalCopies:
+        final List<Book> books = await filteredBooks.findAll();
+        books.sort((a, b) {
+          if (sortOrder == SortOrder.ascending) {
+            return a.totalCopies.length.compareTo(b.totalCopies.length);
+          } else {
+            return b.totalCopies.length.compareTo(a.totalCopies.length);
+          }
+        });
+        return books;
+      // Sort the books by number of issued copies.
+      case BookSort.issuedCopies:
+        final List<Book> books = await filteredBooks.findAll();
+        books.sort((a, b) {
+          if (sortOrder == SortOrder.ascending) {
+            return a.issuedCopies.length.compareTo(b.issuedCopies.length);
+          } else {
+            return b.issuedCopies.length.compareTo(a.issuedCopies.length);
+          }
+        });
+        return books;
+      // No need to sort for release date, creation and updation date/time
+      // because the books are already sorted by index.
+      case BookSort.releaseDate:
+      case BookSort.dateAdded:
+      case BookSort.dateModified:
+      default:
+        return filteredBooks.findAll();
+    }
+  }
+
+  /// Sorts the borrowers manually using Isar's sorting methods. This is the last
+  /// step in the query after `where` clause sorting and filtering.
+  Future<List<Borrower>> getSortedBorrowers(
+    QueryBuilder<Borrower, Borrower, QAfterFilterCondition> filteredBorrowers,
+    BorrowerSort? sortBy,
+    SortOrder sortOrder,
+  ) async {
+    // Sort borrowers according to [sortBy] parameter and order them by
+    // [sortOrder] using Isar's sorting methods.
+    switch (sortBy) {
+      // Sort the borrowers by name.
+      case BorrowerSort.name:
+        if (sortOrder == SortOrder.ascending) {
+          return filteredBorrowers.sortByName().findAll();
+        } else {
+          return filteredBorrowers.sortByNameDesc().findAll();
+        }
+      // No need to sort for membership start date, creation and updation
+      // date/time because the borrowers are already sorted by index.
+      case BorrowerSort.membershipStartDate:
+      case BorrowerSort.dateAdded:
+      case BorrowerSort.dateModified:
+      default:
+        return filteredBorrowers.findAll();
+    }
+  }
+
+  // END: MANUAL SORTING
+
+  // BEGIN: FILTERS
+
+  /// Filters books by combining all the filters defined in [filters] parameter.
+  QueryBuilder<Book, Book, QAfterFilterCondition> getFilteredBooks({
+    required BookFilters filters,
+    QueryBuilder<Book, Book, QAfterWhere>? indexSortedBooks,
+  }) {
+    // Filter query is appended after sorting books by index. If books aren't
+    // being sorted by index, we build the filter query directly.
+    final QueryBuilder<Book, Book, QFilterCondition> queryBuilder;
+    if (indexSortedBooks == null) {
+      queryBuilder = _isar.books.filter();
+    } else {
+      queryBuilder = indexSortedBooks.filter();
+    }
+    // Apply the relevant filters conditionally using the [optional] query
+    // method.
+    return queryBuilder
+        // Filter by genre.
+        .optional(filters.genreFilter != null,
+            (book) => book.genreEqualTo(filters.genreFilter!))
+        // Filter by author.
+        .optional(
+            filters.authorFilter != null,
+            (book) => book
+                .author((author) => author.idEqualTo(filters.authorFilter!.id)))
+        // Filter by oldest release date.
+        .optional(
+            filters.oldestReleaseDateFilter != null,
+            (book) =>
+                book.releaseDateGreaterThan(filters.oldestReleaseDateFilter!))
+        // Filter by newest release date.
+        .optional(
+            filters.newestReleaseDateFilter != null,
+            (book) =>
+                book.releaseDateLessThan(filters.newestReleaseDateFilter!))
+        // Filter by availability.
+        .optional(filters.issueStatusFilter != null, (book) {
+          if (filters.issueStatusFilter!.isAvailable) {
+            // Show available books, i.e., books with at least one available
+            // copy.
+            return book.totalCopies(
+                (copy) => copy.statusEqualTo(IssueStatus.available));
+          } else {
+            // Show unavailable books, i.e., books with all copies issued.
+            return book.not().totalCopies(
+                (copy) => copy.statusEqualTo(IssueStatus.available));
+          }
+        })
+        // Filter by minimum number of total copies.
+        .optional(
+            filters.minCopiesFilter != null,
+            (book) =>
+                book.totalCopiesLengthGreaterThan(filters.minCopiesFilter!))
+        // Filter by maximum number of total copies.
+        .optional(filters.maxCopiesFilter != null,
+            (book) => book.totalCopiesLengthLessThan(filters.maxCopiesFilter!));
+  }
+
+  /// Filters issued copies by combining all the filters defined in [filters]
+  /// parameter.
+  QueryBuilder<BookCopy, BookCopy, QAfterFilterCondition>
+      getFilteredIssuedCopies({
+    required IssuedCopyFilters filters,
+    QueryBuilder<BookCopy, BookCopy, QAfterWhere>? indexSortedIssuedCopies,
+  }) {
+    // Filter query is appended after sorting issued copies by index. If the
+    // copies aren't being sorted by index, we build the filter query directly.
+    final QueryBuilder<BookCopy, BookCopy, QFilterCondition> queryBuilder;
+    if (indexSortedIssuedCopies == null) {
+      queryBuilder = _isar.bookCopys.filter();
+    } else {
+      queryBuilder = indexSortedIssuedCopies.filter();
+    }
+    // Apply the relevant filters conditionally using the [optional] query
+    // method.
+    return queryBuilder
+        // Apply issue status filter.
+        .statusEqualTo(IssueStatus.issued)
+        // Filter by book.
+        .optional(
+          filters.bookFilter != null,
+          (copy) => copy.book(
+            (book) => book.idEqualTo(filters.bookFilter!.id),
+          ),
+        )
+        // Filter by borrower.
+        .optional(filters.borrowerFilter != null, (copy) {
+          return copy.currentBorrower((borrower) {
+            return borrower.idEqualTo(filters.borrowerFilter!.id);
+          });
+        })
+        // Filter by whether the copy is overdue.
+        .optional(filters.overdueFilter != null, (copy) {
+          if (filters.overdueFilter!) {
+            return copy.returnDateLessThan(DateTime.now());
+          } else {
+            return copy.returnDateGreaterThan(DateTime.now());
+          }
+        })
+        // Filter by oldest issue date.
+        .optional(
+          filters.oldestIssueDateFilter != null,
+          (book) => book.issueDateGreaterThan(filters.oldestIssueDateFilter!),
+        )
+        // Filter by newest issue date.
+        .optional(
+          filters.newestIssueDateFilter != null,
+          (book) => book.issueDateLessThan(filters.newestIssueDateFilter!),
+        )
+        // Filter by oldest return date.
+        .optional(
+          filters.oldestReturnDateFilter != null,
+          (book) => book.returnDateGreaterThan(filters.oldestReturnDateFilter!),
+        )
+        // Filter by newest return date.
+        .optional(
+          filters.newestReturnDateFilter != null,
+          (book) => book.returnDateLessThan(filters.newestReturnDateFilter!),
+        );
+  }
+
+  /// Filters borrowers by combining all the filters defined in [filters]
+  /// parameter.
+  QueryBuilder<Borrower, Borrower, QAfterFilterCondition> getFilteredBorrowers({
+    required BorrowerFilters filters,
+    QueryBuilder<Borrower, Borrower, QAfterWhere>? indexSortedBorrowers,
+  }) {
+    // Filter query is appended after sorting borrowers by index. If borrowers
+    // aren't being sorted by index, we build the filter query directly.
+    final QueryBuilder<Borrower, Borrower, QFilterCondition> queryBuilder;
+    if (indexSortedBorrowers == null) {
+      queryBuilder = _isar.borrowers.filter();
+    } else {
+      queryBuilder = indexSortedBorrowers.filter();
+    }
+    // Apply the relevant filters conditionally using the [optional] query
+    // method.
+    return queryBuilder
+        // Filter by whether the borrower is an active member.
+        .optional(filters.activeFilter != null, (borrower) {
+      if (filters.activeFilter!) {
+        // Borrower is active if their membership end date is after today.
+        return borrower.membershipEndDateGreaterThan(DateTime.now());
+      } else {
+        // Borrower is inactive if their membership end date is before today.
+        return borrower.membershipEndDateLessThan(DateTime.now());
+      }
+    })
+        // Filter by whether the borrower is a defaulter.
+        .optional(filters.defaulterFilter != null, (borrower) {
+      if (filters.defaulterFilter!) {
+        return borrower.isDefaulterEqualTo(true);
+      } else {
+        return borrower.isDefaulterEqualTo(false);
+      }
+    })
+        // Filter by oldest membership start date.
+        .optional(filters.oldestMembershipStartDateFilter != null, (book) {
+      return book.membershipStartDateGreaterThan(
+          filters.oldestMembershipStartDateFilter!);
+    })
+        // Filter by newest membership start date.
+        .optional(filters.newestMembershipStartDateFilter != null, (book) {
+      return book.membershipStartDateLessThan(
+          filters.newestMembershipStartDateFilter!);
+    });
+  }
+
+  // END: FILTERS
+
+  // BEGIN: SEARCH
+
+  /// Searches through the authors in the collection by their name.
+  Future<List<Author>> searchAuthors(String name) async {
+    return _isar.authors
+        .filter()
+        .nameContains(name, caseSensitive: false)
+        .findAll();
+  }
+
+  /// Searches through the borrowers in the collection by their name.
+  /// An optional [active] parameter enables us to search through only active
+  /// borrowers.
   Future<List<Borrower>> searchBorrowers(String name,
       {bool active = false}) async {
+    // Filter by borrower's name.
     final QueryBuilder<Borrower, Borrower, QAfterFilterCondition> queryBuilder =
         _isar.borrowers.filter().nameContains(name, caseSensitive: false);
     if (active == true) {
+      // Filter active status by checking if membership end date is after today.
       return queryBuilder
           .membershipEndDateGreaterThan(DateTime.now())
           .findAll();
@@ -671,60 +876,30 @@ class DatabaseRepository {
     }
   }
 
-  Future<void> issueCopy(BookCopy copy, Borrower borrower) async {
-    return _isar.writeTxn(() async {
-      copy.currentBorrower.value = borrower;
-      await _isar.bookCopys.put(copy);
-      copy.currentBorrower.save();
-    });
-  }
-
-  Future<void> returnCopy(BookCopy copy, Borrower borrower) async {
-    return _isar.writeTxn(() async {
-      // Return copy by resetting the borrower link.
-      copy.currentBorrower.reset();
-      // If returned copy was overdue, we update borrower with defaulter status
-      // and fine.
-      await _isar.borrowers.put(borrower);
-      copy.previousBorrowers.add(borrower);
-      await _isar.bookCopys.put(copy);
-      copy.currentBorrower.save();
-      copy.previousBorrowers.save();
-    });
-  }
-
-  Future<void> acceptFine(Borrower borrower) async {
-    return _isar.writeTxn(() async {
-      await _isar.borrowers.put(borrower);
-    });
-  }
-
-  List<BookCopy> _generateCopies(Book book, int totalCopies) {
-    return List.generate(
-      totalCopies,
-      (index) => BookCopy()..book.value = book,
-    );
-  }
-
+  /// Searches through the database by filtering based on the provided [query].
   Future<SearchResult> searchDatabase(String query) async {
+    // Filter books by matching [query] with their title and author's name.
     final List<Book> books = await _isar.books
         .filter()
         .titleContains(query, caseSensitive: false)
         .or()
         .author((q) => q.nameContains(query, caseSensitive: false))
         .findAll();
+    // Filter authors by matching [query] with their name and books' title.
     final List<Author> authors = await _isar.authors
         .filter()
         .nameContains(query, caseSensitive: false)
         .or()
         .books((q) => q.titleContains(query, caseSensitive: false))
         .findAll();
+    // Filter issued copies by matching [query] with their book's title.
     final List<BookCopy> issuedCopies = await _isar.bookCopys
         .filter()
         .statusEqualTo(IssueStatus.issued)
         .and()
         .book((q) => q.titleContains(query, caseSensitive: false))
         .findAll();
+    // Filter borrowers by matching [query] with their name.
     final List<Borrower> borrowers = await _isar.borrowers
         .filter()
         .nameContains(query, caseSensitive: false)
@@ -737,4 +912,97 @@ class DatabaseRepository {
       borrowers: borrowers,
     );
   }
+
+  // END: SEARCH
+
+  // BEGIN: DEVELOPER OPTIONS
+
+  /// Clears entire database. (for development purposes only)
+  Future<void> clearDatabase() async {
+    await _isar.writeTxn(() async {
+      // Clear database.
+      await _isar.clear();
+    });
+  }
+
+  /// Resets database to its original state with mock data.
+  /// Random number of copies are generated for each [Book] object.
+  /// User images (book covers and profile pictures) are deleted as well.
+  /// (for development purposes only)
+  Future<void> resetDatabase() async {
+    await _isar.writeTxn(() async {
+      // Clear database.
+      await _isar.clear();
+      // Delete all the images stored in the app's image directories.
+      await FilesRepository.instance.deleteImageFolder(ImageFolder.bookCovers);
+      await FilesRepository.instance
+          .deleteImageFolder(ImageFolder.authorProfilePictures);
+      await FilesRepository.instance
+          .deleteImageFolder(ImageFolder.borrowerProfilePictures);
+      // Populate books and authors data.
+      for (int index = 0; index < mockBooks.length; index++) {
+        // Need to create a new copy of the [Book] and [Author] object every
+        // time because otherwise we'll be reassigning already initialized links
+        // to different objects. And it is illegal to move a link to another
+        // object.
+        final Book book = mockBooks[index].copyWith();
+        final Author author = mockAuthors[index].copyWith();
+        book.author.value = author;
+
+        // Create random number of [BookCopy] objects up to 15.
+        // Each copy will have a link to the book.
+        final List<BookCopy> copies =
+            _generateCopies(book, Random().nextInt(15) + 1);
+        // Add the copies to the database.
+        await _isar.bookCopys.putAll(copies);
+        // Link the copies set to the book.
+        book.totalCopies.addAll(copies);
+
+        // Update creation and updation time right before adding the book and
+        // author to the database.
+        book
+          ..createdAt = DateTime.now()
+          ..updatedAt = DateTime.now();
+        author
+          ..createdAt = DateTime.now()
+          ..updatedAt = DateTime.now();
+
+        // Add the book and author to the database.
+        await _isar.books.put(book);
+        await _isar.authors.put(author);
+
+        // Save the book, book copies, and author links.
+        // Always the last step, required to update the links in the database.
+        await book.author.save();
+        await book.totalCopies.save();
+        await author.books.save();
+      }
+      // Populate borrowers data.
+      for (int index = 0; index < mockBorrowers.length; index++) {
+        final Borrower borrower = mockBorrowers[index].copyWith();
+        // Update creation and updation time right before adding the borrowers
+        // to the database.
+        borrower
+          ..createdAt = DateTime.now()
+          ..updatedAt = DateTime.now();
+        // Add the borrower to the database.
+        await _isar.borrowers.put(borrower);
+      }
+    });
+  }
+
+  // END: DEVELOPER OPTIONS
+
+  // BEGIN: HELPER METHODS
+
+  /// Generates [totalCopies] number of [BookCopy] objects and links each of
+  /// them to the provided [book] object.
+  List<BookCopy> _generateCopies(Book book, int totalCopies) {
+    return List.generate(
+      totalCopies,
+      (index) => BookCopy()..book.value = book,
+    );
+  }
+
+  // END: HELPER METHODS
 }

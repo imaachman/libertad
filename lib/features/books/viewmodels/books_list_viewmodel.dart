@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:libertad/data/models/author.dart';
 import 'package:libertad/data/models/author_sort.dart';
 import 'package:libertad/data/models/book.dart';
+import 'package:libertad/data/models/book_filters.dart';
 import 'package:libertad/data/models/book_sort.dart';
 import 'package:libertad/data/models/genre.dart';
 import 'package:libertad/data/models/issue_status.dart';
@@ -39,13 +40,15 @@ class BooksListViewModel extends _$BooksListViewModel {
       books = await DatabaseRepository.instance.getBooks(
         sortBy: bookSort,
         sortOrder: selectedSortOrder,
-        genreFilter: genreFilter,
-        authorFilter: authorFilter,
-        oldestReleaseDateFilter: oldestReleaseDateFilter,
-        newestReleaseDateFilter: newestReleaseDateFilter,
-        issueStatusFilter: issueStatusFilter,
-        minCopiesFilter: minCopiesFilter,
-        maxCopiesFilter: maxCopiesFilter,
+        filters: BookFilters(
+          genreFilter: genreFilter,
+          authorFilter: authorFilter,
+          oldestReleaseDateFilter: oldestReleaseDateFilter,
+          newestReleaseDateFilter: newestReleaseDateFilter,
+          issueStatusFilter: issueStatusFilter,
+          minCopiesFilter: minCopiesFilter,
+          maxCopiesFilter: maxCopiesFilter,
+        ),
       );
       // Update state and notify listeners to rebuild the UI.
       state = AsyncData(books);
@@ -63,13 +66,15 @@ class BooksListViewModel extends _$BooksListViewModel {
       books = await DatabaseRepository.instance.getBooks(
         sortBy: bookSort,
         sortOrder: selectedSortOrder,
-        genreFilter: genreFilter,
-        authorFilter: authorFilter,
-        oldestReleaseDateFilter: oldestReleaseDateFilter,
-        newestReleaseDateFilter: newestReleaseDateFilter,
-        issueStatusFilter: issueStatusFilter,
-        minCopiesFilter: minCopiesFilter,
-        maxCopiesFilter: maxCopiesFilter,
+        filters: BookFilters(
+          genreFilter: genreFilter,
+          authorFilter: authorFilter,
+          oldestReleaseDateFilter: oldestReleaseDateFilter,
+          newestReleaseDateFilter: newestReleaseDateFilter,
+          issueStatusFilter: issueStatusFilter,
+          minCopiesFilter: minCopiesFilter,
+          maxCopiesFilter: maxCopiesFilter,
+        ),
       );
       // Update state and notify listeners to rebuild the UI.
       state = AsyncData(books);
@@ -104,13 +109,15 @@ class BooksListViewModel extends _$BooksListViewModel {
       await DatabaseRepository.instance.getBooks(
         sortBy: bookSort,
         sortOrder: selectedSortOrder,
-        genreFilter: genreFilter,
-        authorFilter: authorFilter,
-        oldestReleaseDateFilter: oldestReleaseDateFilter,
-        newestReleaseDateFilter: newestReleaseDateFilter,
-        issueStatusFilter: issueStatusFilter,
-        minCopiesFilter: minCopiesFilter,
-        maxCopiesFilter: maxCopiesFilter,
+        filters: BookFilters(
+          genreFilter: genreFilter,
+          authorFilter: authorFilter,
+          oldestReleaseDateFilter: oldestReleaseDateFilter,
+          newestReleaseDateFilter: newestReleaseDateFilter,
+          issueStatusFilter: issueStatusFilter,
+          minCopiesFilter: minCopiesFilter,
+          maxCopiesFilter: maxCopiesFilter,
+        ),
       ),
     );
     // Keep provider alive to preserve the order.
@@ -254,13 +261,15 @@ class BooksListViewModel extends _$BooksListViewModel {
       await DatabaseRepository.instance.getBooks(
         sortBy: bookSort,
         sortOrder: selectedSortOrder,
-        genreFilter: genreFilter,
-        authorFilter: authorFilter,
-        oldestReleaseDateFilter: oldestReleaseDateFilter,
-        newestReleaseDateFilter: newestReleaseDateFilter,
-        issueStatusFilter: issueStatusFilter,
-        minCopiesFilter: minCopiesFilter,
-        maxCopiesFilter: maxCopiesFilter,
+        filters: BookFilters(
+          genreFilter: genreFilter,
+          authorFilter: authorFilter,
+          oldestReleaseDateFilter: oldestReleaseDateFilter,
+          newestReleaseDateFilter: newestReleaseDateFilter,
+          issueStatusFilter: issueStatusFilter,
+          minCopiesFilter: minCopiesFilter,
+          maxCopiesFilter: maxCopiesFilter,
+        ),
       ),
     );
     // Keep provider alive to preserve the filtered list.

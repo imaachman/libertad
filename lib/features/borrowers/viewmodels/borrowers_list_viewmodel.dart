@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:libertad/data/models/borrower.dart';
+import 'package:libertad/data/models/borrower_filters.dart';
 import 'package:libertad/data/models/borrower_sort.dart';
 import 'package:libertad/data/models/sort_order.dart';
 import 'package:libertad/data/repositories/database_repository.dart';
@@ -29,10 +30,12 @@ class BorrowersListViewModel extends _$BorrowersListViewModel {
       borrowers = await DatabaseRepository.instance.getBorrowers(
         sortBy: borrowerSort,
         sortOrder: selectedSortOrder,
-        activeFilter: activeFilter,
-        defaulterFilter: defaulterFilter,
-        oldestMembershipStartDateFilter: oldestMembershipStartDateFilter,
-        newestMembershipStartDateFilter: newestMembershipStartDateFilter,
+        filters: BorrowerFilters(
+          activeFilter: activeFilter,
+          defaulterFilter: defaulterFilter,
+          oldestMembershipStartDateFilter: oldestMembershipStartDateFilter,
+          newestMembershipStartDateFilter: newestMembershipStartDateFilter,
+        ),
       );
       // Update state and notify listeners to rebuild the UI.
       state = AsyncData(borrowers);
@@ -56,10 +59,12 @@ class BorrowersListViewModel extends _$BorrowersListViewModel {
       await DatabaseRepository.instance.getBorrowers(
         sortBy: borrowerSort,
         sortOrder: selectedSortOrder,
-        activeFilter: activeFilter,
-        defaulterFilter: defaulterFilter,
-        oldestMembershipStartDateFilter: oldestMembershipStartDateFilter,
-        newestMembershipStartDateFilter: newestMembershipStartDateFilter,
+        filters: BorrowerFilters(
+          activeFilter: activeFilter,
+          defaulterFilter: defaulterFilter,
+          oldestMembershipStartDateFilter: oldestMembershipStartDateFilter,
+          newestMembershipStartDateFilter: newestMembershipStartDateFilter,
+        ),
       ),
     );
     // Keep provider alive to preserve the order.
@@ -138,10 +143,12 @@ class BorrowersListViewModel extends _$BorrowersListViewModel {
       await DatabaseRepository.instance.getBorrowers(
         sortBy: borrowerSort,
         sortOrder: selectedSortOrder,
-        activeFilter: activeFilter,
-        defaulterFilter: defaulterFilter,
-        oldestMembershipStartDateFilter: oldestMembershipStartDateFilter,
-        newestMembershipStartDateFilter: newestMembershipStartDateFilter,
+        filters: BorrowerFilters(
+          activeFilter: activeFilter,
+          defaulterFilter: defaulterFilter,
+          oldestMembershipStartDateFilter: oldestMembershipStartDateFilter,
+          newestMembershipStartDateFilter: newestMembershipStartDateFilter,
+        ),
       ),
     );
     // Keep provider alive to preserve the filtered list.
