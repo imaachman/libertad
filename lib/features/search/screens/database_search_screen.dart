@@ -7,6 +7,8 @@ import 'package:libertad/features/borrowers/screens/borrowers_screen/borrower_li
 import 'package:libertad/features/search/viewmodels/database_search_viewmodel.dart';
 import 'package:libertad/widgets/book_list_tile.dart';
 
+/// Page with searchable tab views displaying books, authors, issued
+/// books, and borrowers.
 class DatabaseSearchPage extends ConsumerStatefulWidget {
   final String query;
   final void Function(BuildContext context, dynamic result) close;
@@ -20,6 +22,7 @@ class DatabaseSearchPage extends ConsumerStatefulWidget {
 
 class _DatabaseSearchPageState extends ConsumerState<DatabaseSearchPage>
     with SingleTickerProviderStateMixin {
+  /// List of tabs with labels.
   final List<Tab> _tabs = const [
     Tab(text: 'Books'),
     Tab(text: 'Authors'),
@@ -27,6 +30,7 @@ class _DatabaseSearchPageState extends ConsumerState<DatabaseSearchPage>
     Tab(text: 'Borrowers'),
   ];
 
+  /// Controller to access current tab and control tab bar's behavior.
   late final TabController _tabController;
 
   @override
@@ -43,6 +47,7 @@ class _DatabaseSearchPageState extends ConsumerState<DatabaseSearchPage>
 
   @override
   Widget build(BuildContext context) {
+    // Retrieve filtered data and actively watch for changes.
     final AsyncValue<SearchResult> result =
         ref.watch(databaseSearchViewModelProvider(widget.query));
 

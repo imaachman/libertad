@@ -4,11 +4,14 @@ import 'package:libertad/data/models/issued_copy_sort.dart';
 import 'package:libertad/data/models/sort_order.dart';
 import 'package:libertad/features/book_copies/viewmodels/issued_copies_list_viewmodel.dart';
 
+/// Dialog that allows the user to select one of the sorting options for the
+/// issued copy, and select the sort order as well.
 class IssuedCopiesSortDialog extends ConsumerWidget {
   const IssuedCopiesSortDialog({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Watch for changes to update the UI with the latest data.
     ref.watch(issuedCopiesListViewModelProvider);
     final IssuedCopiesListViewModel model =
         ref.watch(issuedCopiesListViewModelProvider.notifier);

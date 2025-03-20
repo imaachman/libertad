@@ -12,16 +12,29 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'issued_copies_list_viewmodel.g.dart';
 
+/// Business logic layer of issued copies list page.
 @riverpod
 class IssuedCopiesListViewModel extends _$IssuedCopiesListViewModel {
+  /// Order in which the sorted list should be displayed.
   SortOrder selectedSortOrder = SortOrder.ascending;
+
+  /// Defines how the issued copies should be sorted.
   IssuedCopySort? issuedCopySort;
 
+  /// Filter the copies by book.
   Book? bookFilter;
+
+  /// Filter the copies by borrower.
   Borrower? borrowerFilter;
+
+  /// Filter the copies by overdue status.
   bool? overdueFilter;
+
+  /// Filter the copies by issue date range.
   DateTime? oldestIssueDateFilter;
   DateTime? newestIssueDateFilter;
+
+  /// Filter the copies by return date range.
   DateTime? oldestReturnDateFilter;
   DateTime? newestReturnDateFilter;
 
@@ -84,16 +97,16 @@ class IssuedCopiesListViewModel extends _$IssuedCopiesListViewModel {
     return issuedCopies;
   }
 
-  /// Select sort order -- ascending or descending.
+  /// Selects sort order -- ascending or descending.
   void selectSortOrder(SortOrder sortOrder) {
     selectedSortOrder = sortOrder;
     ref.notifyListeners();
   }
 
-  /// Sort the copies according to the selected [IssuedCopySort] type.
-  Future<void> sort(IssuedCopySort sortBy) async {
+  /// Sorts the copies according to the selected [IssuedCopySort] type.
+  Future<void> sort(IssuedCopySort value) async {
     // Update [issuedCopySort] to show the selected sort type in the UI.
-    issuedCopySort = sortBy;
+    issuedCopySort = value;
     // Retrieve the copies again in the selected sort type and update the state.
     state = AsyncData(
       await DatabaseRepository.instance.getIssuedCopies(
@@ -114,36 +127,43 @@ class IssuedCopiesListViewModel extends _$IssuedCopiesListViewModel {
     ref.keepAlive();
   }
 
+  /// Selects book filter.
   void selectBookFilter(Book book) {
     bookFilter = book;
     ref.notifyListeners();
   }
 
+  /// Clears book filter.
   void clearBookFilter() {
     bookFilter = null;
     ref.notifyListeners();
   }
 
+  /// Selects borrower filter.
   void selectBorrowerFilter(Borrower borrower) {
     borrowerFilter = borrower;
     ref.notifyListeners();
   }
 
+  /// Clears borrower filter.
   void clearBorrowerFilter() {
     borrowerFilter = null;
     ref.notifyListeners();
   }
 
+  /// Sets overdue filter.
   void setOverdueFilter(bool overdue) {
     overdueFilter = overdue;
     ref.notifyListeners();
   }
 
+  /// Clears overdue filter.
   void clearOverdueFilter() {
     overdueFilter = null;
     ref.notifyListeners();
   }
 
+  /// Selects oldest issue date filter.
   void selectOldestIssueDateFilter(BuildContext context) async {
     // Show date picker dialog.
     final DateTime? selectedDate = await showDatePicker(
@@ -160,6 +180,7 @@ class IssuedCopiesListViewModel extends _$IssuedCopiesListViewModel {
     }
   }
 
+  /// Selects newest issue date filter.
   void selectNewestIssueDateFilter(BuildContext context) async {
     // Show date picker dialog.
     final DateTime? selectedDate = await showDatePicker(
@@ -176,12 +197,14 @@ class IssuedCopiesListViewModel extends _$IssuedCopiesListViewModel {
     }
   }
 
+  /// Clears issue date filter.
   void clearIssueDateFilter() {
     oldestIssueDateFilter = null;
     newestIssueDateFilter = null;
     ref.notifyListeners();
   }
 
+  /// Selects oldest return date filter.
   void selectOldestReturnDateFilter(BuildContext context) async {
     // Show date picker dialog.
     final DateTime? selectedDate = await showDatePicker(
@@ -198,6 +221,7 @@ class IssuedCopiesListViewModel extends _$IssuedCopiesListViewModel {
     }
   }
 
+  /// Selects newest return date filter.
   void selectNewestReturnDateFilter(BuildContext context) async {
     // Show date picker dialog.
     final DateTime? selectedDate = await showDatePicker(
@@ -214,12 +238,14 @@ class IssuedCopiesListViewModel extends _$IssuedCopiesListViewModel {
     }
   }
 
+  /// Clears return date filter.
   void clearReturnDateFilter() {
     oldestReturnDateFilter = null;
     newestReturnDateFilter = null;
     ref.notifyListeners();
   }
 
+  /// Clears all filters.
   void clearAll() {
     bookFilter = null;
     borrowerFilter = null;
@@ -231,7 +257,7 @@ class IssuedCopiesListViewModel extends _$IssuedCopiesListViewModel {
     ref.notifyListeners();
   }
 
-  /// Filter the issued copies according to the selected filter values.
+  /// Filters the issued copies according to the selected filter values.
   Future<void> applyFilters(BuildContext context) async {
     state = AsyncData(
       await DatabaseRepository.instance.getIssuedCopies(
@@ -248,9 +274,11 @@ class IssuedCopiesListViewModel extends _$IssuedCopiesListViewModel {
         ),
       ),
     );
+
     // Keep provider alive to preserve the filtered list.
     ref.keepAlive();
 
+    // Navigate back.
     if (!context.mounted) return;
     Navigator.of(context).pop();
   }

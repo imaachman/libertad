@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:libertad/data/models/book.dart';
 import 'package:libertad/features/books/viewmodels/book_editor_viewmodel.dart';
 
+/// Number text field to enter the total copies for the book.
 class TotalCopiesField extends ConsumerWidget {
   final Book? book;
 

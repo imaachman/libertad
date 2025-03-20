@@ -8,8 +8,13 @@ import 'package:libertad/features/authors/viewmodels/author_editor_viewmodel.dar
 import 'bio_field.dart';
 import 'name_field.dart';
 
+/// Dialog that allows the user to add a new author or edit an existing one.
 class AuthorEditorDialog extends ConsumerStatefulWidget {
   final Author? author;
+
+  /// Optional query that comes from the authors search screen and is used to
+  /// fill in the name field initially.
+  /// Provides a slightly better UX when creating a new author.
   final String query;
 
   const AuthorEditorDialog({super.key, this.author, this.query = ''});
@@ -20,10 +25,12 @@ class AuthorEditorDialog extends ConsumerStatefulWidget {
 }
 
 class _AuthorEditorDialogState extends ConsumerState<AuthorEditorDialog> {
+  /// Global key used to validate form's input data.
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
+    // Watch for changes to update the UI with the latest data.
     ref.watch(authorEditorViewModelProvider(widget.author));
     final AuthorEditorViewModel model =
         ref.watch(authorEditorViewModelProvider(widget.author).notifier);
@@ -78,8 +85,9 @@ class _AuthorEditorDialogState extends ConsumerState<AuthorEditorDialog> {
                                   child: IconButton(
                                     onPressed: model.clearProfilePicture,
                                     icon: Icon(Icons.delete_outline, size: 20),
-                                    color:
-                                        Theme.of(context).colorScheme.onSecondary,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSecondary,
                                     style: ButtonStyle(
                                       backgroundColor: WidgetStatePropertyAll(
                                         Theme.of(context)
@@ -126,7 +134,9 @@ class _AuthorEditorDialogState extends ConsumerState<AuthorEditorDialog> {
                       ),
                       onPressed: () => model.updateAuthor(context, formKey),
                       child: Text(
-                        widget.author == null ? 'Create Author' : 'Update Author',
+                        widget.author == null
+                            ? 'Create Author'
+                            : 'Update Author',
                         style: Theme.of(context).textTheme.labelLarge?.copyWith(
                               color: Theme.of(context).colorScheme.onPrimary,
                             ),

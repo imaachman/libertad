@@ -10,16 +10,20 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'borrower_details_viewmodel.g.dart';
 
+/// Business logic layer for borrower details page.
 @riverpod
 class BorrowerDetailsViewModel extends _$BorrowerDetailsViewModel {
   @override
   Borrower build(Borrower borrower) {
+    // Listen for changes to this particular borrower object and update the
+    // state with the latest data.
     DatabaseRepository.instance
         .borrowerStream(borrower.id)
         .listen((_) => ref.notifyListeners());
     return borrower;
   }
 
+  /// Shows borrower deletion dialog.
   Future<void> showDeletionDialog(BuildContext context) async {
     await showAdaptiveDialog(
       context: context,
@@ -30,25 +34,30 @@ class BorrowerDetailsViewModel extends _$BorrowerDetailsViewModel {
     );
   }
 
+  /// Deletes the borrower from database and also its profile picture from the
+  /// app directory.
   Future<bool> deleteBorrower(BuildContext context) async {
+    // Delete the borrower from database.
     final bool borrowerDeleted =
         await DatabaseRepository.instance.deleteBorrower(borrower);
+    // If borrower wasn't succesfully deleted, return false.
     if (!borrowerDeleted) return false;
-
+    // If borrower had a profile picture.
     if (borrower.profilePicture.isNotEmpty) {
       // Delete profile picture file only if the borrower was deleted
       // succesfully.
       await FilesRepository.instance.deleteFile(borrower.profilePicture);
     }
-
+    // Navigate back to the home page.
     if (context.mounted) {
       Navigator.of(context)
           .popUntil((route) => route.settings.name == Routes.home);
     }
-
+    // Return deletion status.
     return borrowerDeleted;
   }
 
+  /// Shows borrower editor.
   Future<void> showBorrowerEditor(BuildContext context) async {
     await showModalBottomSheet(
       context: context,
@@ -58,12 +67,13 @@ class BorrowerDetailsViewModel extends _$BorrowerDetailsViewModel {
     );
   }
 
-  /// Shows dialog to pay the fine.
+  /// Shows dialog to accept the fine.
   Future<void> showFineDialog(BuildContext context, Borrower borrower) =>
       showDialog(
           context: context,
           builder: (context) => FineDialog(borrower: borrower));
 
+  /// Accepts fine and removes the borrower's defaulter status.
   Future<void> acceptFine(BuildContext context) async {
     // Update borrower's defaulter status and reset fine amount.
     borrower
@@ -73,6 +83,7 @@ class BorrowerDetailsViewModel extends _$BorrowerDetailsViewModel {
     // Update borrower's defaulter and fine status in the database.
     await DatabaseRepository.instance.acceptFine(borrower);
 
+    // Navigate back.
     if (!context.mounted) return;
     Navigator.of(context).pop();
   }

@@ -3,11 +3,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:libertad/features/books/viewmodels/books_list_viewmodel.dart';
 import 'package:libertad/widgets/filter_tile.dart';
 
+/// Allows selecting an author to filter the books by.
 class AuthorFilterTile extends ConsumerWidget {
   const AuthorFilterTile({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Watch for changes to update the UI with the latest data.
     ref.watch(booksListViewModelProvider);
     final BooksListViewModel model =
         ref.watch(booksListViewModelProvider.notifier);

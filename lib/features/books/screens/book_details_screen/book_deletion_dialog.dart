@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:libertad/data/models/book.dart';
 
+/// Dialog that allows the user to confirm author's deletion.
 class BookDeletionDialog extends StatelessWidget {
   final Book book;
   final VoidCallback onDelete;

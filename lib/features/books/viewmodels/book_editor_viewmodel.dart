@@ -12,6 +12,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'book_editor_viewmodel.g.dart';
 
+/// Business logic layer for book editor.
 @riverpod
 class BookEditorViewModel extends _$BookEditorViewModel {
   /// Title of the book.
@@ -47,6 +48,7 @@ class BookEditorViewModel extends _$BookEditorViewModel {
 
   @override
   Book? build({Book? book}) {
+    // If we are editing an existing book.
     if (book != null) {
       title = book.title;
       author = book.author.value;
@@ -115,6 +117,8 @@ class BookEditorViewModel extends _$BookEditorViewModel {
     Navigator.of(context).pop();
   }
 
+  /// Updates the provided [book] object with the form fields' values and
+  /// saves it to the database.
   Future<void> updateBook(
       BuildContext context, GlobalKey<FormState> formKey, Book book) async {
     // If any of the inputs are invalid, do not update the book in the database.

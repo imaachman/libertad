@@ -12,6 +12,7 @@ import 'editable_book_cover.dart';
 import 'summary_field.dart';
 import 'title_field.dart';
 
+/// Allows the user to add a new book or edit an existing one.
 class BookEditor extends StatelessWidget {
   final Book? book;
 

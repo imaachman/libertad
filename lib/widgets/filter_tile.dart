@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+/// Expansion tile that contains a filter field and a button to clear the
+/// filter.
 class FilterTile extends StatelessWidget {
   final String name;
   final Widget field;

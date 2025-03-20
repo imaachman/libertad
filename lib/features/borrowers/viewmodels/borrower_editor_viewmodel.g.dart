@@ -39,16 +39,24 @@ abstract class _$BorrowerEditorViewModel
   });
 }
 
-/// See also [BorrowerEditorViewModel].
+/// Business logic layer for borrower editor.
+///
+/// Copied from [BorrowerEditorViewModel].
 @ProviderFor(BorrowerEditorViewModel)
 const borrowerEditorViewModelProvider = BorrowerEditorViewModelFamily();
 
-/// See also [BorrowerEditorViewModel].
+/// Business logic layer for borrower editor.
+///
+/// Copied from [BorrowerEditorViewModel].
 class BorrowerEditorViewModelFamily extends Family<Borrower?> {
-  /// See also [BorrowerEditorViewModel].
+  /// Business logic layer for borrower editor.
+  ///
+  /// Copied from [BorrowerEditorViewModel].
   const BorrowerEditorViewModelFamily();
 
-  /// See also [BorrowerEditorViewModel].
+  /// Business logic layer for borrower editor.
+  ///
+  /// Copied from [BorrowerEditorViewModel].
   BorrowerEditorViewModelProvider call({
     Borrower? borrower,
   }) {
@@ -81,10 +89,14 @@ class BorrowerEditorViewModelFamily extends Family<Borrower?> {
   String? get name => r'borrowerEditorViewModelProvider';
 }
 
-/// See also [BorrowerEditorViewModel].
+/// Business logic layer for borrower editor.
+///
+/// Copied from [BorrowerEditorViewModel].
 class BorrowerEditorViewModelProvider extends AutoDisposeNotifierProviderImpl<
     BorrowerEditorViewModel, Borrower?> {
-  /// See also [BorrowerEditorViewModel].
+  /// Business logic layer for borrower editor.
+  ///
+  /// Copied from [BorrowerEditorViewModel].
   BorrowerEditorViewModelProvider({
     Borrower? borrower,
   }) : this._internal(

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:libertad/data/models/book.dart';
 import 'package:libertad/features/books/viewmodels/book_editor_viewmodel.dart';
 
+/// Button that adds a new book to the database, or updates an existing one.
 class BookAddUpdateButton extends ConsumerWidget {
   final GlobalKey<FormState> formKey;
   final Book? book;

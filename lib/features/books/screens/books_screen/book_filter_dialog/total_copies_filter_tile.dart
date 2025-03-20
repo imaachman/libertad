@@ -4,7 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:libertad/features/books/viewmodels/books_list_viewmodel.dart';
 import 'package:libertad/widgets/filter_tile.dart';
 
+/// Allows defining the total copies range to filter the books by.
 class TotalCopiesFilterTile extends ConsumerWidget {
+  /// Controllers for min and max total copies input fields.
   final TextEditingController minController;
   final TextEditingController maxController;
 

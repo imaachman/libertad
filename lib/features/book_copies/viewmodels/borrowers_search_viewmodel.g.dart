@@ -39,17 +39,25 @@ abstract class _$BorrowersSearchViewModel
   );
 }
 
-/// See also [BorrowersSearchViewModel].
+/// Business logic layer for borrowers search page.
+///
+/// Copied from [BorrowersSearchViewModel].
 @ProviderFor(BorrowersSearchViewModel)
 const borrowersSearchViewModelProvider = BorrowersSearchViewModelFamily();
 
-/// See also [BorrowersSearchViewModel].
+/// Business logic layer for borrowers search page.
+///
+/// Copied from [BorrowersSearchViewModel].
 class BorrowersSearchViewModelFamily
     extends Family<AsyncValue<List<Borrower>>> {
-  /// See also [BorrowersSearchViewModel].
+  /// Business logic layer for borrowers search page.
+  ///
+  /// Copied from [BorrowersSearchViewModel].
   const BorrowersSearchViewModelFamily();
 
-  /// See also [BorrowersSearchViewModel].
+  /// Business logic layer for borrowers search page.
+  ///
+  /// Copied from [BorrowersSearchViewModel].
   BorrowersSearchViewModelProvider call(
     String query,
   ) {
@@ -82,11 +90,15 @@ class BorrowersSearchViewModelFamily
   String? get name => r'borrowersSearchViewModelProvider';
 }
 
-/// See also [BorrowersSearchViewModel].
+/// Business logic layer for borrowers search page.
+///
+/// Copied from [BorrowersSearchViewModel].
 class BorrowersSearchViewModelProvider
     extends AutoDisposeAsyncNotifierProviderImpl<BorrowersSearchViewModel,
         List<Borrower>> {
-  /// See also [BorrowersSearchViewModel].
+  /// Business logic layer for borrowers search page.
+  ///
+  /// Copied from [BorrowersSearchViewModel].
   BorrowersSearchViewModelProvider(
     String query,
   ) : this._internal(

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:libertad/data/models/borrower.dart';
 import 'package:libertad/features/borrowers/viewmodels/borrower_editor_viewmodel.dart';
 
+/// Button that adds a new borrower to the database, or updates an existing one.
 class BorrowerAddUpdateButton extends ConsumerWidget {
   final GlobalKey<FormState> formKey;
   final Borrower? borrower;

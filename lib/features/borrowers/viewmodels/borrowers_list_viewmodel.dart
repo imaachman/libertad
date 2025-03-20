@@ -8,13 +8,22 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'borrowers_list_viewmodel.g.dart';
 
+/// Business logic layer for borrowers list page.
 @riverpod
 class BorrowersListViewModel extends _$BorrowersListViewModel {
+  /// Order in which the sorted list should be displayed.
   SortOrder selectedSortOrder = SortOrder.ascending;
+
+  /// Defines how the borrowers should be sorted.
   BorrowerSort? borrowerSort;
 
+  /// Filter the borrowers by active status.
   bool? activeFilter;
+
+  /// Filter the borrowers by defaulter status.
   bool? defaulterFilter;
+
+  /// Filter the borrowers by membership start date range.
   DateTime? oldestMembershipStartDateFilter;
   DateTime? newestMembershipStartDateFilter;
 
@@ -43,16 +52,16 @@ class BorrowersListViewModel extends _$BorrowersListViewModel {
     return borrowers;
   }
 
-  /// Select sort order -- ascending or descending.
+  /// Selects sort order -- ascending or descending.
   void selectSortOrder(SortOrder sortOrder) {
     selectedSortOrder = sortOrder;
     ref.notifyListeners();
   }
 
-  /// Sort the books according to the selected [BorrowerSort] type.
-  Future<void> sort(BorrowerSort sortBy) async {
+  /// Sorts the books according to the selected [BorrowerSort] type.
+  Future<void> sort(BorrowerSort value) async {
     // Update [borrowerSort] to show the selected sort type in the UI.
-    borrowerSort = sortBy;
+    borrowerSort = value;
     // Retrieve the borrowers again in the selected sort type and update the
     // state.
     state = AsyncData(
@@ -71,26 +80,31 @@ class BorrowersListViewModel extends _$BorrowersListViewModel {
     ref.keepAlive();
   }
 
+  /// Sets active status filter.
   void setActiveFilter(bool active) {
     activeFilter = active;
     ref.notifyListeners();
   }
 
+  /// Clears active status filter.
   void clearActiveFilter() {
     activeFilter = null;
     ref.notifyListeners();
   }
 
+  /// Sets defaulter status filter.
   void setDefaulterFilter(bool defaulter) {
     defaulterFilter = defaulter;
     ref.notifyListeners();
   }
 
+  /// Clears defaulter status filter.
   void clearDefaulterFilter() {
     defaulterFilter = null;
     ref.notifyListeners();
   }
 
+  /// Selects oldest membership start date filter.
   void selectOldestMembershipStartDateFilter(BuildContext context) async {
     // Show date picker dialog.
     final DateTime? selectedDate = await showDatePicker(
@@ -107,6 +121,7 @@ class BorrowersListViewModel extends _$BorrowersListViewModel {
     }
   }
 
+  /// Selects newest membership start date filter.
   void selectNewestMembershipStartDateFilter(BuildContext context) async {
     // Show date picker dialog.
     final DateTime? selectedDate = await showDatePicker(
@@ -123,12 +138,14 @@ class BorrowersListViewModel extends _$BorrowersListViewModel {
     }
   }
 
+  /// Clears membership start date filter.
   void clearIssueDateFilter() {
     oldestMembershipStartDateFilter = null;
     newestMembershipStartDateFilter = null;
     ref.notifyListeners();
   }
 
+  /// Clears all filters.
   void clearAll() {
     activeFilter = null;
     defaulterFilter = null;
@@ -137,7 +154,7 @@ class BorrowersListViewModel extends _$BorrowersListViewModel {
     ref.notifyListeners();
   }
 
-  /// Filter the borrowers according to the selected filter values.
+  /// Filters the borrowers according to the selected filter values.
   Future<void> applyFilters(BuildContext context) async {
     state = AsyncData(
       await DatabaseRepository.instance.getBorrowers(
@@ -151,9 +168,11 @@ class BorrowersListViewModel extends _$BorrowersListViewModel {
         ),
       ),
     );
+
     // Keep provider alive to preserve the filtered list.
     ref.keepAlive();
 
+    // Navigate back.
     if (!context.mounted) return;
     Navigator.of(context).pop();
   }

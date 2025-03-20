@@ -4,6 +4,7 @@ import 'package:libertad/core/utils/extensions.dart';
 import 'package:libertad/data/models/book_copy.dart';
 import 'package:libertad/features/book_copies/viewmodels/copy_details_viewmodel.dart';
 
+/// Dialog that allows the user to mark the copy as returned.
 class ReturnDialog extends ConsumerWidget {
   final BookCopy copy;
 

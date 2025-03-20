@@ -11,6 +11,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'copy_details_viewmodel.g.dart';
 
+/// Business logic layer for copy details page.
 @riverpod
 class CopyDetailsViewModel extends _$CopyDetailsViewModel {
   /// Issue date of the copy.
@@ -35,11 +36,16 @@ class CopyDetailsViewModel extends _$CopyDetailsViewModel {
     borrower = copy.currentBorrower.value;
     if (returnDate != null) isReturnDateSelected = true;
     if (borrower != null) isBorrowerSelected = true;
+
+    // Listen for changes to linked borrower object and update the state with
+    // the latest data.
     if (borrower != null) {
       DatabaseRepository.instance
           .borrowerStream(borrower!.id)
           .listen((_) => ref.notifyListeners());
     }
+    // Listen for changes in book copies collection and update the state with
+    // the latest data.
     DatabaseRepository.instance.bookCopiesStream
         .listen((_) => ref.notifyListeners());
     return copy;
@@ -87,7 +93,7 @@ class CopyDetailsViewModel extends _$CopyDetailsViewModel {
       lastDate: issueDate!.add(Duration(days: 180)),
     );
 
-    // If a date is selected, update the issue date.
+    // If a date is selected, update the return date.
     if (selectedDate != null) {
       returnDate = selectedDate;
       // Mark return date as selected.
@@ -114,6 +120,7 @@ class CopyDetailsViewModel extends _$CopyDetailsViewModel {
     ref.notifyListeners();
   }
 
+  /// Issues the copy to [borrower].
   Future<void> issueBook(BuildContext context) async {
     // Check if the return date is selected.
     if (returnDate == null) {
@@ -129,7 +136,7 @@ class CopyDetailsViewModel extends _$CopyDetailsViewModel {
       ref.notifyListeners();
     }
 
-    // If any of the inputs are invalid, do not issue the book.
+    // If any of the inputs are invalid, do not issue the copy.
     if (!isReturnDateSelected || !isBorrowerSelected) return;
 
     // Issue the copy to the borrower.
@@ -142,10 +149,12 @@ class CopyDetailsViewModel extends _$CopyDetailsViewModel {
     // Update database with the issued copy.
     await DatabaseRepository.instance.issueCopy(copy, borrower!);
 
+    // Navigate back.
     if (!context.mounted) return;
     Navigator.of(context).pop();
   }
 
+  /// Marks the copy as returned, taking fine into account.
   Future<void> returnBook(BuildContext context) async {
     // If the book was returned after its return date, mark the borrower as
     // defaulter and add a fine of $2 for each day the book wasn't returned.
@@ -165,10 +174,12 @@ class CopyDetailsViewModel extends _$CopyDetailsViewModel {
     // Mark the copy as returned in the database.
     await DatabaseRepository.instance.returnCopy(copy, borrower!);
 
+    // Navigate back.
     if (!context.mounted) return;
     Navigator.of(context).pop();
   }
 
+  /// Saves edits to the issuance details.
   Future<void> saveEdits(BuildContext context) async {
     // Edit issuance details of the copy.
     copy
@@ -178,6 +189,7 @@ class CopyDetailsViewModel extends _$CopyDetailsViewModel {
     // Update database with the new details.
     await DatabaseRepository.instance.issueCopy(copy, borrower!);
 
+    // Navigate back.
     if (!context.mounted) return;
     Navigator.of(context).pop();
   }

@@ -6,6 +6,8 @@ import 'package:libertad/features/books/screens/books_screen/books_screen.dart';
 import 'package:libertad/features/borrowers/screens/borrowers_screen/borrowers_screen.dart';
 import 'package:libertad/features/home/viewmodels/home_viewmodel.dart';
 
+/// Home page of the app with tabs views displaying books, authors, issued
+/// books, and borrowers.
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
 
@@ -15,6 +17,7 @@ class HomePage extends ConsumerStatefulWidget {
 
 class _HomePageState extends ConsumerState<HomePage>
     with SingleTickerProviderStateMixin {
+  /// List of tabs with labels.
   final List<Tab> _tabs = const [
     Tab(text: 'Books'),
     Tab(text: 'Authors'),
@@ -22,6 +25,7 @@ class _HomePageState extends ConsumerState<HomePage>
     Tab(text: 'Borrowers'),
   ];
 
+  /// List of widgets to be displayed as tab views.
   final List<Widget> _tabViews = const [
     BooksPage(),
     AuthorsPage(),
@@ -29,6 +33,7 @@ class _HomePageState extends ConsumerState<HomePage>
     BorrowersPage(),
   ];
 
+  /// Controller to access current tab and control tab bar's behavior.
   late final TabController _tabController;
 
   @override
@@ -45,9 +50,13 @@ class _HomePageState extends ConsumerState<HomePage>
     super.dispose();
   }
 
+  /// Whether to enable filter button.
   bool _filterButtonEnabled = true;
+
+  /// Whether to show FAB button.
   bool _fabEnabled = true;
 
+  /// Enables/disables filter button and FAB based on the selected tab.
   void _tabListener() {
     final int index = _tabController.index;
     setState(() {

@@ -3,6 +3,8 @@ import 'package:libertad/data/models/author.dart';
 import 'package:libertad/navigation/routes.dart';
 import 'package:libertad/widgets/profile_picture.dart';
 
+/// List tile displaying brief info about the author, such as name and one of
+/// their book's title. Navigates to author's details page.
 class AuthorListTile extends StatelessWidget {
   final Author author;
   final int index;

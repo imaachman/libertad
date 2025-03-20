@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:libertad/data/models/book.dart';
 
+/// Widget that displays the cover image of the book. If the book does not have
+/// a cover image, it displays the book's title and author instead.
 class BookCover extends StatelessWidget {
   final Book book;
   final TextStyle? titleStyle;

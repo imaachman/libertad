@@ -6,6 +6,7 @@ import 'active_filter_tile.dart';
 import 'defaulter_filter_tile.dart';
 import 'membership_start_date_filter_tile.dart';
 
+/// Dialog that allows the user to apply filters to the borrowers list.
 class BorrowerFilterDialog extends ConsumerWidget {
   const BorrowerFilterDialog({super.key});
 

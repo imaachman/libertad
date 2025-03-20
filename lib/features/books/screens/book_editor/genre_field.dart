@@ -4,6 +4,7 @@ import 'package:libertad/data/models/book.dart';
 import 'package:libertad/data/models/genre.dart';
 import 'package:libertad/features/books/viewmodels/book_editor_viewmodel.dart';
 
+/// Allows selecting a genre for the book.
 class GenreField extends ConsumerWidget {
   final Book? book;
 

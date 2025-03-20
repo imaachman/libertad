@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:libertad/data/models/author.dart';
 import 'package:libertad/features/books/screens/book_editor/authors_search_screen.dart';
 
+/// Delegate that builds the search page for authors.
 class AuthorsSearchDelegate extends SearchDelegate<Author?> {
   AuthorsSearchDelegate() : super(searchFieldLabel: 'Search authors');
 

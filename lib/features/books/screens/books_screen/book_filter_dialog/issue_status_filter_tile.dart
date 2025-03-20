@@ -4,6 +4,7 @@ import 'package:libertad/data/models/issue_status.dart';
 import 'package:libertad/features/books/viewmodels/books_list_viewmodel.dart';
 import 'package:libertad/widgets/filter_tile.dart';
 
+/// Allows filtering the books by availability.
 class IssueStatusFilterTile extends ConsumerWidget {
   const IssueStatusFilterTile({super.key});
 

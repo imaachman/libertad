@@ -3,6 +3,8 @@ import 'package:libertad/core/utils/extensions.dart';
 import 'package:libertad/data/models/book_copy.dart';
 import 'package:libertad/navigation/routes.dart';
 
+/// List tile displaying brief info about the issued copy, such as its book,
+/// borrower, and return date. Navigates to copy details page.
 class IssuedCopyTile extends StatelessWidget {
   final BookCopy copy;
   final int index;

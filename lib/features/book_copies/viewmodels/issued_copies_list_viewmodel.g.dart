@@ -7,9 +7,11 @@ part of 'issued_copies_list_viewmodel.dart';
 // **************************************************************************
 
 String _$issuedCopiesListViewModelHash() =>
-    r'c7d8f846af06b8d20bde6ff73531dff307b72646';
+    r'ef0643553ac631baeed7a525e29ed17c91836e34';
 
-/// See also [IssuedCopiesListViewModel].
+/// Business logic layer of issued copies list page.
+///
+/// Copied from [IssuedCopiesListViewModel].
 @ProviderFor(IssuedCopiesListViewModel)
 final issuedCopiesListViewModelProvider = AutoDisposeAsyncNotifierProvider<
     IssuedCopiesListViewModel, List<BookCopy>>.internal(

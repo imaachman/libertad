@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:libertad/data/models/book.dart';
 import 'package:libertad/features/books/viewmodels/book_editor_viewmodel.dart';
 
+/// Extended text field to enter the book's summary.
 class SummaryField extends ConsumerWidget {
   final Book? book;
 

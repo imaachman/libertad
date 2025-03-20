@@ -7,7 +7,7 @@ part of 'copy_details_viewmodel.dart';
 // **************************************************************************
 
 String _$copyDetailsViewModelHash() =>
-    r'2dc5e9fecf4fd3f3b65b6feb3c90e354dca602db';
+    r'2cfd92e4450c0baa14606e61b0f9713e3b82a53e';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -39,16 +39,24 @@ abstract class _$CopyDetailsViewModel
   );
 }
 
-/// See also [CopyDetailsViewModel].
+/// Business logic layer for copy details page.
+///
+/// Copied from [CopyDetailsViewModel].
 @ProviderFor(CopyDetailsViewModel)
 const copyDetailsViewModelProvider = CopyDetailsViewModelFamily();
 
-/// See also [CopyDetailsViewModel].
+/// Business logic layer for copy details page.
+///
+/// Copied from [CopyDetailsViewModel].
 class CopyDetailsViewModelFamily extends Family<BookCopy> {
-  /// See also [CopyDetailsViewModel].
+  /// Business logic layer for copy details page.
+  ///
+  /// Copied from [CopyDetailsViewModel].
   const CopyDetailsViewModelFamily();
 
-  /// See also [CopyDetailsViewModel].
+  /// Business logic layer for copy details page.
+  ///
+  /// Copied from [CopyDetailsViewModel].
   CopyDetailsViewModelProvider call(
     BookCopy copy,
   ) {
@@ -81,10 +89,14 @@ class CopyDetailsViewModelFamily extends Family<BookCopy> {
   String? get name => r'copyDetailsViewModelProvider';
 }
 
-/// See also [CopyDetailsViewModel].
+/// Business logic layer for copy details page.
+///
+/// Copied from [CopyDetailsViewModel].
 class CopyDetailsViewModelProvider
     extends AutoDisposeNotifierProviderImpl<CopyDetailsViewModel, BookCopy> {
-  /// See also [CopyDetailsViewModel].
+  /// Business logic layer for copy details page.
+  ///
+  /// Copied from [CopyDetailsViewModel].
   CopyDetailsViewModelProvider(
     BookCopy copy,
   ) : this._internal(

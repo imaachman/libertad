@@ -39,16 +39,24 @@ abstract class _$BookEditorViewModel
   });
 }
 
-/// See also [BookEditorViewModel].
+/// Business logic layer for book editor.
+///
+/// Copied from [BookEditorViewModel].
 @ProviderFor(BookEditorViewModel)
 const bookEditorViewModelProvider = BookEditorViewModelFamily();
 
-/// See also [BookEditorViewModel].
+/// Business logic layer for book editor.
+///
+/// Copied from [BookEditorViewModel].
 class BookEditorViewModelFamily extends Family<Book?> {
-  /// See also [BookEditorViewModel].
+  /// Business logic layer for book editor.
+  ///
+  /// Copied from [BookEditorViewModel].
   const BookEditorViewModelFamily();
 
-  /// See also [BookEditorViewModel].
+  /// Business logic layer for book editor.
+  ///
+  /// Copied from [BookEditorViewModel].
   BookEditorViewModelProvider call({
     Book? book,
   }) {
@@ -81,10 +89,14 @@ class BookEditorViewModelFamily extends Family<Book?> {
   String? get name => r'bookEditorViewModelProvider';
 }
 
-/// See also [BookEditorViewModel].
+/// Business logic layer for book editor.
+///
+/// Copied from [BookEditorViewModel].
 class BookEditorViewModelProvider
     extends AutoDisposeNotifierProviderImpl<BookEditorViewModel, Book?> {
-  /// See also [BookEditorViewModel].
+  /// Business logic layer for book editor.
+  ///
+  /// Copied from [BookEditorViewModel].
   BookEditorViewModelProvider({
     Book? book,
   }) : this._internal(

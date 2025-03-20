@@ -39,16 +39,24 @@ abstract class _$DatabaseSearchViewModel
   );
 }
 
-/// See also [DatabaseSearchViewModel].
+/// Business logic layer for database search page.
+///
+/// Copied from [DatabaseSearchViewModel].
 @ProviderFor(DatabaseSearchViewModel)
 const databaseSearchViewModelProvider = DatabaseSearchViewModelFamily();
 
-/// See also [DatabaseSearchViewModel].
+/// Business logic layer for database search page.
+///
+/// Copied from [DatabaseSearchViewModel].
 class DatabaseSearchViewModelFamily extends Family<AsyncValue<SearchResult>> {
-  /// See also [DatabaseSearchViewModel].
+  /// Business logic layer for database search page.
+  ///
+  /// Copied from [DatabaseSearchViewModel].
   const DatabaseSearchViewModelFamily();
 
-  /// See also [DatabaseSearchViewModel].
+  /// Business logic layer for database search page.
+  ///
+  /// Copied from [DatabaseSearchViewModel].
   DatabaseSearchViewModelProvider call(
     String query,
   ) {
@@ -81,11 +89,15 @@ class DatabaseSearchViewModelFamily extends Family<AsyncValue<SearchResult>> {
   String? get name => r'databaseSearchViewModelProvider';
 }
 
-/// See also [DatabaseSearchViewModel].
+/// Business logic layer for database search page.
+///
+/// Copied from [DatabaseSearchViewModel].
 class DatabaseSearchViewModelProvider
     extends AutoDisposeAsyncNotifierProviderImpl<DatabaseSearchViewModel,
         SearchResult> {
-  /// See also [DatabaseSearchViewModel].
+  /// Business logic layer for database search page.
+  ///
+  /// Copied from [DatabaseSearchViewModel].
   DatabaseSearchViewModelProvider(
     String query,
   ) : this._internal(

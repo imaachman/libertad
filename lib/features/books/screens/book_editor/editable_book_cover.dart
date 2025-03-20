@@ -5,6 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:libertad/data/models/book.dart';
 import 'package:libertad/features/books/viewmodels/book_editor_viewmodel.dart';
 
+/// Book cover widget that allows the user to delete the cover image or upload
+/// a new one.
 class EditableBookCover extends ConsumerWidget {
   final Book? book;
 

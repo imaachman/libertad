@@ -4,11 +4,14 @@ import 'package:libertad/data/models/borrower_sort.dart';
 import 'package:libertad/data/models/sort_order.dart';
 import 'package:libertad/features/borrowers/viewmodels/borrowers_list_viewmodel.dart';
 
+/// Dialog that allows the user to select one of the sorting options for the
+/// borrower, and select the sort order as well.
 class BorrowerSortDialog extends ConsumerWidget {
   const BorrowerSortDialog({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Watch for changes to update the UI with the latest data.
     ref.watch(borrowersListViewModelProvider);
     final BorrowersListViewModel model =
         ref.watch(borrowersListViewModelProvider.notifier);

@@ -39,16 +39,24 @@ abstract class _$BookDetailsViewModel
   );
 }
 
-/// See also [BookDetailsViewModel].
+/// Business logic layer for book details page.
+///
+/// Copied from [BookDetailsViewModel].
 @ProviderFor(BookDetailsViewModel)
 const bookDetailsViewModelProvider = BookDetailsViewModelFamily();
 
-/// See also [BookDetailsViewModel].
+/// Business logic layer for book details page.
+///
+/// Copied from [BookDetailsViewModel].
 class BookDetailsViewModelFamily extends Family<Book> {
-  /// See also [BookDetailsViewModel].
+  /// Business logic layer for book details page.
+  ///
+  /// Copied from [BookDetailsViewModel].
   const BookDetailsViewModelFamily();
 
-  /// See also [BookDetailsViewModel].
+  /// Business logic layer for book details page.
+  ///
+  /// Copied from [BookDetailsViewModel].
   BookDetailsViewModelProvider call(
     Book book,
   ) {
@@ -81,10 +89,14 @@ class BookDetailsViewModelFamily extends Family<Book> {
   String? get name => r'bookDetailsViewModelProvider';
 }
 
-/// See also [BookDetailsViewModel].
+/// Business logic layer for book details page.
+///
+/// Copied from [BookDetailsViewModel].
 class BookDetailsViewModelProvider
     extends AutoDisposeNotifierProviderImpl<BookDetailsViewModel, Book> {
-  /// See also [BookDetailsViewModel].
+  /// Business logic layer for book details page.
+  ///
+  /// Copied from [BookDetailsViewModel].
   BookDetailsViewModelProvider(
     Book book,
   ) : this._internal(

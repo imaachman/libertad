@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// Extended text field to enter author's bio.
 class BioField extends StatelessWidget {
   final String initialValue;
   final void Function(String value)? onChanged;

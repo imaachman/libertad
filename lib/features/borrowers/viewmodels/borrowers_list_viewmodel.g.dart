@@ -7,9 +7,11 @@ part of 'borrowers_list_viewmodel.dart';
 // **************************************************************************
 
 String _$borrowersListViewModelHash() =>
-    r'44758ed442808c09dd8629a252a503e26fa52a5a';
+    r'7d34a1f651858b3615b6ef21360a2e9b8c6592db';
 
-/// See also [BorrowersListViewModel].
+/// Business logic layer for borrowers list page.
+///
+/// Copied from [BorrowersListViewModel].
 @ProviderFor(BorrowersListViewModel)
 final borrowersListViewModelProvider = AutoDisposeAsyncNotifierProvider<
     BorrowersListViewModel, List<Borrower>>.internal(

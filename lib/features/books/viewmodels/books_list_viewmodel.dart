@@ -12,16 +12,29 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'books_list_viewmodel.g.dart';
 
+/// Business logic layer for books list page.
 @riverpod
 class BooksListViewModel extends _$BooksListViewModel {
+  /// Order in which the sorted list should be displayed.
   SortOrder selectedSortOrder = SortOrder.ascending;
+
+  /// Defines how the books should be sorted.
   BookSort? bookSort;
 
+  /// Filter the books by genre.
   Genre? genreFilter;
+
+  /// Filter the books by author.
   Author? authorFilter;
+
+  /// Filter the books by release date range.
   DateTime? oldestReleaseDateFilter;
   DateTime? newestReleaseDateFilter;
+
+  /// Filter the books by availability.
   IssueStatus? issueStatusFilter;
+
+  /// Filter the books by total copies range.
   int? minCopiesFilter;
   int? maxCopiesFilter;
 
@@ -95,13 +108,13 @@ class BooksListViewModel extends _$BooksListViewModel {
     return books;
   }
 
-  /// Select sort order -- ascending or descending.
+  /// Selects sort order -- ascending or descending.
   void selectSortOrder(SortOrder sortOrder) {
     selectedSortOrder = sortOrder;
     ref.notifyListeners();
   }
 
-  /// Sort the books according to the selected [BookSort] type.
+  /// Sorts the books according to the selected [BookSort] type.
   Future<void> sort(BookSort value) async {
     // Update [bookSort] to show the selected sort type in the UI.
     bookSort = value;
@@ -125,26 +138,31 @@ class BooksListViewModel extends _$BooksListViewModel {
     ref.keepAlive();
   }
 
+  /// Selects genre filter.
   void selectGenreFilter(Genre genre) {
     genreFilter = genre;
     ref.notifyListeners();
   }
 
+  /// Clears genre filter.
   void clearGenreFilter() {
     genreFilter = null;
     ref.notifyListeners();
   }
 
+  /// Selects author fitler.
   void selectAuthorFilter(Author author) {
     authorFilter = author;
     ref.notifyListeners();
   }
 
+  /// Clears author filter.
   void clearAuthorFilter() {
     authorFilter = null;
     ref.notifyListeners();
   }
 
+  /// Selects oldest release date filter.
   void selectOldestReleaseDateFilter(BuildContext context) async {
     // Show date picker dialog.
     final DateTime? selectedDate = await showDatePicker(
@@ -161,6 +179,7 @@ class BooksListViewModel extends _$BooksListViewModel {
     }
   }
 
+  /// Selects newest release date filter.
   void selectNewestReleaseDateFilter(BuildContext context) async {
     // Show date picker dialog.
     final DateTime? selectedDate = await showDatePicker(
@@ -177,12 +196,14 @@ class BooksListViewModel extends _$BooksListViewModel {
     }
   }
 
+  /// Clears release date filter.
   void clearReleaseDateFilter() {
     oldestReleaseDateFilter = null;
     newestReleaseDateFilter = null;
     ref.notifyListeners();
   }
 
+  /// Sets availability filter.
   void setIssueStatusFilter(bool available) {
     if (available) {
       issueStatusFilter = IssueStatus.available;
@@ -192,23 +213,28 @@ class BooksListViewModel extends _$BooksListViewModel {
     ref.notifyListeners();
   }
 
+  /// Clears availabilty filter.
   void clearIssueStatusFilter() {
     issueStatusFilter = null;
     ref.notifyListeners();
   }
 
+  /// Sets minimum total copies filter.
   void setMinCopiesFilter(String value) {
     if (value.isEmpty) return;
     minCopiesFilter = int.parse(value);
     ref.notifyListeners();
   }
 
+  /// Sets maximum total copies filter.
   void setMaxCopiesFilter(String value) {
     if (value.isEmpty) return;
     maxCopiesFilter = int.parse(value);
     ref.notifyListeners();
   }
 
+  /// Validates min total copies field.
+  /// Returned string is displayed to the user as feedback.
   String? minCopiesFilterValidator(String? value) {
     if (value == null || value.isEmpty) return null;
     if (maxCopiesFilter == null) return null;
@@ -219,6 +245,8 @@ class BooksListViewModel extends _$BooksListViewModel {
     }
   }
 
+  /// Validates max total copies field.
+  /// Returned string is displayed to the user as feedback.
   String? maxCopiesFilterValidator(String? value) {
     if (value == null || value.isEmpty) return null;
     if (minCopiesFilter == null) return null;
@@ -229,6 +257,7 @@ class BooksListViewModel extends _$BooksListViewModel {
     }
   }
 
+  /// Clears total copies filter.
   void clearTotalCopiesFilter(
     TextEditingController minController,
     TextEditingController maxController,
@@ -240,6 +269,7 @@ class BooksListViewModel extends _$BooksListViewModel {
     ref.notifyListeners();
   }
 
+  /// Clears all filters.
   void clearAll(
     TextEditingController minController,
     TextEditingController maxController,
@@ -256,7 +286,7 @@ class BooksListViewModel extends _$BooksListViewModel {
     ref.notifyListeners();
   }
 
-  /// Filter the books according to the selected filter values.
+  /// Filters the books according to the selected filter values.
   Future<void> applyFilters(BuildContext context) async {
     state = AsyncData(
       await DatabaseRepository.instance.getBooks(
@@ -273,9 +303,11 @@ class BooksListViewModel extends _$BooksListViewModel {
         ),
       ),
     );
+
     // Keep provider alive to preserve the filtered list.
     ref.keepAlive();
 
+    // Navigate back.
     if (!context.mounted) return;
     Navigator.of(context).pop();
   }

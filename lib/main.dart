@@ -13,6 +13,7 @@ Future<void> main() async {
   runApp(const ProviderScope(child: Libertad()));
 }
 
+/// Entry point of the application.
 class Libertad extends StatelessWidget {
   const Libertad({super.key});
 

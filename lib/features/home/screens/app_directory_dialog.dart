@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
-class DocumentsDirectoryDialog extends StatelessWidget {
+/// Dialog that shows all the files in the app directory.
+class AppDirectoryDialog extends StatelessWidget {
   final List<String> files;
 
-  const DocumentsDirectoryDialog({super.key, required this.files});
+  const AppDirectoryDialog({super.key, required this.files});
 
   @override
   Widget build(BuildContext context) {

@@ -8,6 +8,8 @@ import 'package:libertad/features/book_copies/screens/issued_copies_screen/issue
 import 'package:libertad/features/borrowers/viewmodels/borrower_details_viewmodel.dart';
 import 'package:libertad/widgets/profile_picture.dart';
 
+/// Page with borrower's details such as their name, profile picture, and the
+/// books borrowed by them.
 class BorrowerDetailsPage extends ConsumerWidget {
   final Borrower borrower;
 
@@ -15,6 +17,7 @@ class BorrowerDetailsPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Watch for changes to update the UI with the latest data.
     ref.watch(borrowerDetailsViewModelProvider(borrower));
     final BorrowerDetailsViewModel model =
         ref.watch(borrowerDetailsViewModelProvider(borrower).notifier);

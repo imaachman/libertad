@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:libertad/data/models/borrower.dart';
 import 'package:libertad/features/borrowers/viewmodels/borrower_editor_viewmodel.dart';
 
+/// Number text field to enter the membership duration of the borrower.
 class MembershipDurationField extends ConsumerWidget {
   final Borrower? borrower;
 

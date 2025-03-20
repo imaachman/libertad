@@ -4,6 +4,7 @@ import 'package:libertad/core/utils/extensions.dart';
 import 'package:libertad/data/models/book_copy.dart';
 import 'package:libertad/features/book_copies/viewmodels/copy_details_viewmodel.dart';
 
+/// Allows selecting the issue date for the copy.
 class IssueDateField extends ConsumerWidget {
   final BookCopy copy;
 

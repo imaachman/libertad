@@ -6,9 +6,13 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'authors_list_viewmodel.g.dart';
 
+/// Business logic layer for authors list page.
 @riverpod
 class AuthorsListViewModel extends _$AuthorsListViewModel {
+  /// Order in which the sorted list should be displayed.
   SortOrder selectedSortOrder = SortOrder.ascending;
+
+  /// Defines how the authors should be sorted.
   AuthorSort? authorSort;
 
   @override
@@ -30,16 +34,16 @@ class AuthorsListViewModel extends _$AuthorsListViewModel {
     return authors;
   }
 
-  /// Select sort order -- ascending or descending.
+  /// Selects sort order -- ascending or descending.
   void selectSortOrder(SortOrder sortOrder) {
     selectedSortOrder = sortOrder;
     ref.notifyListeners();
   }
 
-  /// Sort the authors according to the selected [AuthorSort] type.
-  Future<void> sort(AuthorSort sortBy) async {
+  /// Sorts the authors according to the selected [AuthorSort] type.
+  Future<void> sort(AuthorSort value) async {
     // Update [authorSort] to show the selected sort type in the UI.
-    authorSort = sortBy;
+    authorSort = value;
     // Retrieve the authors again in the selected sort type and update the
     // state.
     state = AsyncData(

@@ -4,11 +4,13 @@ import 'package:libertad/core/utils/extensions.dart';
 import 'package:libertad/features/book_copies/viewmodels/issued_copies_list_viewmodel.dart';
 import 'package:libertad/widgets/filter_tile.dart';
 
+/// Allows defining the issue date range to filter the copies by.
 class IssueDateFilterTile extends ConsumerWidget {
   const IssueDateFilterTile({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Watch for changes to update the UI with the latest data.
     ref.watch(issuedCopiesListViewModelProvider);
     final IssuedCopiesListViewModel model =
         ref.watch(issuedCopiesListViewModelProvider.notifier);

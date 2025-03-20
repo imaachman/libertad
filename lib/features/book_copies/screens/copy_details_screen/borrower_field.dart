@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:libertad/data/models/book_copy.dart';
 import 'package:libertad/features/book_copies/viewmodels/copy_details_viewmodel.dart';
 
+/// Allows selecting a borrower from a searchable list of borrowers.
 class BorrowerField extends ConsumerWidget {
   final BookCopy copy;
 

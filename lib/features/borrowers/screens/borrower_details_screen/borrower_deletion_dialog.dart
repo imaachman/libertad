@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:libertad/data/models/borrower.dart';
 
+/// Dialog that allows the user to confirm borrower's deletion.
 class BorrowerDeletionDialog extends StatelessWidget {
   final Borrower borrower;
   final VoidCallback onDelete;

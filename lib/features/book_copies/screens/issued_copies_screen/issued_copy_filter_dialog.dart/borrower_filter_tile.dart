@@ -3,11 +3,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:libertad/features/book_copies/viewmodels/issued_copies_list_viewmodel.dart';
 import 'package:libertad/widgets/filter_tile.dart';
 
+/// Allows selecting a borrower to filter the copies by.
 class BorrowerFilterTile extends ConsumerWidget {
   const BorrowerFilterTile({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Watch for changes to update the UI with the latest data.
     ref.watch(issuedCopiesListViewModelProvider);
     final IssuedCopiesListViewModel model =
         ref.watch(issuedCopiesListViewModelProvider.notifier);

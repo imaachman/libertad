@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// Switches between row and column conditionally.
 class RowColumnSwitch extends StatelessWidget {
   final bool columnWhen;
   final List<Widget> children;

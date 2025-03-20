@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:libertad/data/models/borrower.dart';
 import 'package:libertad/features/borrowers/viewmodels/borrower_details_viewmodel.dart';
 
+/// Dialog that allows the user to accept fine and remove borrower's defaulter
+/// status.
 class FineDialog extends ConsumerWidget {
   final Borrower borrower;
 

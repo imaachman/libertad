@@ -8,6 +8,8 @@ import 'package:libertad/widgets/book_list_tile.dart';
 import 'package:libertad/features/authors/viewmodels/author_details_viewmodel.dart';
 import 'package:libertad/widgets/profile_picture.dart';
 
+/// Page with author's details such as their name, profile picture, and the
+/// books written by them.
 class AuthorDetailsPage extends ConsumerWidget {
   final Author author;
 
@@ -15,6 +17,7 @@ class AuthorDetailsPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Watch for changes to update the UI with the latest data.
     ref.watch(authorDetailsViewModelProvider(author));
     final AuthorDetailsViewModel model =
         ref.watch(authorDetailsViewModelProvider(author).notifier);
@@ -79,12 +82,12 @@ class AuthorDetailsPage extends ConsumerWidget {
                   constraints: BoxConstraints(maxWidth: kSmallPhone / 2),
                   width: MediaQuery.of(context).size.width / 2,
                   child: ProfilePicture(
-                    imageFilePath: model.author.profilePicture,
+                    imageFilePath: author.profilePicture,
                   ),
                 ),
                 SizedBox(height: 16),
                 Text(
-                  model.author.name,
+                  author.name,
                   style: Theme.of(context)
                       .textTheme
                       .headlineLarge

@@ -4,6 +4,7 @@ import 'package:libertad/core/utils/extensions.dart';
 import 'package:libertad/data/models/borrower.dart';
 import 'package:libertad/features/borrowers/viewmodels/borrower_editor_viewmodel.dart';
 
+/// Allows selecting the membership start date of the borrower.
 class MembershipStartDateField extends ConsumerWidget {
   final Borrower? borrower;
 

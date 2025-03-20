@@ -4,6 +4,7 @@ import 'package:libertad/data/models/borrower.dart';
 import 'package:libertad/features/borrowers/screens/borrowers_screen/borrower_list_tile.dart';
 import 'package:libertad/features/borrowers/viewmodels/borrowers_list_viewmodel.dart';
 
+/// Page with all the borrowers in the database displayed in a list view.
 class BorrowersPage extends ConsumerWidget {
   const BorrowersPage({super.key});
 

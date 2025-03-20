@@ -11,6 +11,7 @@ import 'package:libertad/features/home/screens/home_screen.dart';
 import 'package:libertad/navigation/routes.dart';
 import 'package:libertad/widgets/splash_screen.dart';
 
+/// Generates routes by mapping widget to route's name.
 class RouteGenerator {
   static Route? generate(RouteSettings settings) {
     switch (settings.name) {

@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:libertad/data/models/borrower.dart';
 import 'package:libertad/features/borrowers/viewmodels/borrower_editor_viewmodel.dart';
 
+/// Text field to enter the borrower's contact.
 class ContactField extends ConsumerWidget {
   final Borrower? borrower;
 

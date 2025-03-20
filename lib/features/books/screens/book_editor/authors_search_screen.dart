@@ -4,6 +4,7 @@ import 'package:libertad/data/models/author.dart';
 import 'package:libertad/features/books/viewmodels/authors_search_viewmodel.dart';
 import 'package:libertad/widgets/profile_picture.dart';
 
+/// Page that displays authors list which can be filtered with the search query.
 class AuthorsSearchPage extends ConsumerWidget {
   final String query;
   final void Function(BuildContext context, Author? result) close;
@@ -16,13 +17,16 @@ class AuthorsSearchPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Retrieve filtered authors data and actively watch for changes.
     final AsyncValue<List<Author>> authors =
         ref.watch(authorsSearchViewModelProvider(query));
 
+    // Retrieve newly added author, if created by the user.
     final Author? newlyAddedAuthor = ref
         .watch(authorsSearchViewModelProvider(query).notifier)
         .newlyCreatedAuthor;
 
+    // Check for error and loading states and build the widget accordingly.
     return authors.when(
       data: (data) => Column(
         children: [

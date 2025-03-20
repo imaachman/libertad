@@ -39,16 +39,24 @@ abstract class _$AuthorEditorViewModel
   );
 }
 
-/// See also [AuthorEditorViewModel].
+/// Business logic layer for author editor.
+///
+/// Copied from [AuthorEditorViewModel].
 @ProviderFor(AuthorEditorViewModel)
 const authorEditorViewModelProvider = AuthorEditorViewModelFamily();
 
-/// See also [AuthorEditorViewModel].
+/// Business logic layer for author editor.
+///
+/// Copied from [AuthorEditorViewModel].
 class AuthorEditorViewModelFamily extends Family<Author?> {
-  /// See also [AuthorEditorViewModel].
+  /// Business logic layer for author editor.
+  ///
+  /// Copied from [AuthorEditorViewModel].
   const AuthorEditorViewModelFamily();
 
-  /// See also [AuthorEditorViewModel].
+  /// Business logic layer for author editor.
+  ///
+  /// Copied from [AuthorEditorViewModel].
   AuthorEditorViewModelProvider call(
     Author? author,
   ) {
@@ -81,10 +89,14 @@ class AuthorEditorViewModelFamily extends Family<Author?> {
   String? get name => r'authorEditorViewModelProvider';
 }
 
-/// See also [AuthorEditorViewModel].
+/// Business logic layer for author editor.
+///
+/// Copied from [AuthorEditorViewModel].
 class AuthorEditorViewModelProvider
     extends AutoDisposeNotifierProviderImpl<AuthorEditorViewModel, Author?> {
-  /// See also [AuthorEditorViewModel].
+  /// Business logic layer for author editor.
+  ///
+  /// Copied from [AuthorEditorViewModel].
   AuthorEditorViewModelProvider(
     Author? author,
   ) : this._internal(

@@ -4,6 +4,7 @@ import 'package:libertad/core/utils/extensions.dart';
 import 'package:libertad/features/book_copies/viewmodels/issued_copies_list_viewmodel.dart';
 import 'package:libertad/widgets/filter_tile.dart';
 
+/// Allows defining the return date range to filter the copies by.
 class ReturnDateFilterTile extends ConsumerWidget {
   const ReturnDateFilterTile({super.key});
 

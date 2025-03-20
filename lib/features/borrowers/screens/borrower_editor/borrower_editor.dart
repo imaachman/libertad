@@ -9,6 +9,7 @@ import 'package:libertad/features/borrowers/screens/borrower_editor/membership_s
 import 'package:libertad/features/borrowers/screens/borrower_editor/name_field.dart';
 import 'package:libertad/widgets/row_column_switch.dart';
 
+/// Allows the user to add a new borrower or edit an existing one.
 class BorrowerEditor extends StatelessWidget {
   final Borrower? borrower;
 

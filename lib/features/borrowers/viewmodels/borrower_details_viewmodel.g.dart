@@ -39,16 +39,24 @@ abstract class _$BorrowerDetailsViewModel
   );
 }
 
-/// See also [BorrowerDetailsViewModel].
+/// Business logic layer for borrower details page.
+///
+/// Copied from [BorrowerDetailsViewModel].
 @ProviderFor(BorrowerDetailsViewModel)
 const borrowerDetailsViewModelProvider = BorrowerDetailsViewModelFamily();
 
-/// See also [BorrowerDetailsViewModel].
+/// Business logic layer for borrower details page.
+///
+/// Copied from [BorrowerDetailsViewModel].
 class BorrowerDetailsViewModelFamily extends Family<Borrower> {
-  /// See also [BorrowerDetailsViewModel].
+  /// Business logic layer for borrower details page.
+  ///
+  /// Copied from [BorrowerDetailsViewModel].
   const BorrowerDetailsViewModelFamily();
 
-  /// See also [BorrowerDetailsViewModel].
+  /// Business logic layer for borrower details page.
+  ///
+  /// Copied from [BorrowerDetailsViewModel].
   BorrowerDetailsViewModelProvider call(
     Borrower borrower,
   ) {
@@ -81,10 +89,14 @@ class BorrowerDetailsViewModelFamily extends Family<Borrower> {
   String? get name => r'borrowerDetailsViewModelProvider';
 }
 
-/// See also [BorrowerDetailsViewModel].
+/// Business logic layer for borrower details page.
+///
+/// Copied from [BorrowerDetailsViewModel].
 class BorrowerDetailsViewModelProvider extends AutoDisposeNotifierProviderImpl<
     BorrowerDetailsViewModel, Borrower> {
-  /// See also [BorrowerDetailsViewModel].
+  /// Business logic layer for borrower details page.
+  ///
+  /// Copied from [BorrowerDetailsViewModel].
   BorrowerDetailsViewModelProvider(
     Borrower borrower,
   ) : this._internal(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:libertad/features/search/screens/database_search_screen.dart';
 
+/// Delegate that builds the search page for the entire database.
 class DatabaseSearchDelegate extends SearchDelegate {
   DatabaseSearchDelegate() : super(searchFieldLabel: 'Search database');
 

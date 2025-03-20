@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// Text field to enter author's name.
 class NameField extends StatelessWidget {
   final String initialValue;
   final void Function(String value)? onChanged;

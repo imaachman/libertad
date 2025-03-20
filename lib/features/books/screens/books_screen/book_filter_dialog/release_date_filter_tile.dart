@@ -4,11 +4,13 @@ import 'package:libertad/core/utils/extensions.dart';
 import 'package:libertad/features/books/viewmodels/books_list_viewmodel.dart';
 import 'package:libertad/widgets/filter_tile.dart';
 
+/// Allows defining the release date range to filter the books by.
 class ReleaseDateFilterTile extends ConsumerWidget {
   const ReleaseDateFilterTile({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Watch for changes to update the UI with the latest data.
     ref.watch(booksListViewModelProvider);
     final BooksListViewModel model =
         ref.watch(booksListViewModelProvider.notifier);

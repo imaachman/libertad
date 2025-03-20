@@ -4,6 +4,7 @@ import 'package:libertad/data/models/author.dart';
 import 'package:libertad/features/authors/screens/authors_screen/author_list_tile.dart';
 import 'package:libertad/features/authors/viewmodels/authors_list_viewmodel.dart';
 
+/// Page with all the authors in the database displayed in a list view.
 class AuthorsPage extends ConsumerWidget {
   const AuthorsPage({super.key});
 

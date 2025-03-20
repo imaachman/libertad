@@ -8,6 +8,7 @@ import 'genre_filter_tile.dart';
 import 'issue_status_filter_tile.dart';
 import 'total_copies_filter_tile.dart';
 
+/// Dialog that allows the user to apply filters to the books list.
 class BookFilterDialog extends ConsumerStatefulWidget {
   const BookFilterDialog({super.key});
 
@@ -17,6 +18,7 @@ class BookFilterDialog extends ConsumerStatefulWidget {
 }
 
 class _BookFilterDialogState extends ConsumerState<BookFilterDialog> {
+  /// Controllers for min and max total copies input fields.
   late final TextEditingController minController;
   late final TextEditingController maxController;
 

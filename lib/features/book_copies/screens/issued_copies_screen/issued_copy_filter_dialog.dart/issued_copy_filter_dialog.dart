@@ -8,6 +8,7 @@ import 'issue_date_filter_tile.dart';
 import 'overdue_filter_tile.dart';
 import 'return_date_filter_tile.dart';
 
+/// Dialog that allows the user to apply filters to the copies list.
 class IssuedCopyFilterDialog extends ConsumerWidget {
   const IssuedCopyFilterDialog({super.key});
 

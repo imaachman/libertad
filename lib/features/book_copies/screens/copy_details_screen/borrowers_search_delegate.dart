@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:libertad/data/models/borrower.dart';
 import 'package:libertad/features/book_copies/screens/copy_details_screen/borrowers_search_screen.dart';
 
+/// Delegate that builds the search page for borrowers.
 class BorrowersSearchDelegate extends SearchDelegate<Borrower?> {
   BorrowersSearchDelegate() : super(searchFieldLabel: 'Search borrowers');
 

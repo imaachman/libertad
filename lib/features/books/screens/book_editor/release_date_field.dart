@@ -4,6 +4,7 @@ import 'package:libertad/core/utils/extensions.dart';
 import 'package:libertad/data/models/book.dart';
 import 'package:libertad/features/books/viewmodels/book_editor_viewmodel.dart';
 
+/// Allows selecting the release date for the book.
 class ReleaseDateField extends ConsumerWidget {
   final Book? book;
 

@@ -7,9 +7,11 @@ part of 'authors_list_viewmodel.dart';
 // **************************************************************************
 
 String _$authorsListViewModelHash() =>
-    r'7b1bddee9712be4973d5cc31c54c47f4dfea180c';
+    r'e671240c3567997a2772119a076018eb95143794';
 
-/// See also [AuthorsListViewModel].
+/// Business logic layer for authors list page.
+///
+/// Copied from [AuthorsListViewModel].
 @ProviderFor(AuthorsListViewModel)
 final authorsListViewModelProvider = AutoDisposeAsyncNotifierProvider<
     AuthorsListViewModel, List<Author>>.internal(

@@ -4,11 +4,14 @@ import 'package:libertad/data/models/author_sort.dart';
 import 'package:libertad/data/models/sort_order.dart';
 import 'package:libertad/features/authors/viewmodels/authors_list_viewmodel.dart';
 
+/// Dialog that allows the user to select one of the sorting options for the
+/// author, and select the sort order as well.
 class AuthorSortDialog extends ConsumerWidget {
   const AuthorSortDialog({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Watch for changes to update the UI with the latest data.
     ref.watch(authorsListViewModelProvider);
     final AuthorsListViewModel model =
         ref.watch(authorsListViewModelProvider.notifier);

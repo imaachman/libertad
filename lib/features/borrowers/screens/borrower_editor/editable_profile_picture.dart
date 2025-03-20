@@ -5,6 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:libertad/data/models/borrower.dart';
 import 'package:libertad/features/borrowers/viewmodels/borrower_editor_viewmodel.dart';
 
+/// Profile picture widget that allows the user to delete the profile picture or
+/// upload a new one.
 class EditableProfilePicture extends ConsumerWidget {
   final Borrower? borrower;
 

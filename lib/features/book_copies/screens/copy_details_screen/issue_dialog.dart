@@ -6,6 +6,7 @@ import 'package:libertad/features/book_copies/viewmodels/copy_details_viewmodel.
 import 'borrower_field.dart';
 import 'return_date_field.dart';
 
+/// Dialog that allows the user to issue the copy to a borrower.
 class IssueDialog extends ConsumerWidget {
   final BookCopy copy;
 
@@ -13,6 +14,7 @@ class IssueDialog extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Watch for changes to update the UI with the latest data.
     ref.watch(copyDetailsViewModelProvider(copy));
     final CopyDetailsViewModel model =
         ref.watch(copyDetailsViewModelProvider(copy).notifier);

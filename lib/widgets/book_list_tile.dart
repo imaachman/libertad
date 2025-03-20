@@ -3,6 +3,9 @@ import 'package:libertad/data/models/book.dart';
 import 'package:libertad/navigation/routes.dart';
 import 'package:libertad/widgets/book_cover.dart';
 
+/// List tile displaying brief info about the book, such as title, author, cover
+/// image and the total number of available copies. Navigates to book's details
+/// page.
 class BookListTile extends StatelessWidget {
   final Book book;
   final int index;

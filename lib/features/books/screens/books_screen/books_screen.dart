@@ -6,6 +6,7 @@ import 'package:libertad/features/books/viewmodels/books_list_viewmodel.dart';
 
 import '../../../../data/models/book.dart';
 
+/// Page with all the books in the database displayed in a list view.
 class BooksPage extends ConsumerWidget {
   const BooksPage({super.key});
 

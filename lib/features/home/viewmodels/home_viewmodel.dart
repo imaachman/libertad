@@ -10,12 +10,13 @@ import 'package:libertad/features/books/screens/books_screen/book_sort_dialog.da
 import 'package:libertad/features/borrowers/screens/borrower_editor/borrower_editor.dart';
 import 'package:libertad/features/borrowers/screens/borrowers_screen/borrower_filter_dialog/borrower_filter_dialog.dart';
 import 'package:libertad/features/borrowers/screens/borrowers_screen/borrower_sort_dialog.dart';
-import 'package:libertad/features/home/screens/documents_directory_dialog.dart';
+import 'package:libertad/features/home/screens/app_directory_dialog.dart';
 import 'package:libertad/features/search/screens/database_search_delegate.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'home_viewmodel.g.dart';
 
+/// Business logic layer for the home page.
 @riverpod
 class HomeViewModel extends _$HomeViewModel {
   late final TabController _tabController;
@@ -25,27 +26,32 @@ class HomeViewModel extends _$HomeViewModel {
     _tabController = tabController;
   }
 
+  /// Shows the app directory dialog.
   Future<void> showDocumentsDirectory(BuildContext context) async {
+    // Get paths of all the files in the directory.
     final List<String> files =
         await FilesRepository.instance.exposeAppDirectoryFiles();
     if (!context.mounted) return;
     showDialog(
       context: context,
-      builder: (context) => DocumentsDirectoryDialog(files: files),
+      builder: (context) => AppDirectoryDialog(files: files),
     );
   }
 
+  /// Clears the database.
   Future<void> clearDatabase() async =>
       await DatabaseRepository.instance.clearDatabase();
 
+  /// Resets the database to its original state with mock data.
   Future<void> resetDatabase() async =>
       await DatabaseRepository.instance.resetDatabase();
 
+  /// Loads up the view to search the database.
   Future<void> searchDatabase(
           BuildContext context, int selectedTabIndex) async =>
       showSearch(context: context, delegate: DatabaseSearchDelegate());
 
-  /// Show sort dialog to select the sort type and order.
+  /// Shows sort dialog to select the sort type and order.
   void showSortDialog(BuildContext context) => showDialog(
         context: context,
         builder: (context) {
@@ -65,10 +71,11 @@ class HomeViewModel extends _$HomeViewModel {
         },
       );
 
+  /// Shows filter dialog.
   void showFilterDialog(BuildContext context) => showDialog(
         context: context,
         builder: (context) {
-          // Show sort dialog according to the current tab.
+          // Show filter dialog according to the current tab.
           switch (_tabController.index) {
             case 0:
               return BookFilterDialog();
@@ -82,6 +89,7 @@ class HomeViewModel extends _$HomeViewModel {
         },
       );
 
+  /// Shows [BookEditor] or [BorrowerEditor] depending on the current tab.
   void showEditor({required BuildContext context}) {
     showModalBottomSheet(
       context: context,

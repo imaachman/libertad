@@ -5,6 +5,8 @@ import 'package:libertad/data/models/borrower.dart';
 import 'package:libertad/features/book_copies/viewmodels/borrowers_search_viewmodel.dart';
 import 'package:libertad/widgets/profile_picture.dart';
 
+/// Page that displays borrowers list which can be filtered with the search
+/// query.
 class BorrowersSearchPage extends ConsumerWidget {
   final String query;
   final void Function(BuildContext context, Borrower? result) close;
@@ -17,9 +19,11 @@ class BorrowersSearchPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Retrieve filtered borrowers data and actively watch for changes.
     final AsyncValue<List<Borrower>> borrowers =
         ref.watch(borrowersSearchViewModelProvider(query));
 
+    // Check for error and loading states and build the widget accordingly.
     return borrowers.when(
       data: (data) => ListView.builder(
         itemCount: data.length,

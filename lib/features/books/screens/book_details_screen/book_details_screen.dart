@@ -10,6 +10,8 @@ import 'package:libertad/widgets/book_cover.dart';
 
 import 'copy_list_tile.dart';
 
+/// Page with book's details such as its title, cover image, author and the
+/// list of copies in the library.
 class BookDetailsPage extends ConsumerWidget {
   final Book book;
 
@@ -17,6 +19,7 @@ class BookDetailsPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Watch for changes to update the UI with the latest data.
     ref.watch(bookDetailsViewModelProvider(book));
     final BookDetailsViewModel model =
         ref.watch(bookDetailsViewModelProvider(book).notifier);

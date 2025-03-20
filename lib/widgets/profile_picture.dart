@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
+/// Displays the profile picture as a circular avatar.
 class ProfilePicture extends StatelessWidget {
   final String imageFilePath;
   final double? iconSize;

@@ -9,7 +9,9 @@ part of 'books_list_viewmodel.dart';
 String _$booksListViewModelHash() =>
     r'e3f15c77673bbb5562bdda7ca017a761116ec107';
 
-/// See also [BooksListViewModel].
+/// Business logic layer for books list page.
+///
+/// Copied from [BooksListViewModel].
 @ProviderFor(BooksListViewModel)
 final booksListViewModelProvider =
     AutoDisposeAsyncNotifierProvider<BooksListViewModel, List<Book>>.internal(

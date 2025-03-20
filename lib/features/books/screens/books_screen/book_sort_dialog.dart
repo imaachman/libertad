@@ -4,11 +4,14 @@ import 'package:libertad/data/models/book_sort.dart';
 import 'package:libertad/data/models/sort_order.dart';
 import 'package:libertad/features/books/viewmodels/books_list_viewmodel.dart';
 
+/// Dialog that allows the user to select one of the sorting options for the
+/// book, and select the sort order as well.
 class BookSortDialog extends ConsumerWidget {
   const BookSortDialog({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Watch for changes to update the UI with the latest data.
     ref.watch(booksListViewModelProvider);
     final BooksListViewModel model =
         ref.watch(booksListViewModelProvider.notifier);

@@ -4,6 +4,8 @@ import 'package:libertad/data/models/borrower.dart';
 import 'package:libertad/navigation/routes.dart';
 import 'package:libertad/widgets/profile_picture.dart';
 
+/// List tile displaying brief info about the borrower, such as name and joining
+/// date. Navigates to borrower's details page.
 class BorrowerListTile extends StatelessWidget {
   final Borrower borrower;
   final int index;

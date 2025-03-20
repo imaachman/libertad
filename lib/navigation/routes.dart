@@ -1,3 +1,4 @@
+/// Defines the named routes of the app.
 class Routes {
   static const splash = '/';
   static const home = '/home';

@@ -8,6 +8,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'author_editor_viewmodel.g.dart';
 
+/// Business logic layer for author editor.
 @riverpod
 class AuthorEditorViewModel extends _$AuthorEditorViewModel {
   /// Name of the author.
@@ -25,6 +26,7 @@ class AuthorEditorViewModel extends _$AuthorEditorViewModel {
 
   @override
   Author? build(Author? author) {
+    // If we are editing an existing author.
     if (author != null) {
       name = author.name;
       bio = author.bio;
@@ -36,6 +38,7 @@ class AuthorEditorViewModel extends _$AuthorEditorViewModel {
     return author;
   }
 
+  /// Adds a new author, or updates an existing one.
   Future<void> updateAuthor(
       BuildContext context, GlobalKey<FormState> formKey) async {
     // Author must have a name and bio.
@@ -43,7 +46,7 @@ class AuthorEditorViewModel extends _$AuthorEditorViewModel {
 
     // If the profile picture has been added.
     if (temporaryProfilePicture.isNotEmpty && profilePicture.isEmpty) {
-      // Copy the selected profile picture to the app's documents directory.
+      // Copy the selected profile picture to the app directory.
       final File copiedFile = await FilesRepository.instance.copyImageFile(
           temporaryProfilePicture, ImageFolder.authorProfilePictures);
       // Update the profile picture path to the new file path.
@@ -51,7 +54,7 @@ class AuthorEditorViewModel extends _$AuthorEditorViewModel {
     }
     // If the profile picture has been removed.
     else if (temporaryProfilePicture.isEmpty && profilePicture.isNotEmpty) {
-      // Delete the profile picture from the app's documents directory.
+      // Delete the profile picture from the app directory.
       await FilesRepository.instance.deleteFile(profilePicture);
       // Update the profile picture path to an empty string.
       profilePicture = '';

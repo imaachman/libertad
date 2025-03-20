@@ -6,7 +6,7 @@ part of 'home_viewmodel.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$homeViewModelHash() => r'cb6bac780b5716cbf69397f76e4e952faf376c36';
+String _$homeViewModelHash() => r'fb4cd092957b1ab3777d8368f6ca2cb73579443e';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -37,16 +37,24 @@ abstract class _$HomeViewModel extends BuildlessAutoDisposeNotifier<void> {
   );
 }
 
-/// See also [HomeViewModel].
+/// Business logic layer for the home page.
+///
+/// Copied from [HomeViewModel].
 @ProviderFor(HomeViewModel)
 const homeViewModelProvider = HomeViewModelFamily();
 
-/// See also [HomeViewModel].
+/// Business logic layer for the home page.
+///
+/// Copied from [HomeViewModel].
 class HomeViewModelFamily extends Family<void> {
-  /// See also [HomeViewModel].
+  /// Business logic layer for the home page.
+  ///
+  /// Copied from [HomeViewModel].
   const HomeViewModelFamily();
 
-  /// See also [HomeViewModel].
+  /// Business logic layer for the home page.
+  ///
+  /// Copied from [HomeViewModel].
   HomeViewModelProvider call(
     TabController tabController,
   ) {
@@ -79,10 +87,14 @@ class HomeViewModelFamily extends Family<void> {
   String? get name => r'homeViewModelProvider';
 }
 
-/// See also [HomeViewModel].
+/// Business logic layer for the home page.
+///
+/// Copied from [HomeViewModel].
 class HomeViewModelProvider
     extends AutoDisposeNotifierProviderImpl<HomeViewModel, void> {
-  /// See also [HomeViewModel].
+  /// Business logic layer for the home page.
+  ///
+  /// Copied from [HomeViewModel].
   HomeViewModelProvider(
     TabController tabController,
   ) : this._internal(

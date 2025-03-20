@@ -9,6 +9,7 @@ import 'package:libertad/features/borrowers/screens/borrowers_screen/borrower_li
 import 'package:libertad/navigation/routes.dart';
 import 'package:libertad/widgets/book_cover.dart';
 
+/// Page with book copy's details such as its ID, book, and borrowers.
 class CopyDetailsPage extends ConsumerWidget {
   final BookCopy copy;
 
@@ -16,6 +17,7 @@ class CopyDetailsPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Watch for changes to update the UI with the latest data.
     ref.watch(copyDetailsViewModelProvider(copy));
     final CopyDetailsViewModel model =
         ref.watch(copyDetailsViewModelProvider(copy).notifier);

@@ -39,16 +39,24 @@ abstract class _$AuthorsSearchViewModel
   );
 }
 
-/// See also [AuthorsSearchViewModel].
+/// Business logic layer for authors search page.
+///
+/// Copied from [AuthorsSearchViewModel].
 @ProviderFor(AuthorsSearchViewModel)
 const authorsSearchViewModelProvider = AuthorsSearchViewModelFamily();
 
-/// See also [AuthorsSearchViewModel].
+/// Business logic layer for authors search page.
+///
+/// Copied from [AuthorsSearchViewModel].
 class AuthorsSearchViewModelFamily extends Family<AsyncValue<List<Author>>> {
-  /// See also [AuthorsSearchViewModel].
+  /// Business logic layer for authors search page.
+  ///
+  /// Copied from [AuthorsSearchViewModel].
   const AuthorsSearchViewModelFamily();
 
-  /// See also [AuthorsSearchViewModel].
+  /// Business logic layer for authors search page.
+  ///
+  /// Copied from [AuthorsSearchViewModel].
   AuthorsSearchViewModelProvider call(
     String query,
   ) {
@@ -81,11 +89,15 @@ class AuthorsSearchViewModelFamily extends Family<AsyncValue<List<Author>>> {
   String? get name => r'authorsSearchViewModelProvider';
 }
 
-/// See also [AuthorsSearchViewModel].
+/// Business logic layer for authors search page.
+///
+/// Copied from [AuthorsSearchViewModel].
 class AuthorsSearchViewModelProvider
     extends AutoDisposeAsyncNotifierProviderImpl<AuthorsSearchViewModel,
         List<Author>> {
-  /// See also [AuthorsSearchViewModel].
+  /// Business logic layer for authors search page.
+  ///
+  /// Copied from [AuthorsSearchViewModel].
   AuthorsSearchViewModelProvider(
     String query,
   ) : this._internal(

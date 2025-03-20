@@ -9,6 +9,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'borrower_editor_viewmodel.g.dart';
 
+/// Business logic layer for borrower editor.
 @riverpod
 class BorrowerEditorViewModel extends _$BorrowerEditorViewModel {
   /// Name of the borrower.
@@ -32,6 +33,7 @@ class BorrowerEditorViewModel extends _$BorrowerEditorViewModel {
 
   @override
   Borrower? build({Borrower? borrower}) {
+    // If we are editing an existing borrower.
     if (borrower != null) {
       name = borrower.name;
       contact = borrower.contact;
@@ -79,6 +81,8 @@ class BorrowerEditorViewModel extends _$BorrowerEditorViewModel {
     Navigator.of(context).pop();
   }
 
+  /// Updates the provided [borrower] object with the form fields' values and
+  /// saves it to the database.
   Future<void> updateBorrower(BuildContext context,
       GlobalKey<FormState> formKey, Borrower borrower) async {
     // If any of the inputs are invalid, do not update the borrower in the
