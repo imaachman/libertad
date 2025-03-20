@@ -23,7 +23,7 @@ class GenreFilterTile extends ConsumerWidget {
           return Genre.values.map((genre) {
             return PopupMenuItem(
               value: genre,
-              child: Text(genre.name),
+              child: Text(genre.prettify),
             );
           }).toList();
         },
@@ -36,7 +36,7 @@ class GenreFilterTile extends ConsumerWidget {
               Icon(Icons.category, size: 20),
               SizedBox(width: 8),
               Text(
-                model.genreFilter?.name ?? 'Select genre',
+                model.genreFilter?.prettify ?? 'Select genre',
                 style: Theme.of(context)
                     .textTheme
                     .labelLarge

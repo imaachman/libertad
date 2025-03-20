@@ -1,6 +1,7 @@
 import 'book.dart';
 import 'borrower.dart';
 
+/// Contains all the filter options for the issued book copy.
 class IssuedCopyFilters {
   final Book? bookFilter;
   final Borrower? borrowerFilter;

@@ -1,3 +1,4 @@
+/// Contains all the filter options for the borrower.
 class BorrowerFilters {
   final bool? activeFilter;
   final bool? defaulterFilter;

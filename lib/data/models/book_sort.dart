@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// Defines the sorting options for book.
 enum BookSort {
   title,
   releaseDate,
@@ -8,6 +9,7 @@ enum BookSort {
   dateAdded,
   dateModified;
 
+  /// Provides user-friendly string representation of the enum.
   String get prettify {
     switch (this) {
       case BookSort.title:
@@ -25,6 +27,7 @@ enum BookSort {
     }
   }
 
+  /// Provides relevant icons corresponding to the enum.
   IconData get icon {
     switch (this) {
       case BookSort.title:

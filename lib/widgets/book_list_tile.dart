@@ -65,7 +65,7 @@ class BookListTile extends StatelessWidget {
                       ),
                       const SizedBox(width: 12),
                       Text(
-                        'Genre: ${book.genre.name}',
+                        'Genre: ${book.genre.prettify}',
                         style: Theme.of(context).textTheme.labelSmall?.copyWith(
                               color: Theme.of(context).colorScheme.secondary,
                             ),

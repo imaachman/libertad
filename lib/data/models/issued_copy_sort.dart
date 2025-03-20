@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
+/// Defines the sorting options for issued book copy.
 enum IssuedCopySort {
   issueDate,
   returnDate;
 
+  /// Provides user-friendly string representation of the enum.
   String get prettify {
     switch (this) {
       case IssuedCopySort.issueDate:
@@ -13,6 +15,7 @@ enum IssuedCopySort {
     }
   }
 
+  /// Provides relevant icons corresponding to the enum.
   IconData get icon {
     switch (this) {
       case IssuedCopySort.issueDate:

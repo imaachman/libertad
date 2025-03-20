@@ -146,7 +146,7 @@ class BookDetailsPage extends ConsumerWidget {
                                 text: 'Genre: ',
                                 style: Theme.of(context).textTheme.labelLarge),
                             TextSpan(
-                              text: book.genre.name,
+                              text: book.genre.prettify,
                               style: Theme.of(context)
                                   .textTheme
                                   .labelLarge

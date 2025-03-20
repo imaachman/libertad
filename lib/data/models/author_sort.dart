@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
+/// Defines the sorting options for author.
 enum AuthorSort {
   name,
   dateAdded,
   dateModified;
 
+  /// Provides user-friendly string representation of the enum.
   String get prettify {
     switch (this) {
       case AuthorSort.name:
@@ -16,6 +18,7 @@ enum AuthorSort {
     }
   }
 
+  /// Provides relevant icons corresponding to the enum.
   IconData get icon {
     switch (this) {
       case AuthorSort.name:

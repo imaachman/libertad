@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 
+/// Defines the sorting options for borrower.
 enum BorrowerSort {
   name,
   membershipStartDate,
   dateAdded,
   dateModified;
 
+  /// Provides user-friendly string representation of the enum.
   String get prettify {
     switch (this) {
       case BorrowerSort.name:
@@ -19,6 +21,7 @@ enum BorrowerSort {
     }
   }
 
+  /// Provides relevant icons corresponding to the enum.
   IconData get icon {
     switch (this) {
       case BorrowerSort.name:

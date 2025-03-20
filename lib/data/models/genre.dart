@@ -1,3 +1,4 @@
+/// Defines book genres.
 enum Genre {
   fiction,
   nonFiction,
@@ -11,7 +12,8 @@ enum Genre {
   postApocalyptic,
   memoir;
 
-  String get name {
+  /// Provides user-friendly string representation of the enum.
+  String get prettify {
     switch (this) {
       case Genre.fiction:
         return 'Fiction';

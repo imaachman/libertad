@@ -39,7 +39,7 @@ class GenreField extends ConsumerWidget {
             return Genre.values.map((genre) {
               return PopupMenuItem(
                 value: genre,
-                child: Text(genre.name),
+                child: Text(genre.prettify),
               );
             }).toList();
           },
@@ -58,7 +58,7 @@ class GenreField extends ConsumerWidget {
                 SizedBox(width: 8),
                 Expanded(
                   child: Text(
-                    model.genre?.name ?? 'Select genre',
+                    model.genre?.prettify ?? 'Select genre',
                     style: Theme.of(context)
                         .textTheme
                         .bodyLarge
