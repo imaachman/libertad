@@ -90,6 +90,7 @@ class BooksListViewModel extends _$BooksListViewModel {
         sortBy: AuthorSort.name,
         sortOrder: SortOrder.ascending,
       );
+      ref.notifyListeners();
     });
     return books;
   }

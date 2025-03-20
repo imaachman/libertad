@@ -5,6 +5,7 @@ import 'package:libertad/core/utils/extensions.dart';
 import 'package:libertad/data/models/book.dart';
 import 'package:libertad/data/models/book_copy.dart';
 import 'package:libertad/features/books/viewmodels/book_details_viewmodel.dart';
+import 'package:libertad/navigation/routes.dart';
 import 'package:libertad/widgets/book_cover.dart';
 
 import 'copy_list_tile.dart';
@@ -100,10 +101,22 @@ class BookDetailsPage extends ConsumerWidget {
                     textAlign: TextAlign.center,
                   ),
                   SizedBox(height: 4),
-                  Text(
-                    book.author.value!.name,
-                    style: Theme.of(context).textTheme.titleLarge,
-                    textAlign: TextAlign.center,
+                  TextButton(
+                    style: ButtonStyle(
+                      shape: WidgetStatePropertyAll(RoundedRectangleBorder()),
+                    ),
+                    onPressed: () => Navigator.of(context).pushNamed(
+                      Routes.author,
+                      arguments: book.author.value,
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: Text(
+                        book.author.value!.name,
+                        style: Theme.of(context).textTheme.titleLarge,
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
                   ),
                   SizedBox(height: 16),
                   Container(
