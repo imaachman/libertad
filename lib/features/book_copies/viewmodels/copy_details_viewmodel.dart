@@ -35,9 +35,11 @@ class CopyDetailsViewModel extends _$CopyDetailsViewModel {
     borrower = copy.currentBorrower.value;
     if (returnDate != null) isReturnDateSelected = true;
     if (borrower != null) isBorrowerSelected = true;
-    // DatabaseRepository.instance
-    //     .borrowerStream(borrower.id)
-    //     .listen((_) => ref.notifyListeners());
+    if (borrower != null) {
+      DatabaseRepository.instance
+          .borrowerStream(borrower!.id)
+          .listen((_) => ref.notifyListeners());
+    }
     DatabaseRepository.instance.bookCopiesStream
         .listen((_) => ref.notifyListeners());
     return copy;

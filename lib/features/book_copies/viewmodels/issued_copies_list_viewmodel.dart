@@ -79,6 +79,7 @@ class IssuedCopiesListViewModel extends _$IssuedCopiesListViewModel {
         sortBy: BorrowerSort.name,
         sortOrder: SortOrder.ascending,
       );
+      ref.notifyListeners();
     });
     return issuedCopies;
   }
