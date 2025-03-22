@@ -1,8 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:isar/isar.dart';
-import 'package:libertad/data/mock/mock_authors.dart';
-import 'package:libertad/data/mock/mock_books.dart';
-import 'package:libertad/data/mock/mock_borrowers.dart';
+import 'package:libertad/data/mock/mock_data.dart';
 import 'package:libertad/data/models/author.dart';
 import 'package:libertad/data/models/author_sort.dart';
 import 'package:libertad/data/models/book.dart';
@@ -51,7 +49,7 @@ void main() {
       );
 
       // Query mock books data to verify filters and sorting in the database.
-      final List<Book> referenceBooks = mockBooks
+      final List<Book> referenceBooks = MockData.books
           .where((book) => book.releaseDate.isAfter(oldestReleaseDateFilter))
           .where((book) => book.releaseDate.isBefore(newestReleaseDateFilter))
           .toList()
@@ -88,7 +86,7 @@ void main() {
           await DatabaseRepository.instance.getAuthors(sortBy: sortBy);
 
       // Query mock authors data to verify sorting in the database.
-      final List<Author> referenceAuthors = mockAuthors
+      final List<Author> referenceAuthors = MockData.authors
         ..sort((author1, author2) => author1.name.compareTo(author2.name));
 
       // Create a list of authors' names.
@@ -182,12 +180,13 @@ void main() {
 
       // Query mock borrowers data to verify filters and sorting in the
       // database.
-      final List<Borrower> referenceBorrowers =
-          mockBorrowers.where((borrower) => borrower.isActive == false).toList()
-            ..sort(
-              (borrower1, borrower2) => borrower2.membershipStartDate
-                  .compareTo(borrower1.membershipStartDate),
-            );
+      final List<Borrower> referenceBorrowers = MockData.borrowers
+          .where((borrower) => borrower.isActive == false)
+          .toList()
+        ..sort(
+          (borrower1, borrower2) => borrower2.membershipStartDate
+              .compareTo(borrower1.membershipStartDate),
+        );
 
       // Create a list of borrowers' names.
       final List<String> borrowerNames =
@@ -904,7 +903,7 @@ void main() {
           searchedAuthors.map((author) => author.name).toList();
 
       // Query mock authors data to verify database search.
-      final List<String> referenceSearch = mockAuthors
+      final List<String> referenceSearch = MockData.authors
           .map((author) => author.name)
           .where((name) => name.toLowerCase().contains(query.toLowerCase()))
           .toList();
@@ -931,7 +930,7 @@ void main() {
           searchedBorrowers.map((borrower) => borrower.name).toList();
 
       // Query mock borrowers data to verify database search.
-      final List<String> referenceSearch = mockBorrowers
+      final List<String> referenceSearch = MockData.borrowers
           .map((borrower) => borrower.name)
           .where((name) => name.toLowerCase().contains(query.toLowerCase()))
           .toList();
@@ -963,7 +962,7 @@ void main() {
           searchResult.borrowers.map((borrower) => borrower.name).toSet();
 
       // Query mock books data to verify database search.
-      final Set<Book> bookReferenceSearch = mockBooks
+      final Set<Book> bookReferenceSearch = MockData.books
           .where(
               (book) => book.title.toLowerCase().contains(query.toLowerCase()))
           .toSet();
@@ -971,7 +970,7 @@ void main() {
           bookReferenceSearch.map((book) => book.title).toSet();
 
       // Query mock authors data to verify database search.
-      final Set<Author> authorReferenceSearch = mockAuthors
+      final Set<Author> authorReferenceSearch = MockData.authors
           .where((author) =>
               author.name.toLowerCase().contains(query.toLowerCase()))
           .toSet();
@@ -981,21 +980,21 @@ void main() {
       // Need to append the query-matched books' authors to the reference search
       // because that's how we're filtering in the database as well.
       for (final Book book in bookReferenceSearch) {
-        final int index = mockBooks.indexOf(book);
-        final Author author = mockAuthors[index];
+        final int index = MockData.books.indexOf(book);
+        final Author author = MockData.authors[index];
         authorNamesReferenceSearch.add(author.name);
       }
 
       // Need to append the query-matched authors' books to the reference search
       // because that's how we're filtering in the database as well.
       for (final Author author in authorReferenceSearch) {
-        final int index = mockAuthors.indexOf(author);
-        final Book book = mockBooks[index];
+        final int index = MockData.authors.indexOf(author);
+        final Book book = MockData.books[index];
         bookTitlesReferenceSearch.add(book.title);
       }
 
       // Query mock borrowers data to verify database search.
-      final Set<String> borrowerNamesReferenceSearch = mockBorrowers
+      final Set<String> borrowerNamesReferenceSearch = MockData.borrowers
           .where((borrower) =>
               borrower.name.toLowerCase().contains(query.toLowerCase()))
           .map((borrower) => borrower.name)
@@ -1029,17 +1028,17 @@ void main() {
       // Expect the database to be populated with mock data.
       expect(
         books.length,
-        mockBooks.length,
+        MockData.books.length,
         reason: 'Database is populated with mock books data.',
       );
       expect(
         authors.length,
-        mockAuthors.length,
+        MockData.authors.length,
         reason: 'Database is populated with mock authors data.',
       );
       expect(
         borrowers.length,
-        mockBooks.length,
+        MockData.borrowers.length,
         reason: 'Database is populated with mock borrowers data.',
       );
 
@@ -1067,17 +1066,17 @@ void main() {
       // Expect the database to be populated with mock data.
       expect(
         books.length,
-        mockBooks.length,
+        MockData.books.length,
         reason: 'Database is populated with mock books data.',
       );
       expect(
         authors.length,
-        mockAuthors.length,
+        MockData.authors.length,
         reason: 'Database is populated with mock authors data.',
       );
       expect(
         borrowers.length,
-        mockBooks.length,
+        MockData.borrowers.length,
         reason: 'Database is populated with mock borrowers data.',
       );
 
