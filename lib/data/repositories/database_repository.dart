@@ -38,7 +38,7 @@ class DatabaseRepository {
   late final Isar _isar;
 
   /// Initialize database.
-  /// This method should be called before we can interact with the database.
+  /// This method should be called before interacting with the database.
   /// Typically called in the [main] method before running the app.
   Future<void> initialize() async {
     // Get application documents directory.
@@ -53,6 +53,26 @@ class DatabaseRepository {
       [BookSchema, AuthorSchema, BookCopySchema, BorrowerSchema],
       directory: appDirectory.path,
     );
+  }
+
+  /// Initialize database for testing.
+  /// System temporary directory is to setup the database instead of actual
+  /// app directory.
+  /// This method should be called before interacting with the database.
+  /// Typically called inside [setUp] method before running tests.
+  Future<void> initializeForTest() async {
+    // Get temporary directory.
+    final Directory tempDirectory = await Directory.systemTemp.createTemp();
+    // Initialize core database functionality.
+    await Isar.initializeIsarCore(download: true);
+    // If an instance isn't already open.
+    if (Isar.instanceNames.isEmpty) {
+      // Load Isar instance with the relevant collections.
+      _isar = await Isar.open(
+        [BookSchema, AuthorSchema, BookCopySchema, BorrowerSchema],
+        directory: tempDirectory.path,
+      );
+    }
   }
 
   // BEGIN: WATCHERS
@@ -100,6 +120,18 @@ class DatabaseRepository {
 
   // BEGIN: DATA FETCHERS
 
+  /// Returns the book by [id]. (Used only in tests)
+  Future<Book?> getBook(Id id) async => _isar.books.get(id);
+
+  /// Returns the author by [id]. (Used only in tests)
+  Future<Author?> getAuthor(Id id) async => _isar.authors.get(id);
+
+  /// Returns the book copy by [id]. (Used only in tests)
+  Future<BookCopy?> getBookCopy(Id id) async => _isar.bookCopys.get(id);
+
+  /// Returns the borrower by [id]. (Used only in tests)
+  Future<Borrower?> getBorrower(Id id) async => _isar.borrowers.get(id);
+
   /// Returns all the books from the collection, sorted by [sortBy],
   /// arranged according to [sortOrder], and filtered by combining the various
   /// [filters].
@@ -110,15 +142,15 @@ class DatabaseRepository {
   }) async {
     // Sort the books by index if [sortBy] parameter is indexible.
     final QueryBuilder<Book, Book, QAfterWhere>? indexSortedBooks =
-        getIndexSortedBooks(sortBy, sortOrder);
+        _getIndexSortedBooks(sortBy, sortOrder);
     // Filter the books by applying all the filter parameters defined in
     // [filters].
     final QueryBuilder<Book, Book, QAfterFilterCondition> filteredBooks =
-        getFilteredBooks(indexSortedBooks: indexSortedBooks, filters: filters);
+        _getFilteredBooks(indexSortedBooks: indexSortedBooks, filters: filters);
     // Sort the books with Isar's sorting methods if [sortBy] parameter is
     // non-indexible.
     final List<Book> books =
-        await getSortedBooks(filteredBooks, sortBy, sortOrder);
+        await _getSortedBooks(filteredBooks, sortBy, sortOrder);
     return books;
   }
 
@@ -168,15 +200,22 @@ class DatabaseRepository {
   }) async {
     // Sort the issued copies by index.
     final QueryBuilder<BookCopy, BookCopy, QAfterWhere>?
-        indexSortedIssuedCopies = getIndexSortedIssuedCopies(sortBy, sortOrder);
+        indexSortedIssuedCopies =
+        _getIndexSortedIssuedCopies(sortBy, sortOrder);
     // Filter the issued copies by applying all the filter parameters defined in
     // [filters].
     final QueryBuilder<BookCopy, BookCopy, QAfterFilterCondition>
-        filteredIssuedCopies = getFilteredIssuedCopies(
+        filteredIssuedCopies = _getFilteredIssuedCopies(
       indexSortedIssuedCopies: indexSortedIssuedCopies,
       filters: filters,
     );
     return filteredIssuedCopies.findAll();
+  }
+
+  /// Returns all the copies from the [bookCopys] collection.
+  /// (Used only in tests)
+  Future<List<BookCopy>> getAllCopies() async {
+    return _isar.bookCopys.where().findAll();
   }
 
   /// Returns all the borrowers from the collection, sorted by [sortBy],
@@ -189,16 +228,16 @@ class DatabaseRepository {
   }) async {
     // Sort the borrowers by index if [sortBy] parameter is indexible.
     final QueryBuilder<Borrower, Borrower, QAfterWhere>? indexSortedBorrowers =
-        getIndexSortedBorrowers(sortBy, sortOrder);
+        _getIndexSortedBorrowers(sortBy, sortOrder);
     // Filter the borrowers by applying all the filter parameters defined in
     // [filters].
     final QueryBuilder<Borrower, Borrower, QAfterFilterCondition>
-        filteredBorrowers = getFilteredBorrowers(
+        filteredBorrowers = _getFilteredBorrowers(
             indexSortedBorrowers: indexSortedBorrowers, filters: filters);
     // Sort the borrowers with Isar's sorting methods if [sortBy] parameter is
     // non-indexible.
     final List<Borrower> borrowers =
-        await getSortedBorrowers(filteredBorrowers, sortBy, sortOrder);
+        await _getSortedBorrowers(filteredBorrowers, sortBy, sortOrder);
     return borrowers;
   }
 
@@ -308,7 +347,14 @@ class DatabaseRepository {
             await _isar.authors.where().idEqualTo(newAuthor.id).findFirst();
         final bool newAuthorNotPresent = existingAuthor == null;
         // If the new author is not present, add it to the database.
-        if (newAuthorNotPresent) await _isar.authors.put(newAuthor);
+        if (newAuthorNotPresent) {
+          // Update creation and updation time right before adding the new
+          // author to the database.
+          newAuthor
+            ..createdAt = DateTime.now()
+            ..updatedAt = DateTime.now();
+          await _isar.authors.put(newAuthor);
+        }
 
         // Link the new author to the book.
         book.author.value = newAuthor;
@@ -438,6 +484,8 @@ class DatabaseRepository {
   /// All the books issued by the borrower are made available.
   Future<bool> deleteBorrower(Borrower borrower) async {
     return await _isar.writeTxn<bool>(() async {
+      // Load copies link from the database.
+      await borrower.currentlyIssuedBooks.load();
       // Change the issue status for all the books issued by the borrower.
       for (final BookCopy copy in borrower.currentlyIssuedBooks) {
         copy.status = IssueStatus.available;
@@ -503,7 +551,7 @@ class DatabaseRepository {
   /// Indexible fields marked by [Index()] are pre-sorted in the index table.
   /// So, we can retrieve the sorted books list using `where` clauses. No need
   /// to manually sort with Isar's sorting methods.
-  QueryBuilder<Book, Book, QAfterWhere>? getIndexSortedBooks(
+  QueryBuilder<Book, Book, QAfterWhere>? _getIndexSortedBooks(
       BookSort? sortBy, SortOrder sortOrder) {
     // Sort books according to indexible [sortBy] parameter and order them by
     // [sortOrder].
@@ -539,7 +587,7 @@ class DatabaseRepository {
   /// Indexible fields marked by [Index()] are pre-sorted in the index table.
   /// So, we can retrieve the sorted issued copies list using `where` clauses.
   /// No need to manually sort with Isar's sorting methods.
-  QueryBuilder<BookCopy, BookCopy, QAfterWhere>? getIndexSortedIssuedCopies(
+  QueryBuilder<BookCopy, BookCopy, QAfterWhere>? _getIndexSortedIssuedCopies(
       IssuedCopySort? sortBy, SortOrder sortOrder) {
     // Sort issued copies according to indexible [sortBy] parameter and order
     // them by [sortOrder].
@@ -564,7 +612,7 @@ class DatabaseRepository {
   /// Indexible fields marked by [Index()] are pre-sorted in the index table.
   /// So, we can retrieve the sorted borrowers list using `where` clauses.
   /// No need to manually sort with Isar's sorting methods.
-  QueryBuilder<Borrower, Borrower, QAfterWhere>? getIndexSortedBorrowers(
+  QueryBuilder<Borrower, Borrower, QAfterWhere>? _getIndexSortedBorrowers(
       BorrowerSort? sortBy, SortOrder sortOrder) {
     // Sort borrowers according to indexible [sortBy] parameter and order them
     // by [sortOrder].
@@ -601,7 +649,7 @@ class DatabaseRepository {
 
   /// Sorts the books manually using Isar's sorting methods. This is the last
   /// step in the query after `where` clause sorting and filtering.
-  Future<List<Book>> getSortedBooks(
+  Future<List<Book>> _getSortedBooks(
     QueryBuilder<Book, Book, QAfterFilterCondition> filteredBooks,
     BookSort? sortBy,
     SortOrder sortOrder,
@@ -650,7 +698,7 @@ class DatabaseRepository {
 
   /// Sorts the borrowers manually using Isar's sorting methods. This is the last
   /// step in the query after `where` clause sorting and filtering.
-  Future<List<Borrower>> getSortedBorrowers(
+  Future<List<Borrower>> _getSortedBorrowers(
     QueryBuilder<Borrower, Borrower, QAfterFilterCondition> filteredBorrowers,
     BorrowerSort? sortBy,
     SortOrder sortOrder,
@@ -680,7 +728,7 @@ class DatabaseRepository {
   // BEGIN: FILTERS
 
   /// Filters books by combining all the filters defined in [filters] parameter.
-  QueryBuilder<Book, Book, QAfterFilterCondition> getFilteredBooks({
+  QueryBuilder<Book, Book, QAfterFilterCondition> _getFilteredBooks({
     required BookFilters filters,
     QueryBuilder<Book, Book, QAfterWhere>? indexSortedBooks,
   }) {
@@ -739,7 +787,7 @@ class DatabaseRepository {
   /// Filters issued copies by combining all the filters defined in [filters]
   /// parameter.
   QueryBuilder<BookCopy, BookCopy, QAfterFilterCondition>
-      getFilteredIssuedCopies({
+      _getFilteredIssuedCopies({
     required IssuedCopyFilters filters,
     QueryBuilder<BookCopy, BookCopy, QAfterWhere>? indexSortedIssuedCopies,
   }) {
@@ -801,7 +849,8 @@ class DatabaseRepository {
 
   /// Filters borrowers by combining all the filters defined in [filters]
   /// parameter.
-  QueryBuilder<Borrower, Borrower, QAfterFilterCondition> getFilteredBorrowers({
+  QueryBuilder<Borrower, Borrower, QAfterFilterCondition>
+      _getFilteredBorrowers({
     required BorrowerFilters filters,
     QueryBuilder<Borrower, Borrower, QAfterWhere>? indexSortedBorrowers,
   }) {
@@ -929,16 +978,19 @@ class DatabaseRepository {
   /// Random number of copies are generated for each [Book] object.
   /// User images (book covers and profile pictures) are deleted as well.
   /// (for development purposes only)
-  Future<void> resetDatabase() async {
+  Future<void> resetDatabase({deleteImages = true}) async {
     await _isar.writeTxn(() async {
       // Clear database.
       await _isar.clear();
       // Delete all the images stored in the app's image directories.
-      await FilesRepository.instance.deleteImageFolder(ImageFolder.bookCovers);
-      await FilesRepository.instance
-          .deleteImageFolder(ImageFolder.authorProfilePictures);
-      await FilesRepository.instance
-          .deleteImageFolder(ImageFolder.borrowerProfilePictures);
+      if (deleteImages) {
+        await FilesRepository.instance
+            .deleteImageFolder(ImageFolder.bookCovers);
+        await FilesRepository.instance
+            .deleteImageFolder(ImageFolder.authorProfilePictures);
+        await FilesRepository.instance
+            .deleteImageFolder(ImageFolder.borrowerProfilePictures);
+      }
       // Populate books and authors data.
       for (int index = 0; index < mockBooks.length; index++) {
         // Need to create a new copy of the [Book] and [Author] object every

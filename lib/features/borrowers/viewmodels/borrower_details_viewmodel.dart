@@ -40,12 +40,12 @@ class BorrowerDetailsViewModel extends _$BorrowerDetailsViewModel {
     // Delete the borrower from database.
     final bool borrowerDeleted =
         await DatabaseRepository.instance.deleteBorrower(borrower);
-    // If borrower wasn't succesfully deleted, return false.
+    // If borrower wasn't successfully deleted, return false.
     if (!borrowerDeleted) return false;
     // If borrower had a profile picture.
     if (borrower.profilePicture.isNotEmpty) {
       // Delete profile picture file only if the borrower was deleted
-      // succesfully.
+      // successfully.
       await FilesRepository.instance.deleteFile(borrower.profilePicture);
     }
     // Navigate back to the home page.

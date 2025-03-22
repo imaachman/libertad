@@ -43,11 +43,12 @@ class AuthorDetailsViewModel extends _$AuthorDetailsViewModel {
     // Delete the author from database.
     final bool authorDeleted =
         await DatabaseRepository.instance.deleteAuthor(author);
-    // If author wasn't succesfully deleted, return false.
+    // If author wasn't successfully deleted, return false.
     if (!authorDeleted) return false;
     // If author had a profile picture.
     if (author.profilePicture.isNotEmpty) {
-      // Delete profile picture file only if the author was deleted succesfully.
+      // Delete profile picture file only if the author was deleted
+      // successfully.
       await FilesRepository.instance.deleteFile(author.profilePicture);
     }
     // Navigate back to the home page.

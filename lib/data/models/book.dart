@@ -57,7 +57,7 @@ class Book {
     required this.genre,
     required this.releaseDate,
     required this.summary,
-    required this.coverImage,
+    this.coverImage = '',
   });
 
   /// Creates a copy of the object with the provided parameters.

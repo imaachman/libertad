@@ -169,7 +169,7 @@ Book _bookDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = Book(
-    coverImage: reader.readString(offsets[0]),
+    coverImage: reader.readStringOrNull(offsets[0]) ?? '',
     genre: _BookgenreValueEnumMap[reader.readByteOrNull(offsets[2])] ??
         Genre.fiction,
     releaseDate: reader.readDateTime(offsets[3]),
@@ -190,7 +190,7 @@ P _bookDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readString(offset)) as P;
+      return (reader.readStringOrNull(offset) ?? '') as P;
     case 1:
       return (reader.readDateTime(offset)) as P;
     case 2:
