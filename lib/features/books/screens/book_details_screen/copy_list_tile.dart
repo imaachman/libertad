@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:libertad/data/models/book_copy.dart';
 import 'package:libertad/navigation/routes.dart';
 
-/// List tile displaying brief info about the book, such as title, author, and
-/// number of copies available. Navigates to book's details page.
+/// List tile displaying brief info about the book copy, such as ID, book, and
+/// availability. Navigates to copy's details page.
 class CopyListTile extends StatelessWidget {
   final BookCopy copy;
   final int index;

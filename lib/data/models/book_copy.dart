@@ -40,7 +40,6 @@ class BookCopy {
   bool get isIssued => status.isIssued;
 
   /// Whether the copy is available.
-  /// Whether the copy is available.
   @ignore
   bool get isAvailable => status.isAvailable;
 
