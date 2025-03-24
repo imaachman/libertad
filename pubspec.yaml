@@ -1,5 +1,5 @@
 name: libertad
-description: "A new Flutter project."
+description: "A modern library management system built with Flutter, enabling users to manage books, authors, borrowers, and transactions seamlessly while exploring advanced database concepts using Isar. Libertad helps users efficiently manage a library’s book inventory, borrower records, and author information. With features like real-time data updates, transaction management, and advanced sorting and filtering queries, the app is a practical and engaging platform for exploring Isar's powerful database capabilities in Flutter."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
