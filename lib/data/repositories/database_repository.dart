@@ -266,8 +266,13 @@ class DatabaseRepository {
   /// Random number of copies are generated for each [Book] object.
   /// User images (book covers and profile pictures) are deleted as well.
   /// (for development purposes only)
-  Future<void> resetDatabase({deleteImages = true}) =>
+  Future<void> resetDatabase({bool deleteImages = true}) =>
       _database.resetDatabase(deleteImages: deleteImages);
+
+  /// Generates 1000 [Borrower] and [Author] objects and 2-5 [Book] models for
+  /// each [Author]. Each book can have 1-15 [BookCopy] objects linked to it.
+  /// Then, the function inserts this data into the database.
+  Future<void> hyperPopulateDatabase() => _database.hyperPopulateDatabase();
 
   // END: DEVELOPER OPTIONS
 }

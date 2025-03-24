@@ -183,8 +183,11 @@ class MockDatabaseRepository extends DatabaseRepository {
   Future<void> clearDatabase() async => throw UnimplementedError();
 
   @override
-  Future<void> resetDatabase({deleteImages = true}) async =>
+  Future<void> resetDatabase({bool deleteImages = true}) async =>
       throw UnimplementedError();
+
+  @override
+  Future<void> hyperPopulateDatabase() async => throw UnimplementedError();
 
   // END: DEVELOPER OPTIONS
 }

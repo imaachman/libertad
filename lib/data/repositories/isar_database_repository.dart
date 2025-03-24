@@ -2,7 +2,9 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:isar/isar.dart';
+import 'package:libertad/core/utils/data_generators.dart';
 import 'package:libertad/core/utils/extensions.dart';
+import 'package:libertad/core/utils/isolates.dart';
 import 'package:libertad/data/mock/mock_data.dart';
 import 'package:libertad/data/models/author_sort.dart';
 import 'package:libertad/data/models/book_copy.dart';
@@ -47,6 +49,7 @@ class IsarDatabaseRepository extends DatabaseRepository {
     _isar = await Isar.open(
       [BookSchema, AuthorSchema, BookCopySchema, BorrowerSchema],
       directory: appDirectory.path,
+      name: 'libertad',
     );
   }
 
@@ -287,7 +290,8 @@ class IsarDatabaseRepository extends DatabaseRepository {
 
       // Create [totalCopies] number of [BookCopy] objects.
       // Each copy will have a link to the book.
-      final List<BookCopy> copies = _generateCopies(book, totalCopies);
+      final List<BookCopy> copies =
+          DataGenerators.generateCopies(book, totalCopies);
       // Add the copies to the database.
       await _isar.bookCopys.putAll(copies);
       // Link the copies set to the book.
@@ -381,7 +385,7 @@ class IsarDatabaseRepository extends DatabaseRepository {
       if (newTotalCopies > book.totalCopies.length) {
         // Create the new number of [BookCopy] objects.
         // Each copy will have a link to the book.
-        final List<BookCopy> newCopies = _generateCopies(
+        final List<BookCopy> newCopies = DataGenerators.generateCopies(
           book,
           newTotalCopies - book.totalCopies.length,
         );
@@ -398,7 +402,7 @@ class IsarDatabaseRepository extends DatabaseRepository {
           book.totalCopies.map((copy) => copy.id).toList(),
         );
         // Generate new copies.
-        final List<BookCopy> copies = _generateCopies(
+        final List<BookCopy> copies = DataGenerators.generateCopies(
           book,
           newTotalCopies,
         );
@@ -1007,19 +1011,20 @@ class IsarDatabaseRepository extends DatabaseRepository {
   /// User images (book covers and profile pictures) are deleted as well.
   /// (for development purposes only)
   @override
-  Future<void> resetDatabase({deleteImages = true}) async {
+  Future<void> resetDatabase({bool deleteImages = true}) async {
+    // Delete all the images stored in the app's image directories.
+    if (deleteImages) {
+      await FilesRepository.instance.deleteImageFolder(ImageFolder.bookCovers);
+      await FilesRepository.instance
+          .deleteImageFolder(ImageFolder.authorProfilePictures);
+      await FilesRepository.instance
+          .deleteImageFolder(ImageFolder.borrowerProfilePictures);
+    }
+
     await _isar.writeTxn(() async {
       // Clear database.
       await _isar.clear();
-      // Delete all the images stored in the app's image directories.
-      if (deleteImages) {
-        await FilesRepository.instance
-            .deleteImageFolder(ImageFolder.bookCovers);
-        await FilesRepository.instance
-            .deleteImageFolder(ImageFolder.authorProfilePictures);
-        await FilesRepository.instance
-            .deleteImageFolder(ImageFolder.borrowerProfilePictures);
-      }
+
       // Populate books and authors data.
       for (int index = 0; index < MockData.books.length; index++) {
         // Need to create a new copy of the [Book] and [Author] object every
@@ -1033,7 +1038,7 @@ class IsarDatabaseRepository extends DatabaseRepository {
         // Create random number of [BookCopy] objects up to 15.
         // Each copy will have a link to the book.
         final List<BookCopy> copies =
-            _generateCopies(book, Random().nextInt(15) + 1);
+            DataGenerators.generateCopies(book, Random().nextInt(15) + 1);
         // Add the copies to the database.
         await _isar.bookCopys.putAll(copies);
         // Link the copies set to the book.
@@ -1072,18 +1077,94 @@ class IsarDatabaseRepository extends DatabaseRepository {
     });
   }
 
+  /// Generates 1000 [Borrower] and [Author] objects and 1-5 [Book] models for
+  /// each [Author]. Each book can have 1-15 [BookCopy] objects linked to it.
+  /// Then, the function inserts this data into the database.
+  @override
+  Future<void> hyperPopulateDatabase() async =>
+      computeIsolate(_hyperPopulateDatabase);
+
   // END: DEVELOPER OPTIONS
+}
 
-  // BEGIN: HELPER METHODS
+Future<void> _hyperPopulateDatabase() async {
+  // Get application documents directory.
+  final Directory applicationDocumentsDirectory =
+      await getApplicationDocumentsDirectory();
+  // Create sub-directory to use as app's database and file storage.
+  final Directory appDirectory =
+      await Directory('${applicationDocumentsDirectory.path}/Libertad')
+          .create();
+  // Load Isar instance with the relevant collections.
+  final Isar isar = await Isar.open(
+    [BookSchema, AuthorSchema, BookCopySchema, BorrowerSchema],
+    directory: appDirectory.path,
+    name: 'libertad',
+  );
 
-  /// Generates [totalCopies] number of [BookCopy] objects and links each of
-  /// them to the provided [book] object.
-  List<BookCopy> _generateCopies(Book book, int totalCopies) {
-    return List.generate(
-      totalCopies,
-      (index) => BookCopy()..book.value = book,
-    );
-  }
+  await isar.writeTxn(() async {
+    // Clear database.
+    await isar.clear();
 
-  // END: HELPER METHODS
+    // Generate 1000 authors and 2-5 books for each of them.
+    final AuthorsAndBooks authorsAndBooks =
+        DataGenerators.generateAuthorsAndBooks(1000, 1, 5);
+
+    // Generate copies for each book, update book's creation and updation
+    // date/time, and add the book to the database.
+    for (int index = 0; index < authorsAndBooks.books.length; index++) {
+      // Book to generate the copies for.
+      final Book book = authorsAndBooks.books[index];
+      // Generate random number of copies up to 15.
+      final List<BookCopy> copies =
+          DataGenerators.generateCopies(book, Random().nextInt(15) + 1);
+      // Add the copies to the database.
+      await isar.bookCopys.putAll(copies);
+      // Link the copies to the book.
+      book.totalCopies.addAll(copies);
+      // Update book's creation and updation date/time.
+      book
+        ..createdAt = DateTime.now()
+        ..updatedAt = DateTime.now();
+      // Add the book to the database.
+      await isar.books.put(book);
+      // Save the copies link.
+      await book.totalCopies.save();
+    }
+
+    // Update author's creation and updation date/time, and add it to the
+    // database.
+    for (int index = 0; index < authorsAndBooks.authors.length; index++) {
+      final Author author = authorsAndBooks.authors[index];
+      // Update author's creation and updation date/time.
+      author
+        ..createdAt = DateTime.now()
+        ..updatedAt = DateTime.now();
+      // Add the author to the database.
+      await isar.authors.put(author);
+    }
+
+    // Save the author link for each book.
+    for (final Book book in authorsAndBooks.books) {
+      await book.author.save();
+    }
+    // Save the books link for each author.
+    for (final Author author in authorsAndBooks.authors) {
+      await author.books.save();
+    }
+
+    // Generate 1000 borrowers.
+    final List<Borrower> borrowers = DataGenerators.generateBorrowers(1000);
+
+    // Update borrower's creation and updation date/time, and add it to the
+    // database.
+    for (final Borrower borrower in borrowers) {
+      // Update borrower's creation and updation date/time.
+      borrower
+        ..createdAt = DateTime.now()
+        ..updatedAt = DateTime.now();
+      // Add the borrower to the database.
+      await isar.borrowers.put(borrower);
+    }
+  });
 }

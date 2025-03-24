@@ -150,6 +150,26 @@ class _HomePageState extends ConsumerState<HomePage>
                   ],
                 ),
               ),
+              PopupMenuItem(
+                value: 2,
+                onTap: model.hyperPopulateDatabase,
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.data_thresholding_outlined,
+                      size: 18,
+                      color: Theme.of(context).colorScheme.error,
+                    ),
+                    SizedBox(width: 8),
+                    Text(
+                      'Hyper populate database',
+                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                            color: Theme.of(context).colorScheme.error,
+                          ),
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
         ],

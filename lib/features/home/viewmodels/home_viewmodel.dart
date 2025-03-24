@@ -46,6 +46,10 @@ class HomeViewModel extends _$HomeViewModel {
   Future<void> resetDatabase() async =>
       await DatabaseRepository.instance.resetDatabase();
 
+  /// Populates the database with large mock data.
+  Future<void> hyperPopulateDatabase() async =>
+      await DatabaseRepository.instance.hyperPopulateDatabase();
+
   /// Loads up the view to search the database.
   Future<void> searchDatabase(
           BuildContext context, int selectedTabIndex) async =>
