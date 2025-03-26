@@ -32,7 +32,7 @@ class DatabaseRepository {
   void selectMockDatabase() => useMock = true;
 
   /// Selected database repository based on [useMock].
-  late final DatabaseRepository _database;
+  DatabaseRepository? _database;
 
   /// Initialize database.
   /// This method should be called before interacting with the database.
@@ -43,7 +43,7 @@ class DatabaseRepository {
     } else {
       _database = IsarDatabaseRepository();
     }
-    return await _database.initialize();
+    return await _database!.initialize();
   }
 
   /// Initialize database for testing.
@@ -51,57 +51,66 @@ class DatabaseRepository {
   /// app directory.
   /// This method should be called before interacting with the database.
   /// Typically called inside [setUp] method before running tests.
-  Future<void> initializeForTest() async => _database.initializeForTest();
+  Future<void> initializeForTest() async {
+    // If [_database] is already initialized, do not initialize it again.
+    if (_database != null) return;
+    if (useMock) {
+      _database = MockDatabaseRepository();
+    } else {
+      _database = IsarDatabaseRepository();
+    }
+    return _database!.initializeForTest();
+  }
 
   // BEGIN: WATCHERS
 
   /// A stream of books data. Allows us to watch for changes in the books
   /// collection and update UI.
-  Stream<void> get booksStream => _database.booksStream;
+  Stream<void> get booksStream => _database!.booksStream;
 
   /// A stream of book data. Allows us to watch for changes to a particular book
   /// from the collection and update UI.
-  Stream<void> bookStream(Id id) => _database.bookStream(id);
+  Stream<void> bookStream(Id id) => _database!.bookStream(id);
 
   /// A stream of authors data. Allows us to watch for changes in the authors
   /// collection and update UI.
-  Stream<void> get authorsStream => _database.authorsStream;
+  Stream<void> get authorsStream => _database!.authorsStream;
 
   /// A stream of author data. Allows us to watch for changes to a particular
   /// author from the collection and update UI.
-  Stream<void> authorStream(Id id) => _database.authorStream(id);
+  Stream<void> authorStream(Id id) => _database!.authorStream(id);
 
   /// A stream of book copies data. Allows us to watch for changes in the book
   /// copies collection and update UI.
-  Stream<void> get bookCopiesStream => _database.bookCopiesStream;
+  Stream<void> get bookCopiesStream => _database!.bookCopiesStream;
 
   /// A stream of book copy data. Allows us to watch for changes to a particular
   /// book copy from the collection and update UI.
-  Stream<void> bookCopyStream(Id id) => _database.bookCopyStream(id);
+  Stream<void> bookCopyStream(Id id) => _database!.bookCopyStream(id);
 
   /// A stream of borrowers data. Allows us to watch for changes in the
   /// borrowers collection and update UI.
-  Stream<void> get borrowersStream => _database.borrowersStream;
+  Stream<void> get borrowersStream => _database!.borrowersStream;
 
   /// A stream of borrower data. Allows us to watch for changes to a particular
   /// borrower from the collection and update UI.
-  Stream<void> borrowerStream(Id id) => _database.borrowerStream(id);
+  Stream<void> borrowerStream(Id id) => _database!.borrowerStream(id);
 
   // END: WATCHERS
 
   // BEGIN: DATA FETCHERS
 
   /// Returns the book by [id]. (Used only in tests)
-  Future<Book?> getBook(Id id) async => _database.getBook(id);
+  Future<Book?> getBook(Id id) async => _database!.getBook(id);
 
   /// Returns the author by [id]. (Used only in tests)
-  Future<Author?> getAuthor(Id id) async => _database.getAuthor(id);
+  Future<Author?> getAuthor(Id id) async => _database!.getAuthor(id);
 
   /// Returns the book copy by [id]. (Used only in tests)
-  Future<BookCopy?> getBookCopy(Id id) async => _database.getBookCopy(id);
+  Future<BookCopy?> getBookCopy(Id id) async => _database!.getBookCopy(id);
 
   /// Returns the borrower by [id]. (Used only in tests)
-  Future<Borrower?> getBorrower(Id id) async => _database.getBorrower(id);
+  Future<Borrower?> getBorrower(Id id) async => _database!.getBorrower(id);
 
   /// Returns all the books from the collection, sorted by [sortBy],
   /// arranged according to [sortOrder], and filtered by combining the various
@@ -111,7 +120,7 @@ class DatabaseRepository {
     SortOrder sortOrder = SortOrder.ascending,
     BookFilters filters = const BookFilters(),
   }) =>
-      _database.getBooks(
+      _database!.getBooks(
         sortBy: sortBy,
         sortOrder: sortOrder,
         filters: filters,
@@ -123,7 +132,7 @@ class DatabaseRepository {
     AuthorSort? sortBy,
     SortOrder sortOrder = SortOrder.ascending,
   }) =>
-      _database.getAuthors(
+      _database!.getAuthors(
         sortBy: sortBy,
         sortOrder: sortOrder,
       );
@@ -136,7 +145,7 @@ class DatabaseRepository {
     SortOrder sortOrder = SortOrder.ascending,
     IssuedCopyFilters filters = const IssuedCopyFilters(),
   }) =>
-      _database.getIssuedCopies(
+      _database!.getIssuedCopies(
         sortBy: sortBy,
         sortOrder: sortOrder,
         filters: filters,
@@ -144,7 +153,7 @@ class DatabaseRepository {
 
   /// Returns all the copies from the [bookCopys] collection.
   /// (Used only in tests)
-  Future<List<BookCopy>> getAllCopies() => _database.getAllCopies();
+  Future<List<BookCopy>> getAllCopies() => _database!.getAllCopies();
 
   /// Returns all the borrowers from the collection, sorted by [sortBy],
   /// arranged according to [sortOrder], and filtered by combining the various
@@ -154,7 +163,7 @@ class DatabaseRepository {
     SortOrder sortOrder = SortOrder.ascending,
     BorrowerFilters filters = const BorrowerFilters(),
   }) =>
-      _database.getBorrowers(
+      _database!.getBorrowers(
         sortBy: sortBy,
         sortOrder: sortOrder,
         filters: filters,
@@ -173,11 +182,11 @@ class DatabaseRepository {
   /// And [totalCopies] number of [BookCopy] objects will be created, linked to
   /// the [Book] object, and saved to the database.
   Future<void> addBook(Book book, Author author, int totalCopies) =>
-      _database.addBook(book, author, totalCopies);
+      _database!.addBook(book, author, totalCopies);
 
   /// Adds a new borrower to the collection.
   Future<void> addBorrower(Borrower borrower) =>
-      _database.addBorrower(borrower);
+      _database!.addBorrower(borrower);
 
   // END: CREATION
 
@@ -196,14 +205,14 @@ class DatabaseRepository {
   ///   the copies and replace them with the new copies. We don't want to
   ///   update the existing copies because they might have been borrowed.
   Future<void> updateBook(Book book, Author newAuthor, int newTotalCopies) =>
-      _database.updateBook(book, newAuthor, newTotalCopies);
+      _database!.updateBook(book, newAuthor, newTotalCopies);
 
   /// Updates an existing author in the collection.
-  Future<void> updateAuthor(Author author) => _database.updateAuthor(author);
+  Future<void> updateAuthor(Author author) => _database!.updateAuthor(author);
 
   /// Updates an existing borrower in the collection.
   Future<void> updateBorrower(Borrower borrower) =>
-      _database.updateBorrower(borrower);
+      _database!.updateBorrower(borrower);
 
   // END: UPDATION
 
@@ -212,15 +221,15 @@ class DatabaseRepository {
   /// Deletes the book from the collection.
   /// All of book's copies are un-issued and deleted.
   /// If this is author's only book, the author is deleted as well.
-  Future<bool> deleteBook(Book book) => _database.deleteBook(book);
+  Future<bool> deleteBook(Book book) => _database!.deleteBook(book);
 
   /// Deletes the author and their books (along with all the copies of book).
-  Future<bool> deleteAuthor(Author author) => _database.deleteAuthor(author);
+  Future<bool> deleteAuthor(Author author) => _database!.deleteAuthor(author);
 
   /// Deletes the borrower from the collection.
   /// All the books issued by the borrower are made available.
   Future<bool> deleteBorrower(Borrower borrower) =>
-      _database.deleteBorrower(borrower);
+      _database!.deleteBorrower(borrower);
 
   // END: DELETION
 
@@ -228,14 +237,14 @@ class DatabaseRepository {
 
   /// Issues the copy to the borrower.
   Future<void> issueCopy(BookCopy copy, Borrower borrower) =>
-      _database.issueCopy(copy, borrower);
+      _database!.issueCopy(copy, borrower);
 
   /// Marks the issued copy as returned.
   Future<void> returnCopy(BookCopy copy, Borrower borrower) =>
-      _database.returnCopy(copy, borrower);
+      _database!.returnCopy(copy, borrower);
 
   /// Accept fine and mark the borrower as non-defaulter.
-  Future<void> acceptFine(Borrower borrower) => _database.acceptFine(borrower);
+  Future<void> acceptFine(Borrower borrower) => _database!.acceptFine(borrower);
 
   // END: LIBRARY TRANSACTIONS
 
@@ -243,36 +252,36 @@ class DatabaseRepository {
 
   /// Searches through the authors in the collection by their name.
   Future<List<Author>> searchAuthors(String name) =>
-      _database.searchAuthors(name);
+      _database!.searchAuthors(name);
 
   /// Searches through the borrowers in the collection by their name.
   /// An optional [active] parameter enables us to search through only active
   /// borrowers.
   Future<List<Borrower>> searchBorrowers(String name, {bool active = false}) =>
-      _database.searchBorrowers(name, active: active);
+      _database!.searchBorrowers(name, active: active);
 
   /// Searches through the database by filtering based on the provided [query].
   Future<SearchResult> searchDatabase(String query) =>
-      _database.searchDatabase(query);
+      _database!.searchDatabase(query);
 
   // END: SEARCH
 
   // BEGIN: DEVELOPER OPTIONS
 
   /// Clears entire database. (for development purposes only)
-  Future<void> clearDatabase() => _database.clearDatabase();
+  Future<void> clearDatabase() => _database!.clearDatabase();
 
   /// Resets database to its original state with mock data.
   /// Random number of copies are generated for each [Book] object.
   /// User images (book covers and profile pictures) are deleted as well.
   /// (for development purposes only)
   Future<void> resetDatabase({bool deleteImages = true}) =>
-      _database.resetDatabase(deleteImages: deleteImages);
+      _database!.resetDatabase(deleteImages: deleteImages);
 
   /// Generates 1000 [Borrower] and [Author] objects and 2-5 [Book] models for
   /// each [Author]. Each book can have 1-15 [BookCopy] objects linked to it.
   /// Then, the function inserts this data into the database.
-  Future<void> hyperPopulateDatabase() => _database.hyperPopulateDatabase();
+  Future<void> hyperPopulateDatabase() => _database!.hyperPopulateDatabase();
 
   // END: DEVELOPER OPTIONS
 }
